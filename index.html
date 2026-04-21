@@ -875,10 +875,16 @@
     flex: 1;
   }
 
+  /* 배지 그룹 (지역 + NEW) */
+  .card-badges {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
   /* 지역 배지 (pill) */
   .card-badge {
     display: inline-block;
-    align-self: flex-start;
     background: var(--red);
     color: var(--paper);
     font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -887,6 +893,61 @@
     letter-spacing: 0.02em;
     padding: 5px 12px;
     border-radius: 2px;
+  }
+  /* NEW 배지 — 블링블링 효과 */
+  .card-badge-new {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'Inter', 'Pretendard Variable', sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    padding: 5px 10px 5px 9px;
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+  }
+  .card-badge-new::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.5) 50%,
+      transparent 100%
+    );
+    animation: newShimmer 2.4s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes newShimmer {
+    0% { left: -100%; }
+    60% { left: 150%; }
+    100% { left: 150%; }
+  }
+  .card-badge-new::after {
+    content: '';
+    width: 5px;
+    height: 5px;
+    background: #ff3b30;
+    border-radius: 50%;
+    position: relative;
+    z-index: 1;
+    animation: newDot 1.5s ease-in-out infinite;
+  }
+  @keyframes newDot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+  .card-badge-new span {
+    position: relative;
+    z-index: 1;
   }
 
   /* 제목 */
@@ -2740,7 +2801,10 @@
           <img src="${e.thumbnail}" alt="${e.title}" loading="lazy" />
         </div>
         <div class="card-body">
-          <span class="card-badge">${e.region}</span>
+          <div class="card-badges">
+            <span class="card-badge">${e.region}</span>
+            ${e.apiIndex < 5 ? '<span class="card-badge-new"><span>NEW</span></span>' : ''}
+          </div>
           <h3 class="card-title">${e.title}</h3>
           <div class="card-meta">
             <div class="card-meta-item">
