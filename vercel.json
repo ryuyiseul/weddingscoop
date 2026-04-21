@@ -1,6 +1,12 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "regions": ["icn1"],
+  "functions": {
+    "api/expos.js": {
+      "maxDuration": 30
+    }
+  },
   "headers": [
     {
       "source": "/expos.json",

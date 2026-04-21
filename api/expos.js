@@ -1,34 +1,35 @@
-// Vercel Serverless Function - CORS 우회 프록시
-// 호출 경로: /api/expos
-
+// Vercel Serverless Function - CORS 우회 + 타임아웃 확장
 module.exports = async (req, res) => {
   const targetUrl = 'https://cpaad.co.kr/api/ad_json_date.php';
   
   try {
-    // Node.js 18+ 내장 fetch 사용 (또는 https 모듈 fallback)
+    // AbortController로 25초 타임아웃 설정 (Vercel maxDuration 30초 이내)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 25000);
+    
     let data;
-    let upstreamStatus;
-    let upstreamText;
     
     try {
       const response = await fetch(targetUrl, {
         method: 'GET',
         headers: {
-          'User-Agent': 'Mozilla/5.0 (compatible; WeddingScoop/1.0)',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
           'Accept': 'application/json, text/plain, */*',
-          'Accept-Encoding': 'gzip, deflate',
+          'Accept-Language': 'ko-KR,ko;q=0.9,en;q=0.8',
         },
         redirect: 'follow',
+        signal: controller.signal,
       });
       
-      upstreamStatus = response.status;
-      upstreamText = await response.text();
+      clearTimeout(timeoutId);
+      
+      const upstreamText = await response.text();
       
       if (!response.ok) {
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.status(502).json({
           error: 'Upstream returned non-OK status',
-          upstreamStatus,
+          upstreamStatus: response.status,
           upstreamBody: upstreamText.slice(0, 500),
         });
         return;
@@ -40,13 +41,13 @@ module.exports = async (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.status(502).json({
           error: 'Failed to parse upstream JSON',
-          upstreamStatus,
+          upstreamStatus: response.status,
           upstreamBody: upstreamText.slice(0, 500),
-          parseError: parseErr.message,
         });
         return;
       }
     } catch (fetchErr) {
+      clearTimeout(timeoutId);
       res.setHeader('Access-Control-Allow-Origin', '*');
       res.status(502).json({
         error: 'Failed to fetch upstream',
@@ -58,7 +59,7 @@ module.exports = async (req, res) => {
     }
     
     // 성공
-    res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=600');
+    res.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate=3600');
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.status(200).json(data);
@@ -68,7 +69,6 @@ module.exports = async (req, res) => {
     res.status(500).json({
       error: 'Internal server error',
       message: err.message || String(err),
-      stack: err.stack ? err.stack.split('\n').slice(0, 5) : undefined,
     });
   }
 };
