@@ -3690,7 +3690,24 @@
 
     if (!toggle || !panel || !messages) return;
 
-    let chatState = { region: null, type: null };
+    let chatState = { region: null, city: null, type: null };
+
+    // 권역 → 세부 도시 매핑 (도시 단계가 필요한 권역만)
+    // 도시 키워드가 ad_location에 포함되면 매칭됨
+    // 새 박람회는 키워드만 맞으면 자동 반영, 새 도시는 여기에 추가만 하면 됨
+    const REGION_CITIES = {
+      '충청': ['대전', '청주', '천안', '아산', '충주', '세종'],
+      '전라': ['광주', '전주', '익산', '군산'],
+      '경상': ['대구', '울산', '창원', '진주', '김해'],
+      '강원': ['춘천', '원주', '강릉', '동해'],
+    };
+
+    // 박람회의 ad_location에서 도시 매칭
+    function matchesCity(expo, city) {
+      if (!city) return true;
+      const loc = String(expo.location || '');
+      return loc.includes(city);
+    }
 
     // 박람회 종류 키워드 매핑 (gather_name + ad_info 검색)
     const TYPE_KEYWORDS = {
@@ -3808,7 +3825,7 @@
 
     // 대화 흐름 함수들
     function startChat() {
-      chatState = { region: null, type: null };
+      chatState = { region: null, city: null, type: null };
       messages.innerHTML = '';
       setTimeout(() => {
         addBotMessage('안녕하세요! 웨딩스쿱 도우미예요 💌<br/>박람회 추천해드릴게요. 어느 지역에서 알아보세요?');
@@ -3828,13 +3845,59 @@
       wrap.querySelectorAll('.chat-option-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           chatState.region = btn.dataset.region;
-          // 옵션들 비활성화
           wrap.remove();
           addUserMessage(chatState.region);
-          setTimeout(() => askType(), 400);
+          // 해당 권역에 도시 옵션이 있으면 → askCity, 없으면 바로 askType
+          if (REGION_CITIES[chatState.region]) {
+            setTimeout(() => askCity(), 400);
+          } else {
+            setTimeout(() => askType(), 400);
+          }
         });
       });
       scrollToBottom();
+    }
+
+    function askCity() {
+      // 해당 권역의 박람회만 필터 → 어떤 도시가 실제로 있는지 카운트
+      const regionExpos = (window.allExpos || []).filter(e => e.region === chatState.region);
+      const cityList = REGION_CITIES[chatState.region];
+
+      // 각 도시별 박람회 수 계산 (자동 반영 — API 데이터 그대로 사용)
+      const cityCounts = {};
+      cityList.forEach(c => {
+        cityCounts[c] = regionExpos.filter(e => matchesCity(e, c)).length;
+      });
+
+      // 박람회가 1개 이상 있는 도시만 보여주기 (빈 결과 방지)
+      const availableCities = cityList.filter(c => cityCounts[c] > 0);
+
+      // 도시 옵션이 없거나 1개뿐이면 도시 단계 스킵
+      if (availableCities.length <= 1) {
+        chatState.city = null;
+        setTimeout(() => askType(), 200);
+        return;
+      }
+
+      // "전체" + 사용 가능한 도시 버튼들 (각 도시 옆에 박람회 수)
+      const html = [
+        `<button class="chat-option-btn" data-city="">📍 ${chatState.region} 전체</button>`,
+        ...availableCities.map(c =>
+          `<button class="chat-option-btn" data-city="${c}">${c} <span style="opacity:0.6;font-weight:500;">(${cityCounts[c]})</span></button>`
+        )
+      ].join('');
+
+      addBotMessage(`<strong>${chatState.region}</strong> 어디 보세요?`, html);
+      const opts = messages.querySelector('.chat-options:last-of-type');
+      opts.querySelectorAll('.chat-option-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          chatState.city = btn.dataset.city || null;
+          opts.remove();
+          const label = chatState.city || `${chatState.region} 전체`;
+          addUserMessage(label);
+          setTimeout(() => askType(), 400);
+        });
+      });
     }
 
     function askType() {
@@ -3842,7 +3905,8 @@
         const emoji = key === 'all' ? '✨' : key === 'wedding-hall' ? '💐' : key === 'dress' ? '👗' : '🌴';
         return `<button class="chat-option-btn" data-type="${key}">${emoji} ${label}</button>`;
       }).join('');
-      addBotMessage(`좋아요! <strong>${chatState.region}</strong>에서 어떤 박람회를 찾으세요?`, html);
+      const locLabel = chatState.city || chatState.region;
+      addBotMessage(`좋아요! <strong>${locLabel}</strong>에서 어떤 박람회를 찾으세요?`, html);
       const opts = messages.querySelector('.chat-options:last-of-type');
       opts.querySelectorAll('.chat-option-btn').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -3855,9 +3919,13 @@
     }
 
     function showResults() {
-      // 데이터 필터링
+      const locLabel = chatState.city || chatState.region;
+
+      // 데이터 필터링: region + city + type
       const filtered = (window.allExpos || []).filter(e =>
-        e.region === chatState.region && matchesType(e, chatState.type)
+        e.region === chatState.region &&
+        matchesCity(e, chatState.city) &&
+        matchesType(e, chatState.type)
       );
 
       // 마감임박 순으로 정렬
@@ -3870,9 +3938,9 @@
       const top = filtered.slice(0, 5);
 
       if (top.length === 0) {
-        // 폴백: 종류 매칭 없으면 해당 지역 전체에서 마감임박 5개
+        // 폴백: 종류 매칭 없으면 해당 지역(+도시) 전체에서 마감임박 5개
         const fallback = (window.allExpos || [])
-          .filter(e => e.region === chatState.region)
+          .filter(e => e.region === chatState.region && matchesCity(e, chatState.city))
           .sort((a, b) => {
             const aEnd = new Date(a.endDate || a.date);
             const bEnd = new Date(b.endDate || b.date);
@@ -3882,21 +3950,19 @@
 
         if (fallback.length === 0) {
           // 그 지역에 박람회 자체가 없는 경우
-          addBotMessage(`아쉽지만 <strong>${chatState.region}</strong>에는 지금 진행 중인 박람회가 없어요 😢`);
+          addBotMessage(`아쉽지만 <strong>${locLabel}</strong>에는 지금 진행 중인 박람회가 없어요 😢`);
           addEmpty('다른 지역으로 다시 찾아볼까요?');
         } else {
-          // 종류 매칭은 안 됐지만 그 지역에 박람회는 있음 — 자연스러운 추천 톤
-          addBotMessage(`<strong>${chatState.region}</strong>의 <strong>마감임박 박람회 ${fallback.length}개</strong>를 추천드려요! 🎁<br/>지금 신청 가능한 박람회 위주로 보여드릴게요.`);
+          addBotMessage(`<strong>${locLabel}</strong>의 <strong>마감임박 박람회 ${fallback.length}개</strong>를 추천드려요! 🎁<br/>지금 신청 가능한 박람회 위주로 보여드릴게요.`);
           fallback.forEach((expo, i) => {
             setTimeout(() => addExpoCard(expo), 200 * (i + 1));
           });
         }
 
-        // 폴백 결과에 맞춰 처음으로/전체 보기 버튼
         const buttonsDelay = fallback.length === 0 ? 200 : 200 * (fallback.length + 2);
         setTimeout(() => addEndOptions(), buttonsDelay);
       } else {
-        addBotMessage(`<strong>${chatState.region}</strong>의 ${TYPE_LABELS[chatState.type]} 박람회를 <strong>${filtered.length}개</strong> 찾았어요! 🎉<br/>마감임박 순으로 보여드릴게요.`);
+        addBotMessage(`<strong>${locLabel}</strong>의 ${TYPE_LABELS[chatState.type]} 박람회를 <strong>${filtered.length}개</strong> 찾았어요! 🎉<br/>마감임박 순으로 보여드릴게요.`);
         top.forEach((expo, i) => {
           setTimeout(() => addExpoCard(expo), 200 * (i + 1));
         });
