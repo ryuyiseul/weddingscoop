@@ -822,12 +822,13 @@
     border-bottom: 4px solid var(--red);
     background: var(--paper);
     padding: 0;
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    transition: box-shadow 0.35s cubic-bezier(.2,.7,.2,1), transform 0.35s cubic-bezier(.2,.7,.2,1);
     overflow: hidden;
   }
   .card:hover {
-    box-shadow: 8px 8px 0 var(--ink);
-    transform: translate(-2px, -2px);
+    box-shadow: 0 18px 40px -12px rgba(184, 35, 47, 0.35),
+                0 6px 16px -6px rgba(184, 35, 47, 0.25);
+    transform: translateY(-8px);
   }
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(24px); }
@@ -931,18 +932,19 @@
     background: var(--ink);
     color: var(--paper);
     text-align: center;
-    padding: 13px 12px;
+    padding: 16px 14px;
     font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: -0.005em;
-    transition: background 0.25s ease;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 8px;
     position: relative;
     overflow: hidden;
+    animation: ctaPulse 2.6s ease-in-out infinite;
   }
   .card-cta::before {
     content: '';
@@ -954,19 +956,29 @@
     background: linear-gradient(
       90deg,
       transparent 0%,
-      rgba(255, 255, 255, 0.18) 50%,
+      rgba(255, 255, 255, 0.25) 50%,
       transparent 100%
     );
-    animation: ctaShimmer 2.8s ease-in-out infinite;
+    animation: ctaShimmer 2.6s ease-in-out infinite;
     pointer-events: none;
   }
   @keyframes ctaShimmer {
     0% { left: -100%; }
-    50% { left: 150%; }
+    55% { left: 150%; }
     100% { left: 150%; }
+  }
+  @keyframes ctaPulse {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(184, 35, 47, 0);
+    }
+    50% {
+      box-shadow: 0 0 0 6px rgba(184, 35, 47, 0.18);
+    }
   }
   .card:hover .card-cta {
     background: var(--red);
+    animation-play-state: paused;
+    box-shadow: 0 4px 16px -4px rgba(184, 35, 47, 0.5);
   }
   .card-cta > span,
   .card-cta > .card-cta-arrow {
@@ -976,11 +988,11 @@
   .card-cta-arrow {
     font-family: 'Fraunces', serif;
     font-weight: 300;
-    font-size: 16px;
+    font-size: 18px;
     transition: transform 0.3s ease;
   }
   .card:hover .card-cta-arrow {
-    transform: translateX(4px);
+    transform: translateX(6px);
   }
 
   /* 기존 요소들 비활성화 (하위 호환) */
@@ -1893,8 +1905,11 @@
       height: 13px;
     }
     .card-cta {
-      padding: 12px;
-      font-size: 13px;
+      padding: 15px 12px;
+      font-size: 15px;
+    }
+    .card-cta-arrow {
+      font-size: 17px;
     }
 
     /* FAQ 모바일 */
