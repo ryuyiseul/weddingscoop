@@ -3879,11 +3879,11 @@
         return;
       }
 
-      // "전체" + 사용 가능한 도시 버튼들 (각 도시 옆에 박람회 수)
+      // "전체" + 사용 가능한 도시 버튼들
       const html = [
         `<button class="chat-option-btn" data-city="">📍 ${chatState.region} 전체</button>`,
         ...availableCities.map(c =>
-          `<button class="chat-option-btn" data-city="${c}">${c} <span style="opacity:0.6;font-weight:500;">(${cityCounts[c]})</span></button>`
+          `<button class="chat-option-btn" data-city="${c}">${c}</button>`
         )
       ].join('');
 
