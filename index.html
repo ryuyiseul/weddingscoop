@@ -2546,9 +2546,8 @@
     <div class="filters-right">
       <div class="sort-select-wrap">
         <select id="sortSelect" class="sort-select">
-          <option value="recommended">추천순</option>
-          <option value="soon">임박순</option>
-          <option value="later">늦은 순</option>
+          <option value="recent">최신등록</option>
+          <option value="ending">마감임박</option>
         </select>
         <span class="sort-arrow">▾</span>
       </div>
@@ -2819,8 +2818,8 @@
   let allExpos = [];
   // 초기값은 일단 '전체보기', loadExpos() 후 syncFromUrl()이 URL에 따라 덮어씀
   let activeRegion = '전체보기';
-  // 정렬 상태 (기본: 추천순)
-  let currentSort = 'recommended';
+  // 정렬 상태 (기본: 최신등록)
+  let currentSort = 'recent';
 
   const grid = document.getElementById('grid');
   const regionFilter = document.getElementById('regionFilter');
@@ -2847,16 +2846,18 @@
       ? allExpos
       : allExpos.filter(e => e.region === activeRegion);
 
-    // 정렬: currentSort 값에 따라 분기
-    if (currentSort === 'recommended') {
-      // 추천순: cpaad API 응답 순서 (NEW 먼저)
-      filtered.sort((a, b) => (a.apiIndex ?? 0) - (b.apiIndex ?? 0));
-    } else if (currentSort === 'later') {
-      // 늦은 날짜순: 미래로 먼 것이 위
-      filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+    // 정렬:
+    //  - recent: cpaad API 응답 순서 (최신 등록 박람회가 위)
+    //  - ending: 종료일이 가까운 순 (마감임박)
+    if (currentSort === 'ending') {
+      filtered.sort((a, b) => {
+        const aEnd = new Date(a.endDate || a.date);
+        const bEnd = new Date(b.endDate || b.date);
+        return aEnd - bEnd;
+      });
     } else {
-      // 임박순 (기본): 가까운 날짜가 위
-      filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+      // recent (기본값)
+      filtered.sort((a, b) => (a.apiIndex ?? 0) - (b.apiIndex ?? 0));
     }
 
     countNum.textContent = String(filtered.length).padStart(2, '0');
