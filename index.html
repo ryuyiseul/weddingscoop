@@ -1856,16 +1856,18 @@
       display: none;
     }
 
-    /* 메인 그리드 — 모바일에서 1열 (카드 크게) */
-    main { padding: 40px 18px 64px; }
+    /* 메인 그리드 — 모바일 2열 */
+    main { padding: 40px 14px 64px; }
     .grid {
-      grid-template-columns: 1fr;
-      gap: 40px 0;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 28px 10px;
     }
 
     /* 카드 */
     .card {
       padding: 0;
+      border-top-width: 3px;
+      border-bottom-width: 3px;
     }
     .card:hover {
       box-shadow: none;
@@ -1876,30 +1878,37 @@
       filter: none;
     }
     .card-body {
-      padding: 16px 14px 14px;
-      gap: 8px;
+      padding: 12px 10px 10px;
+      gap: 6px;
     }
     .card-badge {
-      font-size: 11px;
-      padding: 4px 10px;
+      font-size: 10px;
+      padding: 3px 8px;
     }
     .card-title {
-      font-size: 18px;
+      font-size: 14px;
       line-height: 1.35;
+      letter-spacing: -0.02em;
+    }
+    .card-meta {
+      margin: 2px 0 4px;
+      gap: 4px;
     }
     .card-meta-item {
-      font-size: 13px;
+      font-size: 11px;
+      gap: 6px;
     }
     .card-meta-icon {
-      width: 13px;
-      height: 13px;
+      width: 11px;
+      height: 11px;
     }
     .card-cta {
-      padding: 15px 12px;
-      font-size: 15px;
+      padding: 11px 8px;
+      font-size: 12px;
+      gap: 4px;
     }
     .card-cta-arrow {
-      font-size: 17px;
+      font-size: 14px;
     }
 
     /* FAQ 모바일 */
@@ -2016,8 +2025,24 @@
     .value-desc { font-size: 10px; line-height: 1.5; margin-top: 10px; }
 
     .filters-section { padding: 14px 16px; }
-    main { padding: 32px 16px 56px; }
-    .card-title { font-size: 19px; }
+    main { padding: 32px 12px 56px; }
+    .grid {
+      gap: 24px 8px;
+    }
+    .card-body {
+      padding: 10px 8px 8px;
+      gap: 5px;
+    }
+    .card-title { font-size: 13px; }
+    .card-meta-item { font-size: 10.5px; }
+    .card-cta {
+      padding: 10px 6px;
+      font-size: 11.5px;
+    }
+    .card-badge {
+      font-size: 9.5px;
+      padding: 3px 7px;
+    }
   }
 
   /* === 터치 디바이스 최적화 === */
