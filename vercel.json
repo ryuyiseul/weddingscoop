@@ -7,6 +7,19 @@
       "maxDuration": 30
     }
   },
+  "rewrites": [
+    { "source": "/seoul", "destination": "/index.html" },
+    { "source": "/gyeonggi", "destination": "/index.html" },
+    { "source": "/incheon", "destination": "/index.html" },
+    { "source": "/busan", "destination": "/index.html" },
+    { "source": "/gyeongsang", "destination": "/index.html" },
+    { "source": "/gwangju", "destination": "/index.html" },
+    { "source": "/jeju", "destination": "/index.html" },
+    { "source": "/gangwon", "destination": "/index.html" },
+    { "source": "/chungcheong", "destination": "/index.html" },
+    { "source": "/jeolla", "destination": "/index.html" },
+    { "source": "/etc", "destination": "/index.html" }
+  ],
   "headers": [
     {
       "source": "/expos.json",

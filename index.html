@@ -2752,6 +2752,7 @@
     today.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
 
   let allExpos = [];
+  // 초기값은 일단 '전체보기', loadExpos() 후 syncFromUrl()이 URL에 따라 덮어씀
   let activeRegion = '전체보기';
 
   const grid = document.getElementById('grid');
@@ -2838,6 +2839,62 @@
   // 고정 지역 목록 — 박람회 유무와 관계없이 항상 표시
   const FIXED_REGIONS = ['전체보기', '서울', '경기', '인천', '부산', '경상', '광주', '제주', '강원', '충청', '전라', '기타'];
 
+  // 한글 지역명 ↔ URL 슬러그 매핑
+  const REGION_TO_SLUG = {
+    '전체보기': '',
+    '서울': 'seoul',
+    '경기': 'gyeonggi',
+    '인천': 'incheon',
+    '부산': 'busan',
+    '경상': 'gyeongsang',
+    '광주': 'gwangju',
+    '제주': 'jeju',
+    '강원': 'gangwon',
+    '충청': 'chungcheong',
+    '전라': 'jeolla',
+    '기타': 'etc',
+  };
+  const SLUG_TO_REGION = Object.fromEntries(
+    Object.entries(REGION_TO_SLUG).map(([k, v]) => [v, k])
+  );
+
+  // URL에서 현재 지역 읽기
+  function getRegionFromUrl() {
+    const path = window.location.pathname.replace(/^\/|\/$/g, '').toLowerCase();
+    if (!path) return '전체보기';
+    return SLUG_TO_REGION[path] || '전체보기';
+  }
+
+  // URL + 페이지 제목 업데이트
+  function updateUrlAndTitle(region) {
+    const slug = REGION_TO_SLUG[region];
+    const newPath = slug ? `/${slug}` : '/';
+    // 현재 URL과 다를 때만 push (중복 히스토리 방지)
+    if (window.location.pathname !== newPath) {
+      window.history.pushState({ region }, '', newPath);
+    }
+    // SEO용 title + description 동적 변경
+    if (region === '전체보기') {
+      document.title = 'Wedding&Scoop — 전국 웨딩박람회 혜택 | 무료초대권 신청';
+    } else {
+      document.title = `${region} 웨딩박람회 혜택 | 무료초대권 신청 — Wedding&Scoop`;
+    }
+  }
+
+  // URL 변경 시 activeRegion 동기화 (초기 로드 + 뒤로가기/앞으로가기)
+  function syncFromUrl() {
+    activeRegion = getRegionFromUrl();
+    // 필터 버튼 active 상태 업데이트
+    regionFilter.querySelectorAll('.filter-btn').forEach(b => {
+      if (b.dataset.region === activeRegion) b.classList.add('active');
+      else b.classList.remove('active');
+    });
+    render();
+  }
+
+  // 브라우저 뒤로가기/앞으로가기 처리
+  window.addEventListener('popstate', syncFromUrl);
+
   function buildRegionFilter() {
     regionFilter.innerHTML = FIXED_REGIONS.map(r => `
       <button class="filter-btn ${r === activeRegion ? 'active' : ''}" data-region="${r}">${r}</button>
@@ -2847,7 +2904,10 @@
         activeRegion = btn.dataset.region;
         regionFilter.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
+        updateUrlAndTitle(activeRegion);
         render();
+        // 박람회 그리드로 스크롤
+        document.getElementById('campaigns')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     });
   }
@@ -2972,7 +3032,10 @@
       console.log(`[API] 렌더링 대상: ${allExpos.length}개`);
 
       buildRegionFilter();
-      render();
+      // URL에서 지역 읽어서 반영 (직접 /seoul 같은 URL로 들어온 경우)
+      syncFromUrl();
+      // 초기 title 설정
+      updateUrlAndTitle(activeRegion);
     } catch (err) {
       console.error('[API Error]', err);
       grid.innerHTML = '<div class="empty">박람회 정보를 불러오지 못했습니다.<br/><small style="opacity:0.6;">잠시 후 다시 시도해주세요.</small></div>';
