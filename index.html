@@ -3870,8 +3870,31 @@
       const top = filtered.slice(0, 5);
 
       if (top.length === 0) {
-        addBotMessage(`아쉽지만 <strong>${chatState.region}</strong>에 ${TYPE_LABELS[chatState.type]} 박람회가 지금 없어요 😢`);
-        addEmpty('다른 지역이나 종류로 다시 찾아볼까요?');
+        // 폴백: 종류 매칭 없으면 해당 지역 전체에서 마감임박 5개
+        const fallback = (window.allExpos || [])
+          .filter(e => e.region === chatState.region)
+          .sort((a, b) => {
+            const aEnd = new Date(a.endDate || a.date);
+            const bEnd = new Date(b.endDate || b.date);
+            return aEnd - bEnd;
+          })
+          .slice(0, 5);
+
+        if (fallback.length === 0) {
+          // 그 지역에 박람회 자체가 없는 경우
+          addBotMessage(`아쉽지만 <strong>${chatState.region}</strong>에는 지금 진행 중인 박람회가 없어요 😢`);
+          addEmpty('다른 지역으로 다시 찾아볼까요?');
+        } else {
+          // 종류 매칭은 안 됐지만 그 지역에 박람회는 있음
+          addBotMessage(`<strong>${chatState.region}</strong>에 ${TYPE_LABELS[chatState.type]} 전용 박람회는 없지만,<br/><strong>마감임박 박람회 ${fallback.length}개</strong>를 추천드려요! 🎁<br/>대부분 종합 박람회라 ${TYPE_LABELS[chatState.type]} 정보도 함께 받으실 수 있어요.`);
+          fallback.forEach((expo, i) => {
+            setTimeout(() => addExpoCard(expo), 200 * (i + 1));
+          });
+        }
+
+        // 폴백 결과에 맞춰 처음으로/전체 보기 버튼
+        const buttonsDelay = fallback.length === 0 ? 200 : 200 * (fallback.length + 2);
+        setTimeout(() => addEndOptions(), buttonsDelay);
       } else {
         addBotMessage(`<strong>${chatState.region}</strong>의 ${TYPE_LABELS[chatState.type]} 박람회를 <strong>${filtered.length}개</strong> 찾았어요! 🎉<br/>마감임박 순으로 보여드릴게요.`);
         top.forEach((expo, i) => {
@@ -3882,29 +3905,27 @@
             addEmpty(`+${filtered.length - 5}개 박람회가 더 있어요. 메인 페이지에서 확인하세요.`);
           }, 200 * (top.length + 1));
         }
+        setTimeout(() => addEndOptions(), 200 * (top.length + 2));
       }
+    }
 
-      // 마지막에 처음으로 버튼
-      setTimeout(() => {
-        const wrap = document.createElement('div');
-        wrap.className = 'chat-options';
-        wrap.innerHTML = `
-          <button class="chat-option-btn" id="chatRestart">🔄 처음부터 다시</button>
-          <button class="chat-option-btn" id="chatViewAll">📋 전체 보기</button>
-        `;
-        messages.appendChild(wrap);
-        scrollToBottom();
-        wrap.querySelector('#chatRestart').addEventListener('click', () => {
-          startChat();
-        });
-        wrap.querySelector('#chatViewAll').addEventListener('click', () => {
-          // 챗봇 닫고 해당 지역 필터 적용 + 스크롤
-          closeChat();
-          // 지역 필터 클릭 시뮬레이션
-          const targetBtn = document.querySelector(`#regionFilter .filter-btn[data-region="${chatState.region}"]`);
-          if (targetBtn) targetBtn.click();
-        });
-      }, 200 * (top.length + 2));
+    function addEndOptions() {
+      const wrap = document.createElement('div');
+      wrap.className = 'chat-options';
+      wrap.innerHTML = `
+        <button class="chat-option-btn" id="chatRestart">🔄 처음부터 다시</button>
+        <button class="chat-option-btn" id="chatViewAll">📋 전체 보기</button>
+      `;
+      messages.appendChild(wrap);
+      scrollToBottom();
+      wrap.querySelector('#chatRestart').addEventListener('click', () => {
+        startChat();
+      });
+      wrap.querySelector('#chatViewAll').addEventListener('click', () => {
+        closeChat();
+        const targetBtn = document.querySelector(`#regionFilter .filter-btn[data-region="${chatState.region}"]`);
+        if (targetBtn) targetBtn.click();
+      });
     }
   })();
 </script>
