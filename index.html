@@ -225,6 +225,335 @@
       bottom: 32px;
     }
   }
+
+  /* ═══ CHATBOT ═══ */
+  .chatbot-toggle {
+    position: fixed;
+    bottom: 48px;
+    right: 24px;
+    z-index: 201;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease, background 0.3s ease;
+    animation: chatbotPulse 2.5s ease-in-out infinite;
+  }
+  .chatbot-toggle:hover {
+    background: var(--red);
+    animation-play-state: paused;
+  }
+  .chatbot-toggle svg {
+    width: 26px;
+    height: 26px;
+  }
+  .chatbot-toggle .badge-dot {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 10px;
+    height: 10px;
+    background: var(--red);
+    border-radius: 50%;
+    border: 2px solid var(--paper);
+    animation: dotPulse 1.4s ease-in-out infinite;
+  }
+  @keyframes chatbotPulse {
+    0%, 100% { box-shadow: 0 8px 24px rgba(0,0,0,0.25), 0 0 0 0 rgba(184, 35, 47, 0.4); }
+    50% { box-shadow: 0 8px 24px rgba(0,0,0,0.25), 0 0 0 12px rgba(184, 35, 47, 0); }
+  }
+  @keyframes dotPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* 챗봇 패널 */
+  .chatbot-panel {
+    position: fixed;
+    bottom: 120px;
+    right: 24px;
+    z-index: 200;
+    width: 380px;
+    max-width: calc(100vw - 32px);
+    height: 580px;
+    max-height: calc(100vh - 160px);
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px) scale(0.95);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+  }
+  .chatbot-panel.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+  }
+
+  /* 헤더 */
+  .chatbot-header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .chatbot-header-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .chatbot-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--paper);
+    font-family: 'Fraunces', serif;
+    font-weight: 800;
+    font-size: 17px;
+  }
+  .chatbot-title {
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+  .chatbot-status {
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 11px;
+    color: rgba(255,255,255,0.65);
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .chatbot-status::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: #22c55e;
+    border-radius: 50%;
+  }
+  .chatbot-close {
+    background: transparent;
+    border: none;
+    color: var(--paper);
+    cursor: pointer;
+    padding: 6px;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+  }
+  .chatbot-close:hover { opacity: 1; }
+  .chatbot-close svg { width: 22px; height: 22px; }
+
+  /* 메시지 영역 */
+  .chatbot-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 16px;
+    background: var(--paper-soft);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .chatbot-messages::-webkit-scrollbar { width: 6px; }
+  .chatbot-messages::-webkit-scrollbar-thumb {
+    background: var(--line);
+    border-radius: 3px;
+  }
+
+  /* 메시지 버블 */
+  .chat-msg {
+    max-width: 85%;
+    animation: msgIn 0.3s ease;
+  }
+  @keyframes msgIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .chat-msg-bot {
+    align-self: flex-start;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .chat-msg-bot-avatar {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fraunces', serif;
+    font-weight: 800;
+    font-size: 13px;
+  }
+  .chat-msg-bot-bubble {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    padding: 12px 14px;
+    border-radius: 4px 14px 14px 14px;
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.55;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .chat-msg-user {
+    align-self: flex-end;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 10px 14px;
+    border-radius: 14px 14px 4px 14px;
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  /* 옵션 버튼 */
+  .chat-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-self: flex-start;
+    max-width: 100%;
+    padding-left: 36px;
+    animation: msgIn 0.4s ease 0.1s both;
+  }
+  .chat-option-btn {
+    background: var(--paper);
+    border: 1.5px solid var(--ink);
+    color: var(--ink);
+    padding: 9px 14px;
+    border-radius: 999px;
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: -0.01em;
+  }
+  .chat-option-btn:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .chat-option-btn:active { transform: scale(0.96); }
+
+  /* 박람회 결과 카드 (챗봇 안) */
+  .chat-expo-card {
+    display: flex;
+    gap: 10px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px;
+    text-decoration: none;
+    color: inherit;
+    align-self: stretch;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+    margin-left: 36px;
+  }
+  .chat-expo-card:hover {
+    border-color: var(--red);
+    transform: translateY(-2px);
+  }
+  .chat-expo-thumb {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    flex-shrink: 0;
+    border-radius: 4px;
+    background: var(--paper-soft);
+  }
+  .chat-expo-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 2px 0;
+  }
+  .chat-expo-title {
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1.3;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  .chat-expo-meta {
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 11px;
+    color: var(--muted-dark);
+    margin-top: 4px;
+    font-weight: 500;
+  }
+  .chat-expo-meta strong {
+    color: var(--red);
+    font-weight: 700;
+  }
+
+  .chat-empty {
+    align-self: stretch;
+    margin-left: 36px;
+    padding: 16px;
+    background: var(--paper);
+    border: 1px dashed var(--line);
+    border-radius: 8px;
+    text-align: center;
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 13px;
+    color: var(--muted-dark);
+    line-height: 1.5;
+  }
+
+  /* 모바일 풀스크린 */
+  @media (max-width: 540px) {
+    .chatbot-toggle {
+      bottom: 32px;
+      right: 16px;
+      width: 56px;
+      height: 56px;
+    }
+    .chatbot-panel {
+      bottom: 0;
+      right: 0;
+      width: 100%;
+      height: 100vh;
+      max-height: 100vh;
+      max-width: 100%;
+      border-radius: 0;
+      border: none;
+    }
+  }
+
   /* ═══ TICKER (무한 스크롤 라인) ═══ */
   .ticker {
     background: var(--red);
@@ -2792,6 +3121,32 @@
   <span>박람회 무료초대권 받기</span>
 </a>
 
+<!-- ═══ 챗봇 ═══ -->
+<button class="chatbot-toggle" id="chatbotToggle" aria-label="박람회 추천 챗봇 열기">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+  </svg>
+  <span class="badge-dot"></span>
+</button>
+<div class="chatbot-panel" id="chatbotPanel" role="dialog" aria-label="박람회 추천 챗봇">
+  <div class="chatbot-header">
+    <div class="chatbot-header-info">
+      <div class="chatbot-avatar">W</div>
+      <div>
+        <div class="chatbot-title">웨딩스쿱 도우미</div>
+        <div class="chatbot-status">실시간 박람회 추천 중</div>
+      </div>
+    </div>
+    <button class="chatbot-close" id="chatbotClose" aria-label="챗봇 닫기">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+  <div class="chatbot-messages" id="chatbotMessages"></div>
+</div>
+
 <footer>
   <div class="footer-inner">
     <div>
@@ -3111,6 +3466,7 @@
 
       // 미래 박람회만 (오늘 이후에 끝나는 것)
       allExpos = filterActive(all);
+      window.allExpos = allExpos; // 챗봇에서 접근용
 
       console.log(`[API] 렌더링 대상: ${allExpos.length}개`);
 
@@ -3323,6 +3679,234 @@
 
   window.addEventListener('resize', updateFloatingVisibility);
   updateFloatingVisibility(); // 초기 상태
+
+  // ═══════ 챗봇 ═══════
+  (function() {
+    const toggle = document.getElementById('chatbotToggle');
+    const panel = document.getElementById('chatbotPanel');
+    const closeBtn = document.getElementById('chatbotClose');
+    const messages = document.getElementById('chatbotMessages');
+    const dot = toggle.querySelector('.badge-dot');
+
+    if (!toggle || !panel || !messages) return;
+
+    let chatState = { region: null, type: null };
+
+    // 박람회 종류 키워드 매핑 (gather_name + ad_info 검색)
+    const TYPE_KEYWORDS = {
+      'all': null, // 모든 박람회
+      'wedding-hall': ['웨딩홀', '예식장', '예식'],
+      'dress': ['드레스', '스타일링', '스튜디오', '메이크업', '뷰티'],
+      'honeymoon': ['허니문', '신혼여행'],
+    };
+
+    const TYPE_LABELS = {
+      'all': '종합 박람회',
+      'wedding-hall': '웨딩홀 위주',
+      'dress': '드레스/스타일링',
+      'honeymoon': '신혼여행',
+    };
+
+    // 박람회 종류 판별 — 종합은 키워드 없는 것
+    function matchesType(expo, type) {
+      if (type === 'all') {
+        // 종합 = 특정 카테고리 키워드가 모두 없는 것 (또는 "종합" 단어 포함)
+        const text = (expo.title + ' ' + (expo.info || '')).toLowerCase();
+        const hasSpecific = ['웨딩홀', '예식장', '드레스', '스튜디오', '메이크업', '허니문', '신혼여행', '혼수가전']
+          .some(kw => text.includes(kw.toLowerCase()));
+        return !hasSpecific;
+      }
+      const keywords = TYPE_KEYWORDS[type];
+      if (!keywords) return true;
+      const text = (expo.title + ' ' + (expo.info || '')).toLowerCase();
+      return keywords.some(kw => text.includes(kw.toLowerCase()));
+    }
+
+    // 챗봇 토글
+    let isOpen = false;
+    function openChat() {
+      isOpen = true;
+      panel.classList.add('open');
+      if (dot) dot.style.display = 'none';
+      // 첫 진입 시 인사
+      if (messages.children.length === 0) {
+        startChat();
+      }
+    }
+    function closeChat() {
+      isOpen = false;
+      panel.classList.remove('open');
+    }
+    toggle.addEventListener('click', () => isOpen ? closeChat() : openChat());
+    closeBtn.addEventListener('click', closeChat);
+
+    // 메시지 추가 함수들
+    function addBotMessage(text, optionsHtml = '') {
+      const msg = document.createElement('div');
+      msg.className = 'chat-msg chat-msg-bot';
+      msg.innerHTML = `
+        <div class="chat-msg-bot-avatar">W</div>
+        <div class="chat-msg-bot-bubble">${text}</div>
+      `;
+      messages.appendChild(msg);
+      if (optionsHtml) {
+        const opts = document.createElement('div');
+        opts.className = 'chat-options';
+        opts.innerHTML = optionsHtml;
+        messages.appendChild(opts);
+      }
+      scrollToBottom();
+    }
+    function addUserMessage(text) {
+      const msg = document.createElement('div');
+      msg.className = 'chat-msg chat-msg-user';
+      msg.textContent = text;
+      messages.appendChild(msg);
+      scrollToBottom();
+    }
+    function addExpoCard(expo) {
+      const card = document.createElement('a');
+      card.className = 'chat-expo-card';
+      card.href = expo.link;
+      card.target = '_blank';
+      card.rel = 'noopener';
+      const dateText = formatChatDate(expo.date, expo.endDate);
+      const thumb = expo.thumbnail || '';
+      card.innerHTML = `
+        <img class="chat-expo-thumb" src="${thumb}" alt="${expo.title}" loading="lazy" />
+        <div class="chat-expo-info">
+          <div class="chat-expo-title">${expo.title}</div>
+          <div class="chat-expo-meta">📅 <strong>${dateText}</strong> · 📍 ${expo.region}</div>
+        </div>
+      `;
+      messages.appendChild(card);
+      scrollToBottom();
+    }
+    function addEmpty(text) {
+      const div = document.createElement('div');
+      div.className = 'chat-empty';
+      div.innerHTML = text;
+      messages.appendChild(div);
+      scrollToBottom();
+    }
+    function scrollToBottom() {
+      setTimeout(() => { messages.scrollTop = messages.scrollHeight; }, 50);
+    }
+
+    function formatChatDate(start, end) {
+      if (!start) return '';
+      const s = new Date(start);
+      const sm = s.getMonth() + 1, sd = s.getDate();
+      if (end && end !== start) {
+        const e = new Date(end);
+        const em = e.getMonth() + 1, ed = e.getDate();
+        if (sm === em) return `${sm}월 ${sd}일 - ${ed}일`;
+        return `${sm}월 ${sd}일 - ${em}월 ${ed}일`;
+      }
+      return `${sm}월 ${sd}일`;
+    }
+
+    // 대화 흐름 함수들
+    function startChat() {
+      chatState = { region: null, type: null };
+      messages.innerHTML = '';
+      setTimeout(() => {
+        addBotMessage('안녕하세요! 웨딩스쿱 도우미예요 💌<br/>박람회 추천해드릴게요. 어느 지역에서 알아보세요?');
+        showRegionOptions();
+      }, 200);
+    }
+
+    function showRegionOptions() {
+      const regions = FIXED_REGIONS.filter(r => r !== '전체보기');
+      const html = regions.map(r =>
+        `<button class="chat-option-btn" data-region="${r}">${r}</button>`
+      ).join('');
+      const wrap = document.createElement('div');
+      wrap.className = 'chat-options';
+      wrap.innerHTML = html;
+      messages.appendChild(wrap);
+      wrap.querySelectorAll('.chat-option-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          chatState.region = btn.dataset.region;
+          // 옵션들 비활성화
+          wrap.remove();
+          addUserMessage(chatState.region);
+          setTimeout(() => askType(), 400);
+        });
+      });
+      scrollToBottom();
+    }
+
+    function askType() {
+      const html = Object.entries(TYPE_LABELS).map(([key, label]) => {
+        const emoji = key === 'all' ? '✨' : key === 'wedding-hall' ? '💐' : key === 'dress' ? '👗' : '🌴';
+        return `<button class="chat-option-btn" data-type="${key}">${emoji} ${label}</button>`;
+      }).join('');
+      addBotMessage(`좋아요! <strong>${chatState.region}</strong>에서 어떤 박람회를 찾으세요?`, html);
+      const opts = messages.querySelector('.chat-options:last-of-type');
+      opts.querySelectorAll('.chat-option-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          chatState.type = btn.dataset.type;
+          opts.remove();
+          addUserMessage(TYPE_LABELS[chatState.type]);
+          setTimeout(() => showResults(), 600);
+        });
+      });
+    }
+
+    function showResults() {
+      // 데이터 필터링
+      const filtered = (window.allExpos || []).filter(e =>
+        e.region === chatState.region && matchesType(e, chatState.type)
+      );
+
+      // 마감임박 순으로 정렬
+      filtered.sort((a, b) => {
+        const aEnd = new Date(a.endDate || a.date);
+        const bEnd = new Date(b.endDate || b.date);
+        return aEnd - bEnd;
+      });
+
+      const top = filtered.slice(0, 5);
+
+      if (top.length === 0) {
+        addBotMessage(`아쉽지만 <strong>${chatState.region}</strong>에 ${TYPE_LABELS[chatState.type]} 박람회가 지금 없어요 😢`);
+        addEmpty('다른 지역이나 종류로 다시 찾아볼까요?');
+      } else {
+        addBotMessage(`<strong>${chatState.region}</strong>의 ${TYPE_LABELS[chatState.type]} 박람회를 <strong>${filtered.length}개</strong> 찾았어요! 🎉<br/>마감임박 순으로 보여드릴게요.`);
+        top.forEach((expo, i) => {
+          setTimeout(() => addExpoCard(expo), 200 * (i + 1));
+        });
+        if (filtered.length > 5) {
+          setTimeout(() => {
+            addEmpty(`+${filtered.length - 5}개 박람회가 더 있어요. 메인 페이지에서 확인하세요.`);
+          }, 200 * (top.length + 1));
+        }
+      }
+
+      // 마지막에 처음으로 버튼
+      setTimeout(() => {
+        const wrap = document.createElement('div');
+        wrap.className = 'chat-options';
+        wrap.innerHTML = `
+          <button class="chat-option-btn" id="chatRestart">🔄 처음부터 다시</button>
+          <button class="chat-option-btn" id="chatViewAll">📋 전체 보기</button>
+        `;
+        messages.appendChild(wrap);
+        scrollToBottom();
+        wrap.querySelector('#chatRestart').addEventListener('click', () => {
+          startChat();
+        });
+        wrap.querySelector('#chatViewAll').addEventListener('click', () => {
+          // 챗봇 닫고 해당 지역 필터 적용 + 스크롤
+          closeChat();
+          // 지역 필터 클릭 시뮬레이션
+          const targetBtn = document.querySelector(`#regionFilter .filter-btn[data-region="${chatState.region}"]`);
+          if (targetBtn) targetBtn.click();
+        });
+      }, 200 * (top.length + 2));
+    }
+  })();
 </script>
 
 </body>
