@@ -724,10 +724,9 @@
     max-width: 1400px;
     margin: 0 auto;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 24px;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
     position: relative;
   }
   .filters-label {
@@ -755,7 +754,6 @@
     gap: 6px;
     flex-wrap: wrap;
     justify-content: center;
-    flex: 1;
   }
   .filter-btn {
     font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -794,13 +792,14 @@
     font-variant-numeric: tabular-nums;
   }
 
-  /* 필터 섹션 우측 그룹 (정렬 + 카운트) */
+  /* 필터 섹션 우측 그룹 (정렬 + 카운트) - 항상 별도 줄 */
   .filters-right {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     gap: 16px;
-    position: absolute;
-    right: 0;
+    width: 100%;
+    padding-top: 4px;
   }
   .sort-select-wrap {
     position: relative;
@@ -1960,15 +1959,8 @@
     .count-badge {
       display: none;
     }
-    /* 모바일: filters-right 위치 조정 — 지역 필터 아래 전체 너비로 */
-    .filters-inner {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 12px;
-    }
     .filters-right {
-      position: static;
-      justify-content: flex-end;
+      padding-top: 0;
       gap: 12px;
     }
     .sort-select {
