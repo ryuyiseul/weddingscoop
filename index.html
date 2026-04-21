@@ -2718,7 +2718,14 @@
       ? allExpos
       : allExpos.filter(e => e.region === activeRegion);
 
-    filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+    // 정렬 전략:
+    //  - 전체보기: cpaad 응답 순서 유지 (최신 등록/추천 박람회가 위)
+    //  - 지역별 필터: 가까운 날짜부터 (사용자가 당장 갈 수 있는 것)
+    if (activeRegion === '전체보기') {
+      filtered.sort((a, b) => (a.apiIndex ?? 0) - (b.apiIndex ?? 0));
+    } else {
+      filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+    }
 
     countNum.textContent = String(filtered.length).padStart(2, '0');
 
@@ -2845,9 +2852,10 @@
   }
 
   // 개별 광고 항목 → 내부 형식 정규화
-  function normalizeExpo(adId, raw) {
+  function normalizeExpo(adId, raw, apiIndex) {
     return {
       id: adId,
+      apiIndex: apiIndex, // API 응답 순서 (cpaad가 위에 올린 = 최신/추천)
       title: raw.gather_name || '',
       info: raw.ad_info || '',
       date: normalizeDate(raw.start_date),
@@ -2889,9 +2897,9 @@
       const entries = Object.entries(ads);
       console.log(`[API] 총 ${entries.length}개 광고 수신`);
 
-      // 정규화
+      // 정규화 (API 응답 순서를 apiIndex로 저장)
       const all = entries
-        .map(([id, raw]) => normalizeExpo(id, raw))
+        .map(([id, raw], idx) => normalizeExpo(id, raw, idx))
         .filter(e => e.title); // 제목 있는 것만
 
       // 미래 박람회만 (오늘 이후에 끝나는 것)
