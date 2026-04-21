@@ -2902,21 +2902,20 @@
   }
 
   // 고정 지역 목록 — 박람회 유무와 관계없이 항상 표시
-  const FIXED_REGIONS = ['전체보기', '서울', '경기', '인천', '부산', '경상', '광주', '제주', '강원', '충청', '전라', '기타'];
+  const FIXED_REGIONS = ['전체보기', '서울', '경기도', '인천', '부산', '충청', '전라', '강원', '경상', '제주도', '기타'];
 
   // 한글 지역명 ↔ URL 슬러그 매핑
   const REGION_TO_SLUG = {
     '전체보기': '',
     '서울': 'seoul',
-    '경기': 'gyeonggi',
+    '경기도': 'gyeonggi',
     '인천': 'incheon',
     '부산': 'busan',
-    '경상': 'gyeongsang',
-    '광주': 'gwangju',
-    '제주': 'jeju',
-    '강원': 'gangwon',
     '충청': 'chungcheong',
     '전라': 'jeolla',
+    '강원': 'gangwon',
+    '경상': 'gyeongsang',
+    '제주도': 'jeju',
     '기타': 'etc',
   };
   const SLUG_TO_REGION = Object.fromEntries(
@@ -2995,14 +2994,14 @@
   // API 응답: capital(서울), gyeonggi, incheon, chungcheong, jeolla, gangwon, gyeongsang, busan, jeju, etc
   const REGION_MAP = {
     'capital': '서울',
-    'gyeonggi': '경기',
+    'gyeonggi': '경기도',
     'incheon': '인천',
     'chungcheong': '충청',
     'jeolla': '전라',
     'gangwon': '강원',
     'gyeongsang': '경상',
     'busan': '부산',
-    'jeju': '제주',
+    'jeju': '제주도',
     'etc': '기타',
   };
 
