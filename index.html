@@ -232,32 +232,45 @@
     bottom: 48px;
     right: 24px;
     z-index: 201;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
+    width: 72px;
+    height: 84px;
+    border-radius: 18px;
     background: var(--ink);
     color: var(--paper);
     border: none;
     cursor: pointer;
     box-shadow: 0 8px 24px rgba(0,0,0,0.25);
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 4px;
+    padding: 10px 8px;
     transition: transform 0.3s ease, background 0.3s ease;
     animation: chatbotPulse 2.5s ease-in-out infinite;
   }
   .chatbot-toggle:hover {
     background: var(--red);
     animation-play-state: paused;
+    transform: translateY(-2px);
   }
   .chatbot-toggle svg {
-    width: 26px;
-    height: 26px;
+    width: 28px;
+    height: 28px;
+  }
+  .chatbot-toggle .toggle-label {
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    text-align: center;
+    white-space: nowrap;
   }
   .chatbot-toggle .badge-dot {
     position: absolute;
-    top: 12px;
-    right: 12px;
+    top: 8px;
+    right: 8px;
     width: 10px;
     height: 10px;
     background: var(--red);
@@ -267,7 +280,7 @@
   }
   @keyframes chatbotPulse {
     0%, 100% { box-shadow: 0 8px 24px rgba(0,0,0,0.25), 0 0 0 0 rgba(184, 35, 47, 0.4); }
-    50% { box-shadow: 0 8px 24px rgba(0,0,0,0.25), 0 0 0 12px rgba(184, 35, 47, 0); }
+    50% { box-shadow: 0 8px 24px rgba(0,0,0,0.25), 0 0 0 10px rgba(184, 35, 47, 0); }
   }
   @keyframes dotPulse {
     0%, 100% { opacity: 1; }
@@ -539,8 +552,17 @@
     .chatbot-toggle {
       bottom: 32px;
       right: 16px;
-      width: 56px;
-      height: 56px;
+      width: 66px;
+      height: 78px;
+      border-radius: 16px;
+      padding: 8px 6px;
+    }
+    .chatbot-toggle svg {
+      width: 24px;
+      height: 24px;
+    }
+    .chatbot-toggle .toggle-label {
+      font-size: 9.5px;
     }
     .chatbot-panel {
       bottom: 0;
@@ -3126,6 +3148,7 @@
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
   </svg>
+  <span class="toggle-label">맞춤 박람회<br/>추천</span>
   <span class="badge-dot"></span>
 </button>
 <div class="chatbot-panel" id="chatbotPanel" role="dialog" aria-label="박람회 추천 챗봇">
