@@ -3885,8 +3885,8 @@
           addBotMessage(`아쉽지만 <strong>${chatState.region}</strong>에는 지금 진행 중인 박람회가 없어요 😢`);
           addEmpty('다른 지역으로 다시 찾아볼까요?');
         } else {
-          // 종류 매칭은 안 됐지만 그 지역에 박람회는 있음
-          addBotMessage(`<strong>${chatState.region}</strong>에 ${TYPE_LABELS[chatState.type]} 전용 박람회는 없지만,<br/><strong>마감임박 박람회 ${fallback.length}개</strong>를 추천드려요! 🎁<br/>대부분 종합 박람회라 ${TYPE_LABELS[chatState.type]} 정보도 함께 받으실 수 있어요.`);
+          // 종류 매칭은 안 됐지만 그 지역에 박람회는 있음 — 자연스러운 추천 톤
+          addBotMessage(`<strong>${chatState.region}</strong>의 <strong>마감임박 박람회 ${fallback.length}개</strong>를 추천드려요! 🎁<br/>지금 신청 가능한 박람회 위주로 보여드릴게요.`);
           fallback.forEach((expo, i) => {
             setTimeout(() => addExpoCard(expo), 200 * (i + 1));
           });
