@@ -816,7 +816,10 @@
     opacity: 0;
     animation: fadeUp 0.6s ease forwards;
     position: relative;
-    border: 1px solid var(--ink);
+    border-left: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+    border-top: 4px solid var(--red);
+    border-bottom: 4px solid var(--red);
     background: var(--paper);
     padding: 0;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
@@ -841,12 +844,12 @@
   /* 이미지 영역 */
   .card-image {
     position: relative;
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 16 / 11;
     overflow: hidden;
     background: var(--paper-soft);
     margin: 0;
     border: none;
-    border-bottom: 1px solid var(--ink);
+    border-bottom: 1px solid var(--line);
   }
   .card-image img {
     width: 100%;
@@ -875,7 +878,7 @@
   .card-badge {
     display: inline-block;
     align-self: flex-start;
-    background: var(--ink);
+    background: var(--red);
     color: var(--paper);
     font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 12px;
@@ -938,9 +941,37 @@
     align-items: center;
     justify-content: center;
     gap: 6px;
+    position: relative;
+    overflow: hidden;
+  }
+  .card-cta::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.18) 50%,
+      transparent 100%
+    );
+    animation: ctaShimmer 2.8s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes ctaShimmer {
+    0% { left: -100%; }
+    50% { left: 150%; }
+    100% { left: 150%; }
   }
   .card:hover .card-cta {
     background: var(--red);
+  }
+  .card-cta > span,
+  .card-cta > .card-cta-arrow {
+    position: relative;
+    z-index: 1;
   }
   .card-cta-arrow {
     font-family: 'Fraunces', serif;
@@ -2695,7 +2726,7 @@
             ` : ''}
           </div>
           <div class="card-cta">
-            무료초대권 신청하기
+            <span>무료초대권 신청하기</span>
             <span class="card-cta-arrow">→</span>
           </div>
         </div>
