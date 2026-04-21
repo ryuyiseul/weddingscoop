@@ -2546,8 +2546,8 @@
     <div class="filters-right">
       <div class="sort-select-wrap">
         <select id="sortSelect" class="sort-select">
-          <option value="recent">최신등록</option>
           <option value="ending">마감임박</option>
+          <option value="recent">최신등록</option>
         </select>
         <span class="sort-arrow">▾</span>
       </div>
@@ -2818,8 +2818,8 @@
   let allExpos = [];
   // 초기값은 일단 '전체보기', loadExpos() 후 syncFromUrl()이 URL에 따라 덮어씀
   let activeRegion = '전체보기';
-  // 정렬 상태 (기본: 최신등록)
-  let currentSort = 'recent';
+  // 정렬 상태 (기본: 마감임박)
+  let currentSort = 'ending';
 
   const grid = document.getElementById('grid');
   const regionFilter = document.getElementById('regionFilter');
