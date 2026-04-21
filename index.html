@@ -891,11 +891,11 @@
 
   /* 제목 */
   .card-title {
-    font-family: 'Noto Serif KR', serif;
+    font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 19px;
-    font-weight: 600;
+    font-weight: 800;
     line-height: 1.35;
-    letter-spacing: -0.015em;
+    letter-spacing: -0.02em;
     color: var(--ink);
     margin: 0;
     transition: color 0.25s ease;
@@ -944,7 +944,6 @@
     gap: 8px;
     position: relative;
     overflow: hidden;
-    animation: ctaPulse 2.6s ease-in-out infinite;
   }
   .card-cta::before {
     content: '';
@@ -967,17 +966,8 @@
     55% { left: 150%; }
     100% { left: 150%; }
   }
-  @keyframes ctaPulse {
-    0%, 100% {
-      box-shadow: 0 0 0 0 rgba(184, 35, 47, 0);
-    }
-    50% {
-      box-shadow: 0 0 0 6px rgba(184, 35, 47, 0.18);
-    }
-  }
   .card:hover .card-cta {
     background: var(--red);
-    animation-play-state: paused;
     box-shadow: 0 4px 16px -4px rgba(184, 35, 47, 0.5);
   }
   .card-cta > span,
