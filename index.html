@@ -1,0 +1,3021 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#0a0a0a" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="format-detection" content="telephone=no" />
+<title>Wedding&Scoop — 전국 웨딩박람회 혜택 | 무료초대권 신청</title>
+<meta name="description" content="전국 웨딩박람회 혜택을 한눈에. 매일 업데이트되는 박람회 정보와 무료초대권 신청 서비스." />
+
+<!-- Open Graph (카톡/페북 공유 시 미리보기) -->
+<meta property="og:site_name" content="Wedding&Scoop" />
+<meta property="og:title" content="Wedding&Scoop" />
+<meta property="og:description" content="전국 웨딩박람회 혜택 | 무료초대권 신청" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://weddingscoop.co.kr" />
+<meta property="og:image" content="https://weddingscoop.co.kr/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Wedding&Scoop — 전국 웨딩박람회 혜택, 무료초대권 신청" />
+<meta property="og:locale" content="ko_KR" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Wedding&Scoop" />
+<meta name="twitter:description" content="전국 웨딩박람회 혜택 | 무료초대권 신청" />
+<meta name="twitter:image" content="https://weddingscoop.co.kr/og-image.png" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,900&family=Inter:wght@300;400;500;600&family=Noto+Serif+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+
+<style>
+  :root {
+    --paper: #fefdfa;
+    --paper-soft: #faf7f0;
+    --ink: #0a0a0a;
+    --ink-soft: #2a2a2a;
+    --red: #b8232f;
+    --red-deep: #8a1a24;
+    --line: #ece9e0;
+    --muted: #8a8680;
+    --muted-dark: #5a5752;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Noto Serif KR', 'Fraunces', serif;
+    font-weight: 400;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ═══ TOP BAR (왼쪽 LIVE / 오른쪽 날짜) ═══ */
+  .topbar {
+    padding: 14px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .topbar .date { font-variant-numeric: tabular-nums; opacity: 0.7; }
+
+  /* 왼쪽 LIVE 강조 */
+  .topbar .live-center {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 16px;
+    border: 1px solid var(--red);
+    background: rgba(255,77,94,0.08);
+    font-weight: 600;
+  }
+  .topbar .live-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--red);
+    animation: livePulse 1.6s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+  @keyframes livePulse {
+    0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(255,77,94,0.7); }
+    50% { opacity: 0.85; transform: scale(1.15); box-shadow: 0 0 0 5px rgba(255,77,94,0); }
+  }
+  .topbar .live-center .ko {
+    font-family: 'Noto Serif KR', serif;
+    letter-spacing: 0.1em;
+    font-weight: 500;
+    font-size: 11px;
+    color: var(--paper);
+  }
+  .topbar .live-center .tag-en {
+    color: var(--red);
+    font-size: 10px;
+  }
+
+  /* ═══ HERO (가운데 정렬 버전) ═══ */
+  .hero {
+    padding: 70px 40px 50px;
+    border-bottom: 2px solid var(--ink);
+    position: relative;
+    text-align: center;
+  }
+  .hero-inline {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    max-width: 1400px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+  }
+  .brand {
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    font-size: clamp(52px, 9vw, 128px);
+    line-height: 0.9;
+    letter-spacing: -0.045em;
+    color: var(--ink);
+  }
+  .brand .amp {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--red);
+  }
+
+  /* ═══ FLOATING CTA (스크롤 따라다니는 버튼) ═══ */
+  .floating-cta {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(0);
+    z-index: 200;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 26px 14px 22px;
+    background: var(--red);
+    color: var(--paper);
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    border-radius: 999px;
+    box-shadow: 0 8px 24px rgba(184, 35, 47, 0.4);
+    cursor: pointer;
+    opacity: 1;
+    visibility: visible;
+    animation: floatBounce 2s ease-in-out infinite;
+    transition: opacity 0.4s ease, visibility 0.4s ease, transform 0.4s ease;
+  }
+  @keyframes floatBounce {
+    0%, 100% {
+      transform: translateX(-50%) translateY(0);
+      box-shadow: 0 8px 24px rgba(184, 35, 47, 0.4);
+    }
+    50% {
+      transform: translateX(-50%) translateY(-8px);
+      box-shadow: 0 14px 32px rgba(184, 35, 47, 0.5);
+    }
+  }
+  .floating-cta.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    animation: none;
+    transform: translateX(-50%) translateY(20px);
+  }
+  .floating-cta:hover {
+    animation-play-state: paused;
+  }
+  .floating-cta .fc-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    background: var(--paper);
+    color: var(--red);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .floating-cta .fc-icon svg {
+    width: 12px;
+    height: 12px;
+    stroke-width: 3;
+  }
+
+  /* 모바일 최적화 */
+  @media (max-width: 480px) {
+    .floating-cta {
+      font-size: 13px;
+      padding: 12px 22px 12px 18px;
+      bottom: 16px;
+    }
+  }
+  /* ═══ TICKER (무한 스크롤 라인) ═══ */
+  .ticker {
+    background: var(--red);
+    color: var(--paper);
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 5px 0;
+    position: relative;
+  }
+  .ticker-track {
+    display: inline-flex;
+    gap: 120px;
+    animation: tickerMove 50s linear infinite;
+    will-change: transform;
+    padding-left: 120px;
+  }
+  .ticker-track span {
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    color: var(--paper);
+    flex-shrink: 0;
+    text-transform: uppercase;
+  }
+  @keyframes tickerMove {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* 빨간 구분선 (실제 요소) */
+  .red-divider {
+    display: block !important;
+    width: 100% !important;
+    height: 4px !important;
+    min-height: 4px !important;
+    max-height: 4px !important;
+    background: var(--red) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    box-sizing: border-box !important;
+    line-height: 0 !important;
+    font-size: 0 !important;
+    position: relative;
+    z-index: 5;
+    flex-shrink: 0;
+  }
+
+  .hero-cta-section {
+    background: var(--ink);
+    padding-top: 32px;
+    padding-bottom: 32px;
+    padding-left: 40px;
+    padding-right: 40px;
+    text-align: center;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+    display: block;
+    position: relative;
+    overflow: visible;
+  }
+  /* 위/아래 빨간 선 (내부 span) */
+  .hcs-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--red);
+    pointer-events: none;
+    display: block;
+  }
+  .hcs-line-top { top: 0; }
+  .hcs-line-bottom { bottom: 0; }
+  .hero-cta-section .hero-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: clamp(16px, 1.6vw, 19px);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--paper);
+    text-decoration: none;
+    padding: 18px 40px;
+    background: var(--red);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.25s ease, background 0.25s ease;
+  }
+  .hero-cta-section .hero-cta-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.25) 50%,
+      transparent 100%
+    );
+    animation: heroBtnShine 3.2s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes heroBtnShine {
+    0%, 70%, 100% { left: -100%; }
+    85% { left: 100%; }
+  }
+  .hero-cta-section .hero-cta-btn:hover {
+    transform: translateY(-2px);
+    background: #d4283a;
+  }
+  .hero-cta-section .hero-cta-btn:active {
+    transform: translateY(0);
+  }
+  .hero-cta-section .hero-cta-btn .btn-text {
+    position: relative;
+    z-index: 2;
+  }
+  .hero-cta-section .hero-cta-btn .btn-arrow {
+    position: relative;
+    z-index: 2;
+    display: inline-flex;
+    width: 18px;
+    height: 18px;
+    transition: transform 0.25s ease;
+  }
+  .hero-cta-section .hero-cta-btn:hover .btn-arrow {
+    transform: translateX(4px);
+  }
+  .hero-cta-section .hero-cta-btn .btn-arrow svg {
+    width: 18px;
+    height: 18px;
+    stroke-width: 2.2;
+  }
+
+  /* ═══ PROCESS SECTION (진행 과정) ═══ */
+  .process-section {
+    background: var(--paper-soft);
+    padding: 72px 40px;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .process-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .process-header {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+  .process-eyebrow {
+    display: inline-block;
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-weight: 600;
+    font-size: 10px;
+    color: var(--red);
+    letter-spacing: 0.3em;
+    margin-bottom: 14px;
+    padding: 4px 12px;
+    border: 1px solid var(--red);
+    border-radius: 999px;
+    text-transform: uppercase;
+  }
+  .process-title {
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: clamp(22px, 2.5vw, 32px);
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    word-break: keep-all;
+    margin-bottom: 12px;
+  }
+  .process-title .accent {
+    background: linear-gradient(135deg, #ff1a1a 0%, #b8232f 50%, #6b0f17 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    font-weight: 800;
+  }
+  .process-sub {
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: 14px;
+    color: var(--muted-dark);
+    letter-spacing: -0.01em;
+  }
+
+  /* 스텝 컨테이너 */
+  .process-steps {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+  .process-step {
+    flex: 1;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    padding: 28px 20px 24px;
+    text-align: center;
+    position: relative;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .process-step:hover {
+    transform: translateY(-4px);
+    border-color: var(--red);
+    box-shadow: 0 8px 24px rgba(184, 35, 47, 0.08);
+  }
+
+  /* 강조 스텝 (03 무료초대권 증정) */
+  .process-step.highlight {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+  .process-step.highlight .process-num {
+    color: #ff6b7d;
+  }
+  .process-step.highlight .process-icon svg {
+    color: var(--paper);
+  }
+  .process-step.highlight .process-title-sm {
+    color: var(--paper);
+  }
+  .process-step.highlight .process-desc {
+    color: rgba(255,255,255,0.75);
+  }
+  .process-step.highlight:hover {
+    border-color: var(--red);
+    box-shadow: 0 8px 28px rgba(184, 35, 47, 0.3);
+  }
+
+  .process-num {
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    font-size: 32px;
+    color: var(--red);
+    letter-spacing: -0.04em;
+    margin-bottom: 8px;
+    line-height: 1;
+    font-style: italic;
+  }
+  .process-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 18px;
+    margin-top: 4px;
+  }
+  .process-icon svg {
+    width: 36px;
+    height: 36px;
+    color: var(--ink);
+    stroke-width: 1.5;
+  }
+  .process-title-sm {
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 10px;
+    letter-spacing: -0.015em;
+    word-break: keep-all;
+  }
+  .process-desc {
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: 12px;
+    color: var(--muted-dark);
+    line-height: 1.6;
+    letter-spacing: -0.005em;
+    word-break: keep-all;
+  }
+
+  /* 화살표 */
+  .process-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--red);
+    flex-shrink: 0;
+    width: 24px;
+  }
+  .process-arrow svg {
+    width: 20px;
+    height: 20px;
+    animation: arrowPulse 2s ease-in-out infinite;
+  }
+  @keyframes arrowPulse {
+    0%, 100% { transform: translateX(0); opacity: 0.6; }
+    50% { transform: translateX(4px); opacity: 1; }
+  }
+
+  /* 하단 안내 */
+  .process-footer {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 16px 24px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--red);
+  }
+  .process-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: var(--red);
+    color: var(--paper);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .process-badge svg {
+    width: 14px;
+    height: 14px;
+  }
+  .process-footer-text {
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: 13px;
+    color: var(--ink-soft);
+    letter-spacing: -0.01em;
+  }
+  .process-footer-text strong {
+    color: var(--red);
+    font-weight: 700;
+  }
+
+  /* ═══ HERO PROOF SECTION (히어로 바로 밑) ═══ */
+  .hero-proof-section {
+    background: var(--paper-soft);
+    padding: 56px 40px;
+    border-bottom: 1px solid var(--line);
+  }
+  .hero-proof-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  /* ═══ VALUE PROPS (혜택 카드 — 윗아래선 굵게) ═══ */
+  .value-props {
+    max-width: 1400px;
+    margin: 50px auto 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+  .value-prop {
+    padding: 36px 32px 32px;
+    position: relative;
+    text-align: center;
+    background: var(--paper);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-top: 4px solid var(--red);
+    border-bottom: 4px solid var(--red);
+    border-radius: 0;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: cardReveal 0.6s ease forwards;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+  }
+  .value-prop:nth-child(1) { animation-delay: 0.1s; }
+  .value-prop:nth-child(2) { animation-delay: 0.2s; }
+
+  @keyframes cardReveal {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .value-prop:hover {
+    transform: translateY(-3px);
+    border-top-color: var(--ink);
+    border-bottom-color: var(--ink);
+  }
+
+  .value-num {
+    display: inline-block;
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    color: var(--red);
+    letter-spacing: 0.2em;
+    margin-bottom: 20px;
+    padding: 6px 18px;
+    border: 1.5px solid var(--red);
+    border-radius: 999px;
+    text-transform: uppercase;
+    background: var(--paper);
+    position: relative;
+    overflow: hidden;
+    animation: shimmerGlow 2.5s ease-in-out infinite;
+  }
+  .value-num::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -80%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(184, 35, 47, 0.35) 50%,
+      transparent 100%
+    );
+    animation: shimmerSweep 2.5s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes shimmerGlow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(184, 35, 47, 0); }
+    50% { box-shadow: 0 0 16px 2px rgba(184, 35, 47, 0.35); }
+  }
+  @keyframes shimmerSweep {
+    0% { left: -80%; }
+    60%, 100% { left: 150%; }
+  }
+  .value-prop:nth-child(2) .value-num,
+  .value-prop:nth-child(2) .value-num::after {
+    animation-delay: 1.25s;
+  }
+
+  .value-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 18px;
+  }
+  .value-icon svg {
+    width: 36px;
+    height: 36px;
+    color: var(--ink);
+    stroke-width: 1.4;
+  }
+
+  .value-title {
+    font-family: 'Pretendard Variable', 'Pretendard', -apple-system, 'Noto Sans KR', sans-serif;
+    font-size: clamp(20px, 1.9vw, 25px);
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: -0.03em;
+    margin-bottom: 0;
+    color: var(--ink);
+    word-break: keep-all;
+  }
+  .value-title .red-mark {
+    background: linear-gradient(135deg, #ff1a1a 0%, #b8232f 50%, #6b0f17 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    font-weight: 800;
+    text-emphasis: filled dot;
+    -webkit-text-emphasis: filled dot;
+    text-emphasis-color: var(--red);
+    -webkit-text-emphasis-color: var(--red);
+    text-emphasis-position: over;
+    -webkit-text-emphasis-position: over;
+  }
+
+  .value-desc {
+    font-family: 'Pretendard Variable', 'Pretendard', -apple-system, 'Noto Sans KR', sans-serif;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--muted-dark);
+    font-weight: 400;
+    word-break: keep-all;
+    letter-spacing: -0.01em;
+    margin-top: 18px;
+    text-align: center;
+  }
+
+  /* ═══ FILTERS ═══ */
+  .filters-section {
+    padding: 28px 40px;
+    border-bottom: 1px solid var(--ink);
+    position: sticky;
+    top: 0;
+    background: rgba(254, 253, 250, 0.96);
+    z-index: 50;
+    backdrop-filter: blur(12px);
+  }
+  .filters-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .filters-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ink);
+    font-weight: 600;
+    padding-right: 20px;
+    border-right: 1px solid var(--line);
+    position: relative;
+  }
+  .filters-label::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 30px;
+    height: 2px;
+    background: var(--red);
+  }
+  .filter-group {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .filter-btn {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 9px 20px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    color: var(--ink-soft);
+    cursor: pointer;
+    border-radius: 0;
+    transition: all 0.2s ease;
+    letter-spacing: 0.02em;
+  }
+  .filter-btn:hover {
+    color: var(--red);
+    border-color: var(--red);
+  }
+  .filter-btn.active {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+  .count-badge {
+    margin-left: auto;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--muted-dark);
+    text-transform: uppercase;
+  }
+  .count-badge strong {
+    color: var(--red);
+    font-weight: 700;
+    font-size: 16px;
+    font-family: 'Fraunces', serif;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ═══ CARD GRID ═══ */
+  main {
+    padding: 70px 40px 100px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 56px 32px;
+  }
+  .card {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    cursor: pointer;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards;
+    position: relative;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .card:nth-child(1) { animation-delay: 0.05s; }
+  .card:nth-child(2) { animation-delay: 0.12s; }
+  .card:nth-child(3) { animation-delay: 0.19s; }
+  .card:nth-child(4) { animation-delay: 0.26s; }
+  .card:nth-child(5) { animation-delay: 0.33s; }
+  .card:nth-child(6) { animation-delay: 0.40s; }
+  .card:nth-child(n+7) { animation-delay: 0.45s; }
+
+  .card-number {
+    position: absolute;
+    top: -10px;
+    left: 0;
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--red);
+    letter-spacing: 0.1em;
+    z-index: 3;
+    background: var(--paper);
+    padding: 0 10px 0 0;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .card-image {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: var(--paper-soft);
+    margin-bottom: 20px;
+    border: 1px solid var(--ink);
+  }
+  .card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s cubic-bezier(.2,.7,.2,1), filter 0.5s ease;
+    filter: grayscale(0.1) contrast(1.03);
+  }
+  .card:hover .card-image img {
+    transform: scale(1.06);
+    filter: grayscale(0) contrast(1.05);
+  }
+  .card-image::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 50%, rgba(10,10,10,0.55) 100%);
+    pointer-events: none;
+  }
+  .card-tag {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: var(--red);
+    color: var(--paper);
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    z-index: 2;
+  }
+  .card-region-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 14px 16px;
+    color: var(--paper);
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-weight: 500;
+  }
+  .card-region-bar .arrow {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    transition: transform 0.3s ease;
+    color: #ff6b6b;
+    font-weight: 300;
+  }
+  .card:hover .card-region-bar .arrow {
+    transform: translateX(6px);
+  }
+
+  .card-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
+  }
+  .card-meta-row .date { color: var(--ink); }
+  .card-meta-row .divider { width: 24px; height: 1px; background: var(--red); }
+  .card-meta-row .label { color: var(--muted-dark); }
+
+  .card-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 23px;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    margin-bottom: 12px;
+    transition: color 0.25s ease;
+  }
+  .card:hover .card-title { color: var(--red); }
+  .card-location {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 13px;
+    color: var(--muted-dark);
+    letter-spacing: 0.02em;
+    padding-left: 14px;
+    position: relative;
+  }
+  .card-location::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 8px;
+    height: 1px;
+    background: var(--red);
+  }
+
+  /* ═══ EMPTY ═══ */
+  .empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 100px 20px;
+    color: var(--muted-dark);
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 20px;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  /* ═══════════════ FAQ SECTION ═══════════════ */
+  .faq-section {
+    background: var(--paper-soft);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 80px 40px;
+  }
+  .faq-inner {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .faq-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .faq-eyebrow {
+    display: inline-block;
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    color: var(--red);
+    letter-spacing: 0.25em;
+    margin-bottom: 16px;
+    padding: 5px 14px;
+    border: 1px solid var(--red);
+    border-radius: 999px;
+    text-transform: uppercase;
+  }
+  .faq-title {
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: clamp(26px, 3vw, 38px);
+    font-weight: 700;
+    line-height: 1.35;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    margin-bottom: 16px;
+    word-break: keep-all;
+  }
+  .faq-title .accent {
+    background: linear-gradient(135deg, #ff1a1a 0%, #b8232f 50%, #6b0f17 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    font-weight: 800;
+  }
+  .faq-subtitle {
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: 14px;
+    color: var(--muted-dark);
+    line-height: 1.7;
+    word-break: keep-all;
+  }
+
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border-top: 1px solid var(--line);
+  }
+  .faq-item {
+    border-bottom: 1px solid var(--line);
+    background: var(--paper);
+    transition: background 0.25s ease;
+  }
+  .faq-item:hover { background: var(--paper-soft); }
+  .faq-item.open { background: var(--paper); }
+
+  .faq-question {
+    width: 100%;
+    background: transparent;
+    border: none;
+    padding: 24px 28px;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    transition: color 0.2s ease;
+  }
+  .faq-question:hover { color: var(--red); }
+  .faq-q-num {
+    flex-shrink: 0;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 16px;
+    color: var(--red);
+    width: 28px;
+  }
+  .faq-q-text {
+    flex: 1;
+    word-break: keep-all;
+  }
+  .faq-toggle {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink);
+    transition: transform 0.3s ease, color 0.3s ease;
+  }
+  .faq-item.open .faq-toggle {
+    transform: rotate(45deg);
+    color: var(--red);
+  }
+  .faq-toggle svg {
+    width: 18px;
+    height: 18px;
+    stroke-width: 1.8;
+  }
+
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(.4,0,.2,1);
+  }
+  .faq-item.open .faq-answer { max-height: 500px; }
+  .faq-answer-inner {
+    padding: 0 28px 26px 76px;
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: 14.5px;
+    line-height: 1.75;
+    color: var(--muted-dark);
+    word-break: keep-all;
+    letter-spacing: -0.005em;
+  }
+  .faq-answer-inner strong {
+    color: var(--red);
+    font-weight: 700;
+  }
+  .faq-answer-inner .highlight {
+    background: linear-gradient(transparent 60%, rgba(184, 35, 47, 0.18) 60%);
+    padding: 0 2px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  /* FAQ CTA */
+  .faq-cta {
+    margin-top: 48px;
+    padding: 56px 32px;
+    background: var(--ink);
+    color: var(--paper);
+    text-align: center;
+    border-top: 4px solid var(--red);
+    border-bottom: 4px solid var(--red);
+  }
+  .faq-cta-text {
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: clamp(24px, 3.2vw, 36px);
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 32px;
+    color: var(--paper);
+    letter-spacing: -0.025em;
+    word-break: keep-all;
+  }
+  .faq-cta-text .cta-accent {
+    background: linear-gradient(135deg, #ff1a1a 0%, #b8232f 50%, #6b0f17 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    font-weight: 900;
+  }
+  .faq-cta-text small {
+    display: inline-block;
+    font-size: 0.55em;
+    font-weight: 600;
+    line-height: 1.55;
+    letter-spacing: -0.015em;
+    color: rgba(255,255,255,0.85);
+    margin-top: 16px;
+  }
+  .faq-cta-text .cta-brand {
+    background: linear-gradient(135deg, #ff1a1a 0%, #b8232f 50%, #6b0f17 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    font-weight: 900;
+  }
+
+  /* ═══ 박람회 둘러보기 — 심플 둥근 사각형 ═══ */
+  .faq-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: clamp(15px, 1.5vw, 18px);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--paper);
+    text-decoration: none;
+    padding: 16px 32px;
+    background: var(--red);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: 0 4px 14px rgba(184, 35, 47, 0.3);
+  }
+  .faq-cta-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.2) 50%,
+      transparent 100%
+    );
+    animation: faqBtnShine 3.5s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes faqBtnShine {
+    0%, 70%, 100% { left: -100%; }
+    85% { left: 100%; }
+  }
+  .faq-cta-btn:hover {
+    transform: translateY(-2px);
+    background: #d4283a;
+    box-shadow: 0 8px 20px rgba(184, 35, 47, 0.45);
+  }
+  .faq-cta-btn:active {
+    transform: translateY(0);
+  }
+  .faq-cta-btn .btn-text { position: relative; z-index: 2; }
+  .faq-cta-btn .btn-arrow {
+    position: relative;
+    z-index: 2;
+    display: inline-flex;
+    width: 18px;
+    height: 18px;
+    transition: transform 0.25s ease;
+  }
+  .faq-cta-btn:hover .btn-arrow {
+    transform: translateX(4px);
+  }
+  .faq-cta-btn .btn-arrow svg {
+    width: 18px;
+    height: 18px;
+    stroke-width: 2.2;
+  }
+
+  /* wrap + mini 라벨 */
+  .faq-cta-wrap {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    margin-top: 8px;
+  }
+  .faq-cta-mini {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+  }
+  .faq-cta-mini::before,
+  .faq-cta-mini::after {
+    content: '';
+    width: 20px;
+    height: 1px;
+    background: rgba(255,255,255,0.25);
+  }
+
+  /* ═══════════════ SOCIAL PROOF SECTION ═══════════════ */
+  .proof-section {
+    margin-top: 64px;
+    padding-top: 56px;
+    border-top: 1px dashed var(--line);
+  }
+  .proof-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .proof-eyebrow {
+    display: inline-block;
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-weight: 600;
+    font-size: 10px;
+    color: var(--red);
+    letter-spacing: 0.3em;
+    margin-bottom: 14px;
+    padding: 4px 12px;
+    border: 1px solid var(--red);
+    border-radius: 999px;
+    text-transform: uppercase;
+  }
+  .proof-title {
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: clamp(22px, 2.5vw, 30px);
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    word-break: keep-all;
+  }
+  .proof-title .accent {
+    background: linear-gradient(135deg, #ff1a1a 0%, #b8232f 50%, #6b0f17 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    font-weight: 800;
+    display: inline;
+    line-height: inherit;
+  }
+  .proof-title small {
+    display: inline-block;
+    font-size: 0.7em;
+    font-weight: 600;
+    color: var(--ink);
+    margin-top: 8px;
+    letter-spacing: -0.015em;
+  }
+
+  /* 통계 수치 — 3단 */
+  .proof-stats {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    align-items: center;
+    gap: 16px;
+    margin: 0 auto 40px;
+    max-width: 720px;
+    padding: 28px 24px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--red);
+  }
+  .stat-item {
+    text-align: center;
+  }
+  .stat-num {
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: clamp(26px, 3.2vw, 40px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 8px;
+    transition: color 0.3s ease, transform 0.3s ease;
+    display: inline-block;
+  }
+  .stat-num.flash {
+    animation: statFlash 0.7s ease-out;
+  }
+  @keyframes statFlash {
+    0% {
+      color: var(--ink);
+      transform: scale(1);
+    }
+    30% {
+      color: var(--red);
+      transform: scale(1.15);
+      text-shadow: 0 0 20px rgba(184, 35, 47, 0.5);
+    }
+    60% {
+      color: var(--red);
+      transform: scale(1.05);
+    }
+    100% {
+      color: var(--ink);
+      transform: scale(1);
+      text-shadow: none;
+    }
+  }
+  .stat-unit {
+    font-size: 0.55em;
+    font-weight: 600;
+    color: var(--red);
+    margin-left: 2px;
+  }
+  .stat-label {
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: 12px;
+    color: var(--muted-dark);
+    letter-spacing: -0.005em;
+    font-weight: 500;
+  }
+  .stat-divider {
+    width: 1px;
+    height: 36px;
+    background: var(--line);
+  }
+
+  /* 후기 슬라이더 */
+  .proof-slider {
+    position: relative;
+    max-width: 720px;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+  .proof-slider-track {
+    display: flex;
+    transition: transform 0.6s cubic-bezier(.2,.8,.2,1);
+    will-change: transform;
+  }
+  .proof-card {
+    flex: 0 0 100%;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--red);
+    padding: 28px 32px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-sizing: border-box;
+    min-height: 290px;
+  }
+  .proof-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px dashed var(--line);
+  }
+  .proof-tag {
+    display: inline-block;
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--red);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    background: rgba(184, 35, 47, 0.06);
+    border: 1px solid var(--red);
+    border-radius: 999px;
+  }
+  .proof-rating {
+    display: flex;
+    gap: 2px;
+  }
+  .proof-rating svg {
+    width: 16px;
+    height: 16px;
+    color: #f4b400;
+  }
+  .proof-quote {
+    font-family: 'Pretendard Variable', 'Pretendard', -apple-system, 'Noto Sans KR', sans-serif;
+    font-size: 15px;
+    line-height: 1.85;
+    color: var(--ink-soft);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    word-break: keep-all;
+    flex: 1;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .proof-quote strong {
+    color: var(--red);
+    font-weight: 700;
+    background: linear-gradient(transparent 60%, rgba(184, 35, 47, 0.15) 60%);
+    padding: 0 2px;
+  }
+  .proof-quote::before {
+    content: '"';
+    position: absolute;
+    top: -20px;
+    left: -8px;
+    font-family: 'Fraunces', serif;
+    font-size: 60px;
+    font-weight: 900;
+    color: var(--red);
+    opacity: 0.2;
+    line-height: 1;
+  }
+  .proof-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+  }
+  .proof-initial {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 700;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .proof-author {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .proof-name {
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .verified-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    background: #1d9bf0;
+    color: #fff;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .verified-check svg {
+    width: 10px;
+    height: 10px;
+  }
+  .proof-date {
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: 11px;
+    color: var(--muted-dark);
+    letter-spacing: -0.005em;
+  }
+
+  /* 슬라이드 인디케이터 */
+  .proof-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+  .proof-dot {
+    width: 20px;
+    height: 3px;
+    background: var(--line);
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.3s ease, width 0.3s ease;
+  }
+  .proof-dot:hover {
+    background: var(--muted-dark);
+  }
+  .proof-dot.active {
+    background: var(--red);
+    width: 36px;
+  }
+
+  /* 긴급성 박스 */
+  .proof-urgency {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 24px;
+    background: linear-gradient(90deg, rgba(184, 35, 47, 0.06) 0%, transparent 100%);
+    border-left: 4px solid var(--red);
+    margin-bottom: 8px;
+  }
+  .urgency-icon {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--red);
+    color: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: urgencyPulse 1.8s ease-in-out infinite;
+  }
+  @keyframes urgencyPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(184, 35, 47, 0.5); }
+    50% { box-shadow: 0 0 0 8px rgba(184, 35, 47, 0); }
+  }
+  .urgency-icon svg { width: 18px; height: 18px; }
+  .urgency-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .urgency-text strong {
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--red);
+    letter-spacing: -0.01em;
+  }
+  .urgency-text span {
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: 12.5px;
+    color: var(--muted-dark);
+    letter-spacing: -0.005em;
+    line-height: 1.5;
+  }
+
+  /* ═══ FOOTER ═══ */
+  footer {
+    border-top: 2px solid var(--ink);
+    padding: 60px 40px 30px;
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .footer-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+  .footer-brand {
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    font-size: 32px;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .footer-brand .amp { color: var(--red); font-style: italic; font-weight: 300; }
+  .footer-text {
+    font-family: 'Pretendard Variable', 'Pretendard', -apple-system, 'Noto Sans KR', sans-serif;
+    font-size: 11px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.4);
+    margin-top: 18px;
+    max-width: 500px;
+    letter-spacing: -0.005em;
+  }
+  .footer-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+  .footer-val {
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    color: var(--paper);
+  }
+  .footer-bottom {
+    max-width: 1400px;
+    margin: 50px auto 0;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255,255,255,0.12);
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: rgba(255,255,255,0.4);
+    display: flex;
+    justify-content: space-between;
+    text-transform: uppercase;
+  }
+
+  /* ═══════════════════════════════════════════
+     RESPONSIVE — 모바일 최적화
+     ═══════════════════════════════════════════ */
+
+  /* === 태블릿 (1024px 이하) === */
+  @media (max-width: 1024px) {
+    .hero { padding: 60px 28px 50px; }
+    .filters-section { padding: 24px 28px; }
+    main { padding: 60px 28px 80px; }
+    footer { padding: 50px 28px 28px; }
+    .footer-inner { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .footer-inner > div:first-child { grid-column: 1 / -1; }
+    .grid { gap: 48px 24px; }
+  }
+
+  /* === 모바일 (768px 이하) === */
+  @media (max-width: 768px) {
+    /* 탑바 */
+    .topbar {
+      padding: 10px 14px;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 9px;
+    }
+    .topbar .date {
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      opacity: 0.55;
+    }
+    .topbar .live-center {
+      padding: 6px 14px;
+      gap: 8px;
+      width: 100%;
+      justify-content: center;
+    }
+    .topbar .live-center .ko {
+      font-size: 11px;
+      letter-spacing: 0.04em;
+    }
+    .topbar .live-center .tag-en { font-size: 9px; }
+
+    /* 히어로 */
+    .hero { padding: 44px 18px 36px; }
+    .hero-inline {
+      flex-direction: column;
+      gap: 18px;
+    }
+    .brand {
+      font-size: clamp(48px, 14vw, 80px);
+      line-height: 0.95;
+    }
+
+    /* 혜택 카드 — 2열 유지 */
+    .value-props {
+      grid-template-columns: repeat(2, 1fr);
+      margin-top: 32px;
+      gap: 12px;
+    }
+    .value-prop {
+      padding: 24px 16px 22px;
+    }
+    .value-prop:hover {
+      transform: none;
+      border-top-color: var(--red);
+      border-bottom-color: var(--red);
+    }
+    .value-num {
+      font-size: 9px;
+      margin-bottom: 14px;
+      padding: 4px 12px;
+      letter-spacing: 0.15em;
+      border-width: 1px;
+    }
+    .value-icon { margin-bottom: 12px; }
+    .value-icon svg { width: 26px; height: 26px; }
+    .value-title {
+      font-size: 15px;
+      line-height: 1.5;
+      margin-bottom: 0;
+      letter-spacing: -0.02em;
+      word-break: keep-all;
+    }
+    .value-desc {
+      font-size: 11px;
+      line-height: 1.55;
+      margin-top: 12px;
+    }
+    .hero-cta-btn {
+      padding: 13px 26px;
+      font-size: 14px;
+      gap: 10px;
+    }
+    .hero-cta-btn .btn-arrow,
+    .hero-cta-btn .btn-arrow svg { width: 16px; height: 16px; }
+
+    /* 히어로 CTA 섹션 — 심플 */
+    .hero-cta-section {
+      padding-top: 24px;
+      padding-bottom: 24px;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+    .ticker { padding: 4px 0; }
+    .ticker-track { gap: 70px; padding-left: 70px; }
+    .ticker-track span { font-size: 9px; letter-spacing: 0.2em; }
+    .hero-cta-section .hero-cta-btn {
+      padding: 15px 28px;
+      font-size: 15px;
+      gap: 10px;
+    }
+    .hero-cta-section .hero-cta-btn .btn-arrow,
+    .hero-cta-section .hero-cta-btn .btn-arrow svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* 히어로 프루프 */
+    .hero-proof-section { padding: 44px 18px; }
+    .hero-proof-inner .proof-stats {
+      grid-template-columns: 1fr 1fr 1fr;
+      padding: 20px 12px;
+      gap: 6px;
+      margin-bottom: 28px;
+    }
+    .hero-proof-inner .stat-divider { display: none; }
+    .hero-proof-inner .proof-slider { margin-bottom: 28px; }
+    .hero-proof-inner .proof-card { padding: 20px 18px; min-height: 200px; }
+    .proof-quote { font-size: 13.5px; line-height: 1.75; }
+    .proof-dots { margin-top: 18px; }
+    .proof-dot { width: 14px; height: 3px; }
+    .proof-dot.active { width: 24px; }
+
+    /* 필터 */
+    .filters-section {
+      padding: 16px 18px;
+      top: 0;
+    }
+    .filters-inner {
+      gap: 10px;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .filters-label {
+      padding-right: 0;
+      border-right: none;
+      font-size: 9px;
+    }
+    /* 필터 버튼들 가로 스크롤 가능하게 */
+    .filter-group {
+      display: flex;
+      gap: 6px;
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+    }
+    .filter-group::-webkit-scrollbar { display: none; }
+    .filter-btn {
+      flex-shrink: 0;
+      padding: 10px 16px;
+      font-size: 13px;
+      min-height: 40px;
+      scroll-snap-align: start;
+    }
+    .count-badge {
+      margin-left: 0;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+    }
+    .count-badge strong { font-size: 14px; }
+
+    /* 메인 그리드 — 모바일에서 1열 (카드 크게) */
+    main { padding: 40px 18px 64px; }
+    .grid {
+      grid-template-columns: 1fr;
+      gap: 40px 0;
+    }
+
+    /* 카드 */
+    .card-number {
+      font-size: 13px;
+      top: -8px;
+    }
+    .card-image { margin-bottom: 16px; }
+    .card-image img {
+      filter: grayscale(0) contrast(1.03);  /* 모바일은 호버 없으니 컬러 기본 */
+    }
+    .card-tag {
+      font-size: 9px;
+      padding: 7px 12px;
+      letter-spacing: 0.2em;
+    }
+    .card-region-bar {
+      padding: 12px 14px;
+      font-size: 10px;
+      letter-spacing: 0.25em;
+    }
+    .card-meta-row {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      margin-bottom: 10px;
+      gap: 8px;
+    }
+    .card-meta-row .divider { width: 18px; }
+    .card-title {
+      font-size: 21px;
+      line-height: 1.35;
+      margin-bottom: 10px;
+    }
+    .card-location { font-size: 13px; }
+
+    /* FAQ 모바일 */
+    .faq-section { padding: 56px 18px; }
+    .faq-header { margin-bottom: 36px; }
+    .faq-subtitle { font-size: 13px; }
+    .faq-question {
+      padding: 20px 18px;
+      gap: 14px;
+      font-size: 14px;
+    }
+    .faq-q-num { font-size: 14px; width: 22px; }
+    .faq-toggle svg { width: 16px; height: 16px; }
+    .faq-answer-inner {
+      padding: 0 18px 22px 54px;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+    .faq-cta { padding: 44px 20px; margin-top: 36px; }
+    .faq-cta-text { font-size: 22px; margin-bottom: 24px; }
+    .faq-cta-text small { font-size: 0.6em; margin-top: 12px; }
+    .faq-cta-btn {
+      padding: 14px 26px;
+      font-size: 14px;
+      gap: 10px;
+    }
+    .faq-cta-btn .btn-arrow,
+    .faq-cta-btn .btn-arrow svg { width: 16px; height: 16px; }
+    .faq-cta-mini { font-size: 10px; letter-spacing: 0.15em; }
+    .faq-cta-mini::before,
+    .faq-cta-mini::after { width: 14px; }
+
+    /* Social Proof */
+    .proof-section { margin-top: 44px; padding-top: 40px; }
+    .proof-header { margin-bottom: 28px; }
+
+    /* 진행 과정 — 모바일에서 2×2 그리드, 화살표 숨김 */
+    .process-section { padding: 48px 18px; }
+    .process-header { margin-bottom: 32px; }
+    .process-title { font-size: 20px; }
+    .process-sub { font-size: 12.5px; }
+    .process-steps {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    .process-arrow { display: none; }
+    .process-step {
+      padding: 18px 12px 16px;
+    }
+    .process-step:hover {
+      transform: none;
+    }
+    .process-num { font-size: 24px; margin-bottom: 4px; }
+    .process-icon { margin-bottom: 10px; margin-top: 2px; }
+    .process-icon svg { width: 26px; height: 26px; }
+    .process-title-sm { font-size: 13px; margin-bottom: 6px; }
+    .process-desc { font-size: 11px; line-height: 1.55; }
+    .process-footer { padding: 14px 16px; gap: 8px; }
+    .process-footer-text { font-size: 11.5px; line-height: 1.5; }
+    .process-badge { width: 20px; height: 20px; }
+    .process-badge svg { width: 11px; height: 11px; }
+    .proof-stats {
+      grid-template-columns: 1fr 1fr 1fr;
+      padding: 20px 12px;
+      margin-bottom: 28px;
+      gap: 6px;
+    }
+    .stat-divider { display: none; }
+    .stat-label { font-size: 11px; }
+    .proof-urgency {
+      padding: 16px 18px;
+      gap: 12px;
+    }
+    .urgency-icon { width: 32px; height: 32px; }
+    .urgency-icon svg { width: 16px; height: 16px; }
+    .urgency-text strong { font-size: 13px; }
+    .urgency-text span { font-size: 12px; }
+
+    /* 풋터 */
+    footer { padding: 40px 18px 24px; }
+    .footer-inner {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+    .footer-brand { font-size: 28px; }
+    .footer-text { font-size: 13px; max-width: 100%; }
+    .footer-bottom {
+      flex-direction: column;
+      gap: 8px;
+      text-align: center;
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      margin-top: 36px;
+    }
+  }
+
+  /* === 소형폰 (480px 이하 — 아이폰 SE 등) === */
+  @media (max-width: 480px) {
+    .topbar .live-center .ko {
+      font-size: 10px;
+      letter-spacing: 0.02em;
+    }
+    .hero { padding: 36px 16px 32px; }
+    .brand { font-size: clamp(42px, 12vw, 64px); }
+
+    .value-props { gap: 8px; }
+    .value-prop { padding: 20px 12px 18px; }
+    .value-num { font-size: 8px; margin-bottom: 12px; padding: 3px 10px; }
+    .value-icon { margin-bottom: 10px; }
+    .value-icon svg { width: 22px; height: 22px; }
+    .value-title { font-size: 13px; line-height: 1.4; }
+    .value-desc { font-size: 10px; line-height: 1.5; margin-top: 10px; }
+
+    .filters-section { padding: 14px 16px; }
+    main { padding: 32px 16px 56px; }
+    .card-title { font-size: 19px; }
+  }
+
+  /* === 터치 디바이스 최적화 === */
+  @media (hover: none) and (pointer: coarse) {
+    /* 모든 클릭 가능 요소: 터치 하이라이트 제거 */
+    a, button {
+      -webkit-tap-highlight-color: rgba(184, 35, 47, 0.15);
+      -webkit-touch-callout: none;
+    }
+    /* 호버 효과 무력화 (모바일에선 의미 없음) */
+    .card:hover .card-image img {
+      transform: none;
+      filter: grayscale(0) contrast(1.03);
+    }
+    .card:hover .card-region-bar .arrow { transform: none; }
+    .card:hover .card-title { color: var(--ink); }
+    .filter-btn:hover {
+      color: var(--ink-soft);
+      border-color: var(--line);
+    }
+    .filter-btn.active:hover,
+    .filter-btn.active {
+      color: var(--paper);
+      border-color: var(--ink);
+    }
+    /* 터치 시 active 상태 */
+    .card:active .card-image img {
+      transform: scale(1.03);
+      transition: transform 0.2s ease;
+    }
+    .filter-btn:active {
+      background: var(--ink);
+      color: var(--paper);
+      border-color: var(--ink);
+    }
+    /* value-prop 카드 — 터치 시 짧은 반짝임 */
+    .value-prop:active {
+      transform: translateY(-2px);
+      transition: transform 0.15s ease;
+    }
+  }
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+  <span class="live-center">
+    <span class="live-dot"></span>
+    <span class="tag-en">LIVE</span>
+    <span class="ko">매일 자정 신규 박람회 업데이트</span>
+  </span>
+  <span class="date" id="todayDate"></span>
+</div>
+
+<section class="hero">
+  <div class="hero-inline">
+    <h1 class="brand">
+      Wedding<span class="amp">&amp;</span>Scoop
+    </h1>
+  </div>
+
+  <div class="value-props">
+    <div class="value-prop">
+      <div class="value-num">혜택 1</div>
+      <div class="value-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 21s-7-7.5-7-12a7 7 0 0 1 14 0c0 4.5-7 12-7 12z"/>
+          <circle cx="12" cy="9" r="2.5"/>
+        </svg>
+      </div>
+      <h2 class="value-title"><span class="red-mark">매일 업데이트</span>되는<br />전국 웨딩박람회를 한눈에</h2>
+      <p class="value-desc">서울 · 부산 · 대구 · 인천 · 광주<br />놓치는 일정 없이 한 자리에서 확인</p>
+    </div>
+    <div class="value-prop">
+      <div class="value-num">혜택 2</div>
+      <div class="value-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/>
+          <line x1="13" y1="5" x2="13" y2="7"/>
+          <line x1="13" y1="11" x2="13" y2="13"/>
+          <line x1="13" y1="17" x2="13" y2="19"/>
+        </svg>
+      </div>
+      <h2 class="value-title">최대 <span class="red-mark">5만원 상당</span>의<br />무료초대권 증정</h2>
+      <p class="value-desc">웨딩스쿱을 통해 사전 신청만 하면<br />박람회 입장권 무료 제공</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ HERO CTA SECTION (위아래 빨간 선으로 구분) ═══ -->
+<section class="hero-cta-section">
+  <span class="hcs-line hcs-line-top"></span>
+  <a class="hero-cta-btn" href="#campaigns" onclick="document.getElementById('campaigns').scrollIntoView({behavior: 'smooth'}); return false;">
+    <span class="btn-text">전국 웨딩박람회 무료초대권</span>
+    <span class="btn-arrow">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="5" y1="12" x2="19" y2="12"/>
+        <polyline points="12 5 19 12 12 19"/>
+      </svg>
+    </span>
+  </a>
+  <span class="hcs-line hcs-line-bottom"></span>
+</section>
+
+<!-- ═══ SOCIAL PROOF — 통계 + 후기 (히어로 바로 아래) ═══ -->
+<section class="hero-proof-section">
+  <div class="hero-proof-inner">
+    <div class="proof-header">
+      <span class="proof-eyebrow">REAL BENEFIT</span>
+      <h3 class="proof-title">이미 <span class="accent">수천 명</span>의 예비부부가<br /><small>웨딩스쿱을 통해 혜택을 받았습니다</small></h3>
+    </div>
+
+    <div class="proof-stats">
+      <div class="stat-item">
+        <div class="stat-num" data-target="7619" data-auto-increment="true">0</div>
+        <div class="stat-label">누적 신청자</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <div class="stat-num" data-target="486"><span class="stat-unit">만원+</span></div>
+        <div class="stat-label">평균 혜택가</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <div class="stat-num">4.8<span class="stat-unit">/5</span></div>
+        <div class="stat-label">만족도</div>
+      </div>
+    </div>
+
+    <div class="proof-slider">
+      <div class="proof-slider-track" id="proofSliderTrack">
+        <div class="proof-card" data-slide="0">
+          <div class="proof-card-top">
+            <div class="proof-tag">서울 · 코엑스</div>
+            <div class="proof-rating">
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+          </div>
+          <p class="proof-quote">
+            처음엔 반신반의했는데, 웨딩스쿱 통해서 신청하니까 <strong>혜택이 확실히 달라지더라고요</strong>. 직접 박람회 공식 사이트에서 신청했을 때보다 챙겨주는 게 많아서 놀랐어요. 남편도 옆에서 "이런 것도 주냐"고 할 정도였고, 친구한테도 꼭 여기서 신청하라고 추천했어요. 이 정도면 안 하는 게 손해예요.
+          </p>
+          <div class="proof-meta">
+            <span class="proof-initial">김</span>
+            <div class="proof-author">
+              <span class="proof-name">김○○ 예비신부님 <span class="verified-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></span>
+              <span class="proof-date">인증된 후기</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="proof-card" data-slide="1">
+          <div class="proof-card-top">
+            <div class="proof-tag">경기 · KINTEX</div>
+            <div class="proof-rating">
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+          </div>
+          <p class="proof-quote">
+            남편 될 사람이랑 박람회 세 곳을 비교하려고 다 신청했었는데, 신기하게도 <strong>웨딩스쿱 쪽으로 신청한 곳의 혜택이 제일 풍부</strong>했어요. 상담받을 때 분위기도 달라서 느긋하게 이야기 나눌 수 있었고요. 사람 많은 박람회장에서 편하게 상담받을 수 있는 게 진짜 큰 차이였어요. 혜택 챙기려면 무조건 여기 통해서 신청하세요.
+          </p>
+          <div class="proof-meta">
+            <span class="proof-initial">박</span>
+            <div class="proof-author">
+              <span class="proof-name">박○○ 예비신부님 <span class="verified-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></span>
+              <span class="proof-date">인증된 후기</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="proof-card" data-slide="2">
+          <div class="proof-card-top">
+            <div class="proof-tag">부산 · BEXCO</div>
+            <div class="proof-rating">
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+          </div>
+          <p class="proof-quote">
+            박람회 당일에 입구에서 <strong>웰컴 패키지</strong>를 받았을 때 진짜 깜짝 놀랐어요. 결혼 준비에 실질적으로 도움이 되는 것들로 알차게 구성되어 있더라고요. 웨딩스쿱 없이 그냥 박람회 갔으면 이런 혜택 하나도 못 받고 끝났을 거 같아요. 결혼 준비하는 분들한테 이거 하나는 꼭 알려주고 싶어요.
+          </p>
+          <div class="proof-meta">
+            <span class="proof-initial">이</span>
+            <div class="proof-author">
+              <span class="proof-name">이○○ 예비신부님 <span class="verified-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></span>
+              <span class="proof-date">인증된 후기</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="proof-card" data-slide="3">
+          <div class="proof-card-top">
+            <div class="proof-tag">인천 · 송도</div>
+            <div class="proof-rating">
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+          </div>
+          <p class="proof-quote">
+            결혼 준비하면서 정보 찾기 진짜 어려웠는데, 웨딩스쿱 덕분에 <strong>지역별 박람회를 한 곳에서 정리해서 볼 수 있어서 너무 편했어요</strong>. 직접 검색하면서 여기저기 사이트 돌아다니지 않아도 되고, 일정도 한눈에 보이니까 계획 세우기가 수월했어요. 이런 사이트 진작에 있었으면 좋았을 거 같아요.
+          </p>
+          <div class="proof-meta">
+            <span class="proof-initial">정</span>
+            <div class="proof-author">
+              <span class="proof-name">정○○ 예비신부님 <span class="verified-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></span>
+              <span class="proof-date">인증된 후기</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="proof-card" data-slide="4">
+          <div class="proof-card-top">
+            <div class="proof-tag">대전 · 컨벤션센터</div>
+            <div class="proof-rating">
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+          </div>
+          <p class="proof-quote">
+            처음엔 이런 사이트 통해서 신청하면 뭔가 번거로울까 걱정했는데 전혀 그런 거 없었어요. <strong>신청 과정도 간단하고 박람회 주최측에서 바로 연락 오더라구요</strong>. 혜택 관련해서도 자세히 안내받았고, 현장에서도 따로 챙겨주셔서 기분 좋게 다녀왔어요. 지인들한테도 추천하고 있습니다.
+          </p>
+          <div class="proof-meta">
+            <span class="proof-initial">최</span>
+            <div class="proof-author">
+              <span class="proof-name">최○○ 예비신부님 <span class="verified-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></span>
+              <span class="proof-date">인증된 후기</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="proof-card" data-slide="5">
+          <div class="proof-card-top">
+            <div class="proof-tag">광주 · 김대중컨벤션</div>
+            <div class="proof-rating">
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+          </div>
+          <p class="proof-quote">
+            지방에 살다 보니까 박람회 정보 얻기가 쉽지 않았는데, <strong>웨딩스쿱에서 지역별로 구분되어 있어서 바로 찾을 수 있었어요</strong>. 광주에서 열리는 박람회도 꼼꼼하게 업데이트되어 있어서 놓치지 않고 참여할 수 있었고요. 혜택도 서울이나 수도권이랑 차이 없이 그대로 제공받아서 만족스러웠습니다.
+          </p>
+          <div class="proof-meta">
+            <span class="proof-initial">강</span>
+            <div class="proof-author">
+              <span class="proof-name">강○○ 예비신부님 <span class="verified-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></span>
+              <span class="proof-date">인증된 후기</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="proof-card" data-slide="6">
+          <div class="proof-card-top">
+            <div class="proof-tag">대구 · EXCO</div>
+            <div class="proof-rating">
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+          </div>
+          <p class="proof-quote">
+            결혼 준비를 시작하면서 처음 들어본 사이트였는데, <strong>꼼꼼하게 박람회 정보가 정리되어 있어서 놀랐어요</strong>. 특히 혜택 내용이 박람회마다 다 다른데 그걸 한눈에 비교할 수 있어서 좋았어요. 무료초대권도 진짜 문제없이 받았고, 현장에서 본인 확인도 빠르게 끝나서 편했습니다.
+          </p>
+          <div class="proof-meta">
+            <span class="proof-initial">윤</span>
+            <div class="proof-author">
+              <span class="proof-name">윤○○ 예비신부님 <span class="verified-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></span>
+              <span class="proof-date">인증된 후기</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="proof-card" data-slide="7">
+          <div class="proof-card-top">
+            <div class="proof-tag">제주 · ICC</div>
+            <div class="proof-rating">
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+          </div>
+          <p class="proof-quote">
+            제주에서 결혼 준비하는 분들은 아시겠지만 정보가 정말 한정적이에요. <strong>그런데 웨딩스쿱에 제주 박람회도 있더라고요</strong>. 리조트 웨딩 관련 상담도 자세히 받을 수 있었고, 섬이라고 해서 혜택이 줄거나 하지도 않았어요. 지방 사는 예비부부들한테 진짜 필요한 사이트예요.
+          </p>
+          <div class="proof-meta">
+            <span class="proof-initial">한</span>
+            <div class="proof-author">
+              <span class="proof-name">한○○ 예비신부님 <span class="verified-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></span>
+              <span class="proof-date">인증된 후기</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="proof-card" data-slide="8">
+          <div class="proof-card-top">
+            <div class="proof-tag">서울 · SETEC</div>
+            <div class="proof-rating">
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+          </div>
+          <p class="proof-quote">
+            처음엔 그냥 정보 보려고 들어갔다가 <strong>혜택이 많아 보여서 바로 신청했어요</strong>. 드레스 피팅부터 스튜디오 투어까지 다양하게 경험할 수 있었고, 가격 상담도 꼼꼼하게 받았어요. 직접 사이트에서 신청한 친구랑 받는 혜택이 진짜 달라서 제대로 했다 싶더라고요. 강력 추천합니다!
+          </p>
+          <div class="proof-meta">
+            <span class="proof-initial">송</span>
+            <div class="proof-author">
+              <span class="proof-name">송○○ 예비신부님 <span class="verified-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></span>
+              <span class="proof-date">인증된 후기</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="proof-card" data-slide="9">
+          <div class="proof-card-top">
+            <div class="proof-tag">강원 · 알펜시아</div>
+            <div class="proof-rating">
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+          </div>
+          <p class="proof-quote">
+            리조트 웨딩 알아보려고 강원도 박람회 신청했는데, <strong>웨딩스쿱 통해서 신청하니까 현장에서 대우가 달랐어요</strong>. 상담사분도 친절하시고 여유 있게 설명 들을 수 있었어요. 결혼 준비는 작은 차이가 모여서 만족도를 결정하는데, 웨딩스쿱이 그 차이를 만들어준 것 같아요.
+          </p>
+          <div class="proof-meta">
+            <span class="proof-initial">임</span>
+            <div class="proof-author">
+              <span class="proof-name">임○○ 예비신부님 <span class="verified-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></span>
+              <span class="proof-date">인증된 후기</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 슬라이드 인디케이터 -->
+      <div class="proof-dots">
+        <button class="proof-dot active" data-slide="0" aria-label="리뷰 1"></button>
+        <button class="proof-dot" data-slide="1" aria-label="리뷰 2"></button>
+        <button class="proof-dot" data-slide="2" aria-label="리뷰 3"></button>
+        <button class="proof-dot" data-slide="3" aria-label="리뷰 4"></button>
+        <button class="proof-dot" data-slide="4" aria-label="리뷰 5"></button>
+        <button class="proof-dot" data-slide="5" aria-label="리뷰 6"></button>
+        <button class="proof-dot" data-slide="6" aria-label="리뷰 7"></button>
+        <button class="proof-dot" data-slide="7" aria-label="리뷰 8"></button>
+        <button class="proof-dot" data-slide="8" aria-label="리뷰 9"></button>
+        <button class="proof-dot" data-slide="9" aria-label="리뷰 10"></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="filters-section" id="campaigns">
+  <div class="filters-inner">
+    <div class="filter-group" id="regionFilter"></div>
+    <span class="count-badge"><strong id="countNum">0</strong> &nbsp;EXPOS LISTED</span>
+  </div>
+</section>
+
+<main>
+  <div class="grid" id="grid"></div>
+</main>
+
+<!-- ═══ 진행 과정 (HOW IT WORKS) ═══ -->
+<section class="process-section">
+  <div class="process-inner">
+    <div class="process-header">
+      <span class="process-eyebrow">HOW IT WORKS</span>
+      <h2 class="process-title">신청부터 방문까지, <span class="accent">4단계면 충분해요</span></h2>
+      <p class="process-sub">복잡한 절차 없이 간단하게, 전용 혜택을 받아보세요.</p>
+    </div>
+
+    <div class="process-steps">
+      <div class="process-step">
+        <div class="process-num">01</div>
+        <div class="process-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.59 13.41 13.42 20.58a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+            <line x1="7" y1="7" x2="7.01" y2="7"/>
+          </svg>
+        </div>
+        <div class="process-title-sm">박람회 선택 & 신청</div>
+        <p class="process-desc">원하는 지역의 박람회를<br />웨딩스쿱에서 클릭, 간단 정보 입력.</p>
+      </div>
+
+      <div class="process-arrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </div>
+
+      <div class="process-step">
+        <div class="process-num">02</div>
+        <div class="process-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+          </svg>
+        </div>
+        <div class="process-title-sm">담당자 연락</div>
+        <p class="process-desc">박람회 주최측에서 직접<br />연락, 일정·혜택 안내.</p>
+      </div>
+
+      <div class="process-arrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </div>
+
+      <div class="process-step highlight">
+        <div class="process-num">03</div>
+        <div class="process-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 12 20 22 4 22 4 12"/>
+            <rect x="2" y="7" width="20" height="5"/>
+            <line x1="12" y1="22" x2="12" y2="7"/>
+            <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/>
+            <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>
+          </svg>
+        </div>
+        <div class="process-title-sm">무료초대권 증정</div>
+        <p class="process-desc">웨딩스쿱 전용 혜택이<br />포함된 초대권 수령.</p>
+      </div>
+
+      <div class="process-arrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </div>
+
+      <div class="process-step">
+        <div class="process-num">04</div>
+        <div class="process-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm7 0a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM2 22v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2M22 22v-2a4 4 0 0 0-3-3.87"/>
+          </svg>
+        </div>
+        <div class="process-title-sm">박람회 방문</div>
+        <p class="process-desc">현장에서 본인 확인 후<br />모든 혜택 누리기.</p>
+      </div>
+    </div>
+
+    <div class="process-footer">
+      <span class="process-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </span>
+      <span class="process-footer-text"><strong>신청 후 평균 1~2일 내</strong>로 담당자 연락이 진행됩니다.</span>
+    </div>
+  </div>
+</section>
+
+<section class="faq-section">
+  <div class="faq-inner">
+    <div class="faq-header">
+      <span class="faq-eyebrow">FAQ</span>
+      <h2 class="faq-title">
+        <span class="accent">웨딩스쿱</span>에서 신청하면<br />
+        무엇이 달라지나요?
+      </h2>
+      <p class="faq-subtitle">
+        같은 박람회라도 어디에서 신청하느냐에 따라 받는 혜택이 달라집니다.<br />
+        웨딩스쿱 회원 전용 혜택을 확인해보세요.
+      </p>
+    </div>
+
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-question">
+          <span class="faq-q-num">Q1</span>
+          <span class="faq-q-text">박람회에 직접 신청해도 되는데, 왜 웨딩스쿱을 통해야 하나요?</span>
+          <span class="faq-toggle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            박람회 공식 홈페이지에서 직접 신청하시면 받을 수 없는 <strong>웨딩스쿱 전용 혜택</strong>이 준비되어 있습니다. 대표적으로 <span class="highlight">최대 5만원 상당의 무료초대권</span>, 사전 등록 시 제공되는 웰컴 패키지, 일부 박람회의 VIP 라운지 이용권 등이 포함됩니다. 동일한 박람회라도 신청 경로에 따라 혜택이 달라지니, 반드시 웨딩스쿱을 통해 신청하시기를 권장드립니다.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <span class="faq-q-num">Q2</span>
+          <span class="faq-q-text">무료초대권은 정말 무료인가요? 숨겨진 비용이 있나요?</span>
+          <span class="faq-toggle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <strong>100% 무료</strong>입니다. 웨딩스쿱은 박람회 주최측과 제휴를 맺고 사전 신청자에게 혜택을 제공하는 구조로, 신청자분께 별도로 청구되는 비용은 <span class="highlight">전혀 없습니다</span>. 박람회 현장에서 상담을 받더라도 계약 의사가 없으시다면 자유롭게 입장만 하시고 관람만 하셔도 됩니다.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <span class="faq-q-num">Q3</span>
+          <span class="faq-q-text">신청 후 얼마나 빨리 확인 연락이 오나요?</span>
+          <span class="faq-toggle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            신청 접수 후 <strong>영업일 기준 1~2일 이내</strong>에 박람회 주최측에서 직접 연락드립니다. 신청 시 입력하신 연락처로 일정 안내와 함께 초대권 정보를 전달해드리며, 박람회 당일 현장에서 본인 확인 후 입장하실 수 있습니다.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <span class="faq-q-num">Q4</span>
+          <span class="faq-q-text">여러 박람회를 중복으로 신청해도 되나요?</span>
+          <span class="faq-toggle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            네, <strong>얼마든지 중복 신청</strong> 가능합니다. 오히려 여러 박람회를 비교 관람하시는 것을 추천드립니다. 업체마다 제공되는 혜택과 가격 구성이 다르므로, <span class="highlight">2~3개 박람회를 둘러보신 후 결정</span>하시면 더 합리적인 선택을 하실 수 있습니다.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ 긴급성 알림만 유지 ═══ -->
+    <div class="proof-urgency-wrap">
+      <div class="proof-urgency">
+        <span class="urgency-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </span>
+        <div class="urgency-text">
+          <strong>선착순 혜택 마감 임박</strong>
+          <span>박람회별 무료초대권은 수량 한정으로 제공되며, 조기 마감되는 경우가 많습니다.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-cta">
+      <p class="faq-cta-text">
+        같은 박람회, <span class="cta-accent">다른 혜택.</span><br />
+        <small><span class="cta-brand">웨딩스쿱</span>에서만 받을 수 있는<br />
+        특별한 시작을 놓치지마세요!</small>
+      </p>
+      <div class="faq-cta-wrap">
+        <span class="faq-cta-mini">NOW LIVE</span>
+        <a class="faq-cta-btn" href="#campaigns" onclick="document.getElementById('campaigns').scrollIntoView({behavior: 'smooth'}); return false;">
+          <span class="btn-text">웨딩박람회 무료초대권 받기</span>
+          <span class="btn-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 플로팅 CTA (스크롤 따라다니는 버튼) ═══ -->
+<a class="floating-cta" id="floatingCta" href="#campaigns" onclick="document.getElementById('campaigns').scrollIntoView({behavior: 'smooth'}); return false;">
+  <span class="fc-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="6 9 12 15 18 9"/>
+    </svg>
+  </span>
+  <span>박람회 무료초대권 받기</span>
+</a>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">Wedding<span class="amp">&amp;</span>Scoop</div>
+      <p class="footer-text">
+        본 사이트의 정보는 주최측 사정에 의해 변경될 수 있습니다.<br />
+        해당 홈페이지를 통해 수수료를 받을 수 있습니다.
+      </p>
+    </div>
+    <div>
+      <div class="footer-label">Updated</div>
+      <div class="footer-val" id="lastUpdate">—</div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 WEDDING SCOOP · ALL RIGHTS RESERVED</span>
+    <span>MADE WITH CARE IN SEOUL</span>
+  </div>
+</footer>
+
+<script>
+  const today = new Date();
+  document.getElementById('todayDate').textContent =
+    today.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }).toUpperCase();
+  document.getElementById('lastUpdate').textContent =
+    today.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+
+  let allExpos = [];
+  let activeRegion = '전체보기';
+
+  const grid = document.getElementById('grid');
+  const regionFilter = document.getElementById('regionFilter');
+  const countNum = document.getElementById('countNum');
+
+  function formatDate(dateStr, endStr) {
+    const d = new Date(dateStr);
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    if (endStr) {
+      const e = new Date(endStr);
+      const em = String(e.getMonth() + 1).padStart(2, '0');
+      const ed = String(e.getDate()).padStart(2, '0');
+      return `${d.getFullYear()}.${m}.${day} — ${em}.${ed}`;
+    }
+    return `${d.getFullYear()}.${m}.${day}`;
+  }
+
+  function render() {
+    const filtered = activeRegion === '전체보기'
+      ? allExpos
+      : allExpos.filter(e => e.region === activeRegion);
+
+    filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    countNum.textContent = String(filtered.length).padStart(2, '0');
+
+    if (filtered.length === 0) {
+      grid.innerHTML = '<div class="empty">해당 지역의 박람회가 아직 준비중입니다.</div>';
+      return;
+    }
+
+    grid.innerHTML = filtered.map((e, i) => `
+      <a class="card" href="${e.link}" target="_blank" rel="noopener">
+        <span class="card-number">N° ${String(i + 1).padStart(2, '0')}</span>
+        <div class="card-image">
+          ${e.tag ? `<span class="card-tag">${e.tag}</span>` : ''}
+          <img src="${e.thumbnail}" alt="${e.title}" loading="lazy" />
+          <div class="card-region-bar">
+            <span>${e.region}</span>
+            <span class="arrow">→</span>
+          </div>
+        </div>
+        <div class="card-meta-row">
+          <span class="date">${formatDate(e.date, e.endDate)}</span>
+          <span class="divider"></span>
+          <span class="label">${e.region}</span>
+        </div>
+        <h3 class="card-title">${e.title}</h3>
+        <p class="card-location">${e.location}</p>
+      </a>
+    `).join('');
+  }
+
+  // 고정 지역 목록 — 박람회 유무와 관계없이 항상 표시
+  const FIXED_REGIONS = ['전체보기', '서울', '경기', '인천', '부산', '경상', '광주', '제주', '강원', '충청', '전라', '기타'];
+
+  function buildRegionFilter() {
+    regionFilter.innerHTML = FIXED_REGIONS.map(r => `
+      <button class="filter-btn ${r === activeRegion ? 'active' : ''}" data-region="${r}">${r}</button>
+    `).join('');
+    regionFilter.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        activeRegion = btn.dataset.region;
+        regionFilter.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        render();
+      });
+    });
+  }
+
+  // ═══════ 파트너스 API 연동 (cpaad.co.kr → Vercel 프록시) ═══════
+  const PARTNER_ID = 'popo9110';
+  // Vercel Serverless Function 프록시 경로 (CORS 우회)
+  const API_URL = '/api/expos';
+
+  // 영문 region 코드 → 한글 지역명
+  // API 응답: capital(서울), gyeonggi, incheon, chungcheong, jeolla, gangwon, gyeongsang, busan, jeju, etc
+  const REGION_MAP = {
+    'capital': '서울',
+    'gyeonggi': '경기',
+    'incheon': '인천',
+    'chungcheong': '충청',
+    'jeolla': '전라',
+    'gangwon': '강원',
+    'gyeongsang': '경상',
+    'busan': '부산',
+    'jeju': '제주',
+    'etc': '기타',
+  };
+
+  function normalizeRegion(raw) {
+    if (!raw) return '기타';
+    const key = String(raw).trim().toLowerCase();
+    return REGION_MAP[key] || '기타';
+  }
+
+  // 날짜 정규화 (YYYY-MM-DD 형식)
+  function normalizeDate(raw) {
+    if (!raw) return null;
+    const s = String(raw).trim();
+    if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+    if (/^\d{8}$/.test(s)) {
+      return `${s.slice(0,4)}-${s.slice(4,6)}-${s.slice(6,8)}`;
+    }
+    const m = s.match(/^(\d{4})[-./](\d{1,2})[-./](\d{1,2})/);
+    if (m) return `${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`;
+    return null;
+  }
+
+  // 홍보 URL 조합: ad_url 뒤에 파트너 아이디 추가
+  // 예: "https://ad.cpaad.co.kr/iniwedding05/" → "https://ad.cpaad.co.kr/iniwedding05/popo9110"
+  function buildPromoUrl(adUrl) {
+    if (!adUrl) return '#';
+    let s = String(adUrl).trim();
+    // 이미 파트너 아이디가 붙어있으면 그대로
+    if (s.endsWith('/' + PARTNER_ID) || s.endsWith('/' + PARTNER_ID + '/')) return s;
+    // 끝에 / 없으면 추가한 뒤 파트너 아이디 붙임
+    if (!s.endsWith('/')) s += '/';
+    return s + PARTNER_ID;
+  }
+
+  // 장소 문자열 정리: "서울 광진구 워커힐로 177||(광장동 22-1)||그랜드 워커힐 호텔 비스타홀"
+  // → "그랜드 워커힐 호텔 비스타홀" (마지막 파트, 행사장 이름 우선)
+  // → 없으면 첫 파트(도로명 주소)
+  function cleanLocation(raw) {
+    if (!raw) return '';
+    const parts = String(raw).split('||').map(s => s.trim()).filter(Boolean);
+    if (parts.length === 0) return '';
+    // 마지막 파트가 행사장 이름이면 그걸 사용
+    if (parts.length >= 3) return parts[parts.length - 1];
+    return parts[0];
+  }
+
+  // 개별 광고 항목 → 내부 형식 정규화
+  function normalizeExpo(adId, raw) {
+    return {
+      id: adId,
+      title: raw.gather_name || '',
+      info: raw.ad_info || '',
+      date: normalizeDate(raw.start_date),
+      endDate: normalizeDate(raw.end_date),
+      dateText: raw.ad_date || '', // 한글 표시용 원본 (fallback)
+      link: buildPromoUrl(raw.ad_url),
+      region: normalizeRegion(raw.region),
+      location: cleanLocation(raw.ad_location),
+      thumbnail: raw.ad_thumbnail || raw.ad_mainvisual || '',
+      tag: '',
+    };
+  }
+
+  // 오늘 이후의 박람회만 필터링 (이미 끝난 건 제외)
+  function filterActive(expos) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return expos.filter(e => {
+      if (!e.date) return false;
+      const end = new Date(e.endDate || e.date);
+      return end >= today;
+    });
+  }
+
+  // 데이터 로드
+  async function loadExpos() {
+    try {
+      const res = await fetch(API_URL, { cache: 'no-store' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+
+      // 응답 구조: { advertisements: { "adId1": {...}, "adId2": {...} }, ... }
+      const ads = data.advertisements || {};
+      if (typeof ads !== 'object') {
+        throw new Error('advertisements 필드 없음');
+      }
+
+      // 오브젝트 → 배열 변환
+      const entries = Object.entries(ads);
+      console.log(`[API] 총 ${entries.length}개 광고 수신`);
+
+      // 정규화
+      const all = entries
+        .map(([id, raw]) => normalizeExpo(id, raw))
+        .filter(e => e.title); // 제목 있는 것만
+
+      // 미래 박람회만 (오늘 이후에 끝나는 것)
+      allExpos = filterActive(all);
+
+      console.log(`[API] 렌더링 대상: ${allExpos.length}개`);
+
+      buildRegionFilter();
+      render();
+    } catch (err) {
+      console.error('[API Error]', err);
+      grid.innerHTML = '<div class="empty">박람회 정보를 불러오지 못했습니다.<br/><small style="opacity:0.6;">잠시 후 다시 시도해주세요.</small></div>';
+    }
+  }
+
+  loadExpos();
+
+  // ═══════ FAQ 아코디언 ═══════
+  document.querySelectorAll('.faq-question').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.parentElement;
+      const wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!wasOpen) item.classList.add('open');
+    });
+  });
+
+  // ═══════ Social Proof 숫자 카운트업 ═══════
+  const animateCount = (el) => {
+    const target = parseInt(el.dataset.target, 10);
+    if (!target) return;
+    const duration = 1800;
+    const start = performance.now();
+    const unitHTML = el.querySelector('.stat-unit')?.outerHTML || '';
+    const step = (now) => {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = Math.floor(target * eased);
+      el.innerHTML = current.toLocaleString() + unitHTML;
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      } else {
+        // 타겟 도달 후 자동 증가 시작 (누적 신청자만)
+        if (el.dataset.autoIncrement === 'true') {
+          startAutoIncrement(el, target);
+        }
+      }
+    };
+    requestAnimationFrame(step);
+  };
+
+  // 누적 신청자 자동 증가 (2~4초 랜덤, 최대 10만까지)
+  function startAutoIncrement(el, startValue) {
+    let currentVal = startValue;
+    const MAX = 100000;
+
+    function tick() {
+      if (currentVal >= MAX) return;
+      // 증가 폭: 1~7 사이 랜덤
+      const increment = Math.floor(Math.random() * 7) + 1;
+      currentVal = Math.min(currentVal + increment, MAX);
+
+      // 숫자 업데이트
+      el.textContent = currentVal.toLocaleString();
+
+      // 빨간 하이라이트 애니메이션
+      el.classList.remove('flash');
+      void el.offsetWidth; // 리플로우 트리거
+      el.classList.add('flash');
+
+      // 다음 tick — 2~4초 랜덤
+      const nextDelay = 2000 + Math.random() * 2000;
+      setTimeout(tick, nextDelay);
+    }
+
+    // 초기 딜레이 후 시작
+    setTimeout(tick, 1500);
+  }
+
+  const proofObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.querySelectorAll('.stat-num[data-target]').forEach(animateCount);
+        proofObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  const proofStats = document.querySelector('.proof-stats');
+  if (proofStats) proofObserver.observe(proofStats);
+
+  // ═══════ 후기 슬라이더 (자동 전환) ═══════
+  const sliderTrack = document.getElementById('proofSliderTrack');
+  const sliderDots = document.querySelectorAll('.proof-dot');
+  let currentSlide = 0;
+  let sliderInterval;
+
+  function goToSlide(index) {
+    if (!sliderTrack) return;
+    currentSlide = index;
+    sliderTrack.style.transform = `translateX(-${index * 100}%)`;
+    sliderDots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === index);
+    });
+  }
+
+  function nextSlide() {
+    goToSlide((currentSlide + 1) % 10);
+  }
+
+  function startAutoSlide() {
+    stopAutoSlide();
+    sliderInterval = setInterval(nextSlide, 5000); // 5초마다 다음 슬라이드
+  }
+
+  function stopAutoSlide() {
+    if (sliderInterval) clearInterval(sliderInterval);
+  }
+
+  // 인디케이터 클릭
+  sliderDots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const idx = parseInt(dot.dataset.slide, 10);
+      goToSlide(idx);
+      startAutoSlide(); // 클릭 후 타이머 리셋
+    });
+  });
+
+  // 마우스 호버 시 일시정지
+  const proofSlider = document.querySelector('.proof-slider');
+  if (proofSlider) {
+    proofSlider.addEventListener('mouseenter', stopAutoSlide);
+    proofSlider.addEventListener('mouseleave', startAutoSlide);
+
+    // 터치 스와이프 지원
+    let touchStartX = 0;
+    let touchEndX = 0;
+    proofSlider.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+      stopAutoSlide();
+    }, { passive: true });
+    proofSlider.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      const diff = touchStartX - touchEndX;
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) {
+          goToSlide((currentSlide + 1) % 10);
+        } else {
+          goToSlide((currentSlide - 1 + 10) % 10);
+        }
+      }
+      startAutoSlide();
+    }, { passive: true });
+  }
+
+  // 슬라이더가 화면에 보일 때만 자동 재생
+  if (sliderTrack) {
+    const sliderViewObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          startAutoSlide();
+        } else {
+          stopAutoSlide();
+        }
+      });
+    }, { threshold: 0.2 });
+    sliderViewObserver.observe(sliderTrack);
+  }
+
+  // ═══════ 플로팅 CTA 표시/숨김 제어 ═══════
+  // 캠페인 영역 (필터 + 박람회 그리드)을 보고 있을 때는 숨김
+  const floatingCta = document.getElementById('floatingCta');
+  const campaignsEl = document.getElementById('campaigns');
+  const gridEl = document.getElementById('grid');
+  const heroEl = document.querySelector('.hero');
+
+  function updateFloatingVisibility() {
+    if (!floatingCta || !campaignsEl || !gridEl || !heroEl) return;
+
+    const scrollY = window.scrollY;
+    const heroBottom = heroEl.getBoundingClientRect().bottom + scrollY;
+    const campaignsTop = campaignsEl.getBoundingClientRect().top + scrollY;
+    const gridBottom = gridEl.getBoundingClientRect().bottom + scrollY;
+    const viewportBottom = scrollY + window.innerHeight;
+    const viewportTop = scrollY;
+
+    // 숨겨야 하는 조건:
+    // (1) 히어로 영역만 보이고 있을 때 (스크롤 아직 히어로 안)
+    // (2) 캠페인 영역(필터~그리드 끝)이 화면 안에 들어와 있을 때
+    const inHero = viewportBottom < heroBottom + 100;
+    const inCampaigns = viewportBottom > campaignsTop + 150 && viewportTop < gridBottom - 100;
+
+    if (inHero || inCampaigns) {
+      floatingCta.classList.add('hidden');
+    } else {
+      floatingCta.classList.remove('hidden');
+    }
+  }
+
+  // 스크롤 이벤트 (성능 최적화 — requestAnimationFrame)
+  let scrollTicking = false;
+  window.addEventListener('scroll', () => {
+    if (!scrollTicking) {
+      requestAnimationFrame(() => {
+        updateFloatingVisibility();
+        scrollTicking = false;
+      });
+      scrollTicking = true;
+    }
+  }, { passive: true });
+
+  window.addEventListener('resize', updateFloatingVisibility);
+  updateFloatingVisibility(); // 초기 상태
+</script>
+
+</body>
+</html>
