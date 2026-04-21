@@ -778,17 +778,19 @@
     border-color: var(--ink);
   }
   .count-badge {
-    font-family: 'Inter', sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.2em;
+    font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
     color: var(--muted-dark);
-    text-transform: uppercase;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 3px;
   }
   .count-badge strong {
     color: var(--red);
-    font-weight: 700;
-    font-size: 16px;
-    font-family: 'Fraunces', serif;
+    font-weight: 800;
+    font-size: 17px;
     font-variant-numeric: tabular-nums;
   }
 
@@ -1956,13 +1958,15 @@
       min-height: 42px;
       scroll-snap-align: start;
     }
-    .count-badge {
-      display: none;
-    }
     .filters-right {
       padding-top: 0;
       gap: 12px;
     }
+    .count-badge {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+    }
+    .count-badge strong { font-size: 14px; }
     .sort-select {
       font-size: 12px;
       padding: 7px 28px 7px 10px;
@@ -2548,7 +2552,7 @@
         </select>
         <span class="sort-arrow">▾</span>
       </div>
-      <span class="count-badge"><strong id="countNum">0</strong> &nbsp;EXPOS LISTED</span>
+      <span class="count-badge"><strong id="countNum">0</strong>개 박람회</span>
     </div>
   </div>
 </section>
