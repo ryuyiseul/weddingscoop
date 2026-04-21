@@ -684,14 +684,16 @@
     word-break: keep-all;
   }
   .value-title .red-mark {
-    color: var(--red);
+    background: linear-gradient(135deg, #ff1a1a 0%, #b8232f 50%, #6b0f17 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
     font-weight: 800;
     -webkit-text-emphasis: filled dot var(--red);
     -webkit-text-emphasis-position: over;
     text-emphasis: filled dot var(--red);
     text-emphasis-position: over;
-    text-emphasis-skip: spaces punctuation;
-    -webkit-text-emphasis-skip: spaces punctuation;
   }
   .value-title .emphasis-gap {
     color: var(--red);
