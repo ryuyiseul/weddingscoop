@@ -686,10 +686,18 @@
   .value-title .red-mark {
     color: var(--red);
     font-weight: 800;
-    -webkit-text-emphasis: dot var(--red);
+    -webkit-text-emphasis: filled dot var(--red);
     -webkit-text-emphasis-position: over;
-    text-emphasis: dot var(--red);
+    text-emphasis: filled dot var(--red);
     text-emphasis-position: over;
+    text-emphasis-skip: spaces punctuation;
+    -webkit-text-emphasis-skip: spaces punctuation;
+  }
+  .value-title .emphasis-gap {
+    color: var(--red);
+    font-weight: 800;
+    -webkit-text-emphasis: none;
+    text-emphasis: none;
   }
 
   .value-desc {
@@ -2225,7 +2233,7 @@
           <circle cx="12" cy="9" r="2.5"/>
         </svg>
       </div>
-      <h2 class="value-title"><span class="red-mark">매일 업데이트</span>되는<br />전국 웨딩박람회를 한눈에</h2>
+      <h2 class="value-title"><span class="red-mark">매일</span><span class="emphasis-gap"> </span><span class="red-mark">업데이트</span>되는<br />전국 웨딩박람회를 한눈에</h2>
       <p class="value-desc">서울 · 부산 · 대구 · 인천 · 광주<br />놓치는 일정 없이 한 자리에서 확인</p>
     </div>
     <div class="value-prop">
@@ -2238,7 +2246,7 @@
           <line x1="13" y1="17" x2="13" y2="19"/>
         </svg>
       </div>
-      <h2 class="value-title">최대 <span class="red-mark">5만원 상당</span>의<br />무료초대권 증정</h2>
+      <h2 class="value-title">최대 <span class="red-mark">5만원</span><span class="emphasis-gap"> </span><span class="red-mark">상당</span>의<br />무료초대권 증정</h2>
       <p class="value-desc">웨딩스쿱을 통해 사전 신청만 하면<br />박람회 입장권 무료 제공</p>
     </div>
   </div>
