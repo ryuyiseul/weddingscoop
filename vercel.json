@@ -8,17 +8,17 @@
     }
   },
   "rewrites": [
-    { "source": "/seoul", "destination": "/index.html" },
-    { "source": "/gyeonggi", "destination": "/index.html" },
-    { "source": "/incheon", "destination": "/index.html" },
-    { "source": "/busan", "destination": "/index.html" },
-    { "source": "/gyeongsang", "destination": "/index.html" },
-    { "source": "/gwangju", "destination": "/index.html" },
-    { "source": "/jeju", "destination": "/index.html" },
-    { "source": "/gangwon", "destination": "/index.html" },
-    { "source": "/chungcheong", "destination": "/index.html" },
-    { "source": "/jeolla", "destination": "/index.html" },
-    { "source": "/etc", "destination": "/index.html" }
+    { "source": "/seoul", "destination": "/" },
+    { "source": "/gyeonggi", "destination": "/" },
+    { "source": "/incheon", "destination": "/" },
+    { "source": "/busan", "destination": "/" },
+    { "source": "/gyeongsang", "destination": "/" },
+    { "source": "/gwangju", "destination": "/" },
+    { "source": "/jeju", "destination": "/" },
+    { "source": "/gangwon", "destination": "/" },
+    { "source": "/chungcheong", "destination": "/" },
+    { "source": "/jeolla", "destination": "/" },
+    { "source": "/etc", "destination": "/" }
   ],
   "headers": [
     {

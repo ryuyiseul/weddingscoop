@@ -780,8 +780,6 @@
     border-color: var(--ink);
   }
   .count-badge {
-    position: absolute;
-    right: 0;
     font-family: 'Inter', sans-serif;
     font-size: 11px;
     letter-spacing: 0.2em;
@@ -794,6 +792,52 @@
     font-size: 16px;
     font-family: 'Fraunces', serif;
     font-variant-numeric: tabular-nums;
+  }
+
+  /* 필터 섹션 우측 그룹 (정렬 + 카운트) */
+  .filters-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: absolute;
+    right: 0;
+  }
+  .sort-select-wrap {
+    position: relative;
+    display: inline-block;
+  }
+  .sort-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    border-radius: 2px;
+    padding: 8px 30px 8px 12px;
+    cursor: pointer;
+    letter-spacing: -0.01em;
+    transition: border-color 0.2s ease, color 0.2s ease;
+  }
+  .sort-select:hover {
+    border-color: var(--red);
+    color: var(--red);
+  }
+  .sort-select:focus {
+    outline: none;
+    border-color: var(--red);
+  }
+  .sort-arrow {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 11px;
+    color: var(--ink);
+    pointer-events: none;
   }
 
   /* ═══ CARD GRID ═══ */
@@ -1916,6 +1960,21 @@
     .count-badge {
       display: none;
     }
+    /* 모바일: filters-right 위치 조정 — 지역 필터 아래 전체 너비로 */
+    .filters-inner {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+    }
+    .filters-right {
+      position: static;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+    .sort-select {
+      font-size: 12px;
+      padding: 7px 28px 7px 10px;
+    }
 
     /* 메인 그리드 — 모바일 2열 */
     main { padding: 40px 14px 64px; }
@@ -2488,7 +2547,17 @@
 <section class="filters-section" id="campaigns">
   <div class="filters-inner">
     <div class="filter-group" id="regionFilter"></div>
-    <span class="count-badge"><strong id="countNum">0</strong> &nbsp;EXPOS LISTED</span>
+    <div class="filters-right">
+      <div class="sort-select-wrap">
+        <select id="sortSelect" class="sort-select">
+          <option value="recommended">추천순</option>
+          <option value="soon">임박순</option>
+          <option value="later">늦은 순</option>
+        </select>
+        <span class="sort-arrow">▾</span>
+      </div>
+      <span class="count-badge"><strong id="countNum">0</strong> &nbsp;EXPOS LISTED</span>
+    </div>
   </div>
 </section>
 
@@ -2754,6 +2823,8 @@
   let allExpos = [];
   // 초기값은 일단 '전체보기', loadExpos() 후 syncFromUrl()이 URL에 따라 덮어씀
   let activeRegion = '전체보기';
+  // 정렬 상태 (기본: 추천순)
+  let currentSort = 'recommended';
 
   const grid = document.getElementById('grid');
   const regionFilter = document.getElementById('regionFilter');
@@ -2780,12 +2851,15 @@
       ? allExpos
       : allExpos.filter(e => e.region === activeRegion);
 
-    // 정렬 전략:
-    //  - 전체보기: cpaad 응답 순서 유지 (최신 등록/추천 박람회가 위)
-    //  - 지역별 필터: 가까운 날짜부터 (사용자가 당장 갈 수 있는 것)
-    if (activeRegion === '전체보기') {
+    // 정렬: currentSort 값에 따라 분기
+    if (currentSort === 'recommended') {
+      // 추천순: cpaad API 응답 순서 (NEW 먼저)
       filtered.sort((a, b) => (a.apiIndex ?? 0) - (b.apiIndex ?? 0));
+    } else if (currentSort === 'later') {
+      // 늦은 날짜순: 미래로 먼 것이 위
+      filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
     } else {
+      // 임박순 (기본): 가까운 날짜가 위
       filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
     }
 
@@ -2909,6 +2983,15 @@
         // 박람회 그리드로 스크롤
         document.getElementById('campaigns')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
+    });
+  }
+
+  // ═══════ 정렬 드롭다운 이벤트 ═══════
+  const sortSelect = document.getElementById('sortSelect');
+  if (sortSelect) {
+    sortSelect.addEventListener('change', () => {
+      currentSort = sortSelect.value;
+      render();
     });
   }
 
