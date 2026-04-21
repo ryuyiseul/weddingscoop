@@ -812,13 +812,20 @@
     color: inherit;
     display: block;
     cursor: pointer;
+  .card {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
     opacity: 0;
     animation: fadeUp 0.6s ease forwards;
     position: relative;
     border: 1px solid var(--ink);
     background: var(--paper);
-    padding: 16px 16px 24px;
+    padding: 0;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
+    overflow: hidden;
   }
   .card:hover {
     box-shadow: 8px 8px 0 var(--ink);
@@ -836,133 +843,124 @@
   .card:nth-child(6) { animation-delay: 0.40s; }
   .card:nth-child(n+7) { animation-delay: 0.45s; }
 
-  .card-number {
-    position: absolute;
-    top: -10px;
-    left: 0;
-    font-family: 'Fraunces', serif;
-    font-weight: 300;
-    font-style: italic;
-    font-size: 14px;
-    color: var(--red);
-    letter-spacing: 0.1em;
-    z-index: 3;
-    background: var(--paper);
-    padding: 0 10px 0 0;
-    font-variant-numeric: tabular-nums;
-  }
-
+  /* 이미지 영역 */
   .card-image {
     position: relative;
     aspect-ratio: 4 / 5;
     overflow: hidden;
     background: var(--paper-soft);
-    margin-bottom: 20px;
-    border: 1px solid var(--ink);
+    margin: 0;
+    border: none;
+    border-bottom: 1px solid var(--ink);
   }
   .card-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.8s cubic-bezier(.2,.7,.2,1), filter 0.5s ease;
-    filter: grayscale(0.1) contrast(1.03);
+    transition: transform 0.8s cubic-bezier(.2,.7,.2,1);
+    filter: none;
   }
   .card:hover .card-image img {
     transform: scale(1.06);
-    filter: grayscale(0) contrast(1.05);
   }
-  .card-image::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, transparent 50%, rgba(10,10,10,0.55) 100%);
-    pointer-events: none;
-  }
-  .card-tag {
-    position: absolute;
-    top: 0;
-    left: 0;
-    background: var(--red);
-    color: var(--paper);
-    font-family: 'Inter', sans-serif;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    padding: 8px 14px;
-    z-index: 2;
-  }
-  .card-region-bar {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 14px 16px;
-    color: var(--paper);
-    font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
-    font-size: 13px;
-    letter-spacing: 0.02em;
-    z-index: 2;
+  .card-image::after { display: none; }
+  .card-tag { display: none; }
+  .card-region-bar { display: none; }
+
+  /* 카드 본문 (이미지 아래) */
+  .card-body {
+    padding: 20px 18px 18px;
     display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    font-weight: 700;
-  }
-  .card-region-bar .arrow {
-    font-family: 'Fraunces', serif;
-    font-size: 22px;
-    transition: transform 0.3s ease;
-    color: #ff6b6b;
-    font-weight: 300;
-  }
-  .card:hover .card-region-bar .arrow {
-    transform: translateX(6px);
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
   }
 
-  .card-meta-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 12px;
+  /* 지역 배지 (pill) */
+  .card-badge {
+    display: inline-block;
+    align-self: flex-start;
+    background: var(--ink);
+    color: var(--paper);
     font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 12px;
-    letter-spacing: 0.05em;
-    font-variant-numeric: tabular-nums;
-    font-weight: 600;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    padding: 5px 12px;
+    border-radius: 2px;
   }
-  .card-meta-row .date { color: var(--ink); }
-  .card-meta-row .divider { width: 24px; height: 1px; background: var(--red); }
-  .card-meta-row .label { color: var(--muted-dark); }
 
+  /* 제목 */
   .card-title {
     font-family: 'Noto Serif KR', serif;
-    font-size: 23px;
+    font-size: 19px;
     font-weight: 600;
-    line-height: 1.3;
+    line-height: 1.35;
     letter-spacing: -0.015em;
     color: var(--ink);
-    margin-bottom: 12px;
+    margin: 0;
     transition: color 0.25s ease;
   }
   .card:hover .card-title { color: var(--red); }
-  .card-location {
+
+  /* 메타 (아이콘 + 텍스트) */
+  .card-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 4px 0 8px;
+  }
+  .card-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 13px;
     font-weight: 500;
-    color: var(--muted-dark);
+    color: var(--ink-soft);
     letter-spacing: -0.005em;
-    padding-left: 14px;
-    position: relative;
   }
-  .card-location::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 8px;
-    width: 8px;
-    height: 1px;
+  .card-meta-icon {
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+    color: var(--red);
+  }
+
+  /* CTA 버튼 */
+  .card-cta {
+    margin-top: auto;
+    background: var(--ink);
+    color: var(--paper);
+    text-align: center;
+    padding: 13px 12px;
+    font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: -0.005em;
+    transition: background 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .card:hover .card-cta {
     background: var(--red);
   }
+  .card-cta-arrow {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 16px;
+    transition: transform 0.3s ease;
+  }
+  .card:hover .card-cta-arrow {
+    transform: translateX(4px);
+  }
+
+  /* 기존 요소들 비활성화 (하위 호환) */
+  .card-number { display: none; }
+  .card-meta-row { display: none; }
+  .card-location { display: none; }
 
   /* ═══ EMPTY ═══ */
   .empty {
@@ -1839,39 +1837,39 @@
 
     /* 카드 */
     .card {
-      padding: 14px 14px 20px;
+      padding: 0;
     }
     .card:hover {
       box-shadow: none;
       transform: none;
     }
-    .card-image { margin-bottom: 16px; }
+    .card-image { margin: 0; }
     .card-image img {
-      filter: grayscale(0) contrast(1.03);  /* 모바일은 호버 없으니 컬러 기본 */
+      filter: none;
     }
-    .card-tag {
-      font-size: 9px;
-      padding: 7px 12px;
-      letter-spacing: 0.2em;
-    }
-    .card-region-bar {
-      padding: 12px 14px;
-      font-size: 12px;
-      letter-spacing: 0.02em;
-    }
-    .card-meta-row {
-      font-size: 11px;
-      letter-spacing: 0.04em;
-      margin-bottom: 10px;
+    .card-body {
+      padding: 16px 14px 14px;
       gap: 8px;
     }
-    .card-meta-row .divider { width: 18px; }
-    .card-title {
-      font-size: 21px;
-      line-height: 1.35;
-      margin-bottom: 10px;
+    .card-badge {
+      font-size: 11px;
+      padding: 4px 10px;
     }
-    .card-location { font-size: 13px; }
+    .card-title {
+      font-size: 18px;
+      line-height: 1.35;
+    }
+    .card-meta-item {
+      font-size: 13px;
+    }
+    .card-meta-icon {
+      width: 13px;
+      height: 13px;
+    }
+    .card-cta {
+      padding: 12px;
+      font-size: 13px;
+    }
 
     /* FAQ 모바일 */
     .faq-section { padding: 56px 18px; }
@@ -2001,10 +1999,11 @@
     /* 호버 효과 무력화 (모바일에선 의미 없음) */
     .card:hover .card-image img {
       transform: none;
-      filter: grayscale(0) contrast(1.03);
+      filter: none;
     }
-    .card:hover .card-region-bar .arrow { transform: none; }
     .card:hover .card-title { color: var(--ink); }
+    .card:hover .card-cta { background: var(--ink); }
+    .card:hover .card-cta-arrow { transform: none; }
     .filter-btn:hover {
       color: var(--ink-soft);
       border-color: var(--line);
@@ -2644,15 +2643,18 @@
 
   function formatDate(dateStr, endStr) {
     const d = new Date(dateStr);
-    const m = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    if (endStr) {
+    const m = d.getMonth() + 1;
+    const day = d.getDate();
+    if (endStr && endStr !== dateStr) {
       const e = new Date(endStr);
-      const em = String(e.getMonth() + 1).padStart(2, '0');
-      const ed = String(e.getDate()).padStart(2, '0');
-      return `${d.getFullYear()}.${m}.${day} — ${em}.${ed}`;
+      const em = e.getMonth() + 1;
+      const ed = e.getDate();
+      if (m === em) {
+        return `${m}월 ${day}일 - ${ed}일`;
+      }
+      return `${m}월 ${day}일 - ${em}월 ${ed}일`;
     }
-    return `${d.getFullYear()}.${m}.${day}`;
+    return `${m}월 ${day}일`;
   }
 
   function render() {
@@ -2672,20 +2674,36 @@
     grid.innerHTML = filtered.map((e, i) => `
       <a class="card" href="${e.link}" target="_blank" rel="noopener">
         <div class="card-image">
-          ${e.tag ? `<span class="card-tag">${e.tag}</span>` : ''}
           <img src="${e.thumbnail}" alt="${e.title}" loading="lazy" />
-          <div class="card-region-bar">
-            <span>${e.region}</span>
-            <span class="arrow">→</span>
+        </div>
+        <div class="card-body">
+          <span class="card-badge">${e.region}</span>
+          <h3 class="card-title">${e.title}</h3>
+          <div class="card-meta">
+            <div class="card-meta-item">
+              <svg class="card-meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              <span>${formatDate(e.date, e.endDate)}</span>
+            </div>
+            ${e.location ? `
+            <div class="card-meta-item">
+              <svg class="card-meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              <span>${e.location}</span>
+            </div>
+            ` : ''}
+          </div>
+          <div class="card-cta">
+            무료초대권 신청하기
+            <span class="card-cta-arrow">→</span>
           </div>
         </div>
-        <div class="card-meta-row">
-          <span class="date">${formatDate(e.date, e.endDate)}</span>
-          <span class="divider"></span>
-          <span class="label">${e.region}</span>
-        </div>
-        <h3 class="card-title">${e.title}</h3>
-        <p class="card-location">${e.location}</p>
       </a>
     `).join('');
   }
