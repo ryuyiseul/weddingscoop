@@ -725,8 +725,10 @@
     margin: 0 auto;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 24px;
     flex-wrap: wrap;
+    position: relative;
   }
   .filters-label {
     font-family: 'Inter', sans-serif;
@@ -750,21 +752,23 @@
   }
   .filter-group {
     display: flex;
-    gap: 4px;
+    gap: 6px;
     flex-wrap: wrap;
+    justify-content: center;
+    flex: 1;
   }
   .filter-btn {
-    font-family: 'Noto Serif KR', serif;
-    font-size: 14px;
-    font-weight: 400;
-    padding: 9px 20px;
+    font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 12px 24px;
     border: 1px solid var(--line);
     background: var(--paper);
     color: var(--ink-soft);
     cursor: pointer;
     border-radius: 0;
     transition: all 0.2s ease;
-    letter-spacing: 0.02em;
+    letter-spacing: -0.01em;
   }
   .filter-btn:hover {
     color: var(--red);
@@ -776,7 +780,8 @@
     border-color: var(--ink);
   }
   .count-badge {
-    margin-left: auto;
+    position: absolute;
+    right: 0;
     font-family: 'Inter', sans-serif;
     font-size: 11px;
     letter-spacing: 0.2em;
@@ -810,6 +815,14 @@
     opacity: 0;
     animation: fadeUp 0.6s ease forwards;
     position: relative;
+    border: 1px solid var(--ink);
+    background: var(--paper);
+    padding: 16px 16px 24px;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+  .card:hover {
+    box-shadow: 8px 8px 0 var(--ink);
+    transform: translate(-2px, -2px);
   }
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(24px); }
@@ -886,15 +899,14 @@
     right: 0;
     padding: 14px 16px;
     color: var(--paper);
-    font-family: 'Inter', sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
+    font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.02em;
     z-index: 2;
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    font-weight: 500;
+    font-weight: 700;
   }
   .card-region-bar .arrow {
     font-family: 'Fraunces', serif;
@@ -912,12 +924,11 @@
     align-items: center;
     gap: 10px;
     margin-bottom: 12px;
-    font-family: 'Inter', sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
+    font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.05em;
     font-variant-numeric: tabular-nums;
-    font-weight: 500;
+    font-weight: 600;
   }
   .card-meta-row .date { color: var(--ink); }
   .card-meta-row .divider { width: 24px; height: 1px; background: var(--red); }
@@ -935,10 +946,11 @@
   }
   .card:hover .card-title { color: var(--red); }
   .card-location {
-    font-family: 'Noto Serif KR', serif;
+    font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 13px;
+    font-weight: 500;
     color: var(--muted-dark);
-    letter-spacing: 0.02em;
+    letter-spacing: -0.005em;
     padding-left: 14px;
     position: relative;
   }
@@ -1803,21 +1815,20 @@
       scroll-snap-type: x mandatory;
       scrollbar-width: none;
       padding-bottom: 2px;
+      justify-content: flex-start;
     }
     .filter-group::-webkit-scrollbar { display: none; }
     .filter-btn {
       flex-shrink: 0;
-      padding: 10px 16px;
-      font-size: 13px;
-      min-height: 40px;
+      padding: 11px 18px;
+      font-size: 15px;
+      font-weight: 600;
+      min-height: 42px;
       scroll-snap-align: start;
     }
     .count-badge {
-      margin-left: 0;
-      font-size: 10px;
-      letter-spacing: 0.15em;
+      display: none;
     }
-    .count-badge strong { font-size: 14px; }
 
     /* 메인 그리드 — 모바일에서 1열 (카드 크게) */
     main { padding: 40px 18px 64px; }
@@ -1827,9 +1838,12 @@
     }
 
     /* 카드 */
-    .card-number {
-      font-size: 13px;
-      top: -8px;
+    .card {
+      padding: 14px 14px 20px;
+    }
+    .card:hover {
+      box-shadow: none;
+      transform: none;
     }
     .card-image { margin-bottom: 16px; }
     .card-image img {
@@ -1842,12 +1856,12 @@
     }
     .card-region-bar {
       padding: 12px 14px;
-      font-size: 10px;
-      letter-spacing: 0.25em;
+      font-size: 12px;
+      letter-spacing: 0.02em;
     }
     .card-meta-row {
-      font-size: 10px;
-      letter-spacing: 0.2em;
+      font-size: 11px;
+      letter-spacing: 0.04em;
       margin-bottom: 10px;
       gap: 8px;
     }
@@ -2657,7 +2671,6 @@
 
     grid.innerHTML = filtered.map((e, i) => `
       <a class="card" href="${e.link}" target="_blank" rel="noopener">
-        <span class="card-number">N° ${String(i + 1).padStart(2, '0')}</span>
         <div class="card-image">
           ${e.tag ? `<span class="card-tag">${e.tag}</span>` : ''}
           <img src="${e.thumbnail}" alt="${e.title}" loading="lazy" />
