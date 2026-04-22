@@ -2697,83 +2697,151 @@
 
   /* SEO 보강: 지역 키워드 섹션 */
   .seo-regions {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 56px 40px 48px;
+    background: var(--paper-soft);
     border-top: 1px solid var(--line);
+    padding: 72px 40px 80px;
+  }
+  .seo-regions-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .seo-regions-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .seo-regions-eyebrow {
+    display: inline-block;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    color: var(--red);
+    margin-bottom: 14px;
   }
   .seo-regions-title {
     font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
-    font-size: 18px;
+    font-size: 28px;
     font-weight: 800;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.025em;
     color: var(--ink);
-    margin-bottom: 12px;
+    line-height: 1.3;
+    margin-bottom: 16px;
+  }
+  .seo-regions-title .accent {
+    color: var(--red);
   }
   .seo-regions-desc {
     font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
-    font-size: 13px;
-    line-height: 1.7;
-    color: var(--ink-soft);
-    margin-bottom: 22px;
-    max-width: 720px;
-    letter-spacing: -0.005em;
-  }
-  .seo-regions-list {
-    list-style: none;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 8px 24px;
-    padding: 0;
-    margin: 0;
-  }
-  .seo-regions-list li::before {
-    content: '— ';
-    color: var(--red);
-    margin-right: 4px;
-    font-weight: 700;
-  }
-  .seo-regions-list a {
-    color: var(--ink-soft);
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: -0.01em;
-    transition: color 0.2s ease;
-  }
-  .seo-regions-list a:hover {
-    color: var(--red);
-  }
-  .seo-regions-subtitle {
-    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
     font-size: 14px;
-    font-weight: 700;
-    color: var(--ink);
-    margin: 28px 0 12px;
-    letter-spacing: -0.015em;
-  }
-  .seo-regions-keywords {
-    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
-    font-size: 11.5px;
-    line-height: 1.85;
-    color: var(--muted-dark);
+    line-height: 1.75;
+    color: var(--ink-soft);
+    max-width: 760px;
+    margin: 0 auto;
     letter-spacing: -0.005em;
-    word-break: keep-all;
   }
   .seo-regions-desc strong {
     color: var(--ink);
     font-weight: 700;
   }
+  .seo-regions-subtitle {
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--ink);
+    margin: 48px 0 18px;
+    letter-spacing: -0.015em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .seo-regions-subtitle::before {
+    content: '';
+    width: 18px;
+    height: 2px;
+    background: var(--red);
+    flex-shrink: 0;
+  }
+  /* 지역 카드 그리드 */
+  .seo-regions-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
+    padding: 0;
+    margin: 0;
+  }
+  .seo-regions-list a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px 18px;
+    color: var(--ink);
+    text-decoration: none;
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  }
+  .seo-regions-list a::after {
+    content: '→';
+    font-family: 'Fraunces', serif;
+    color: var(--muted);
+    font-size: 16px;
+    font-weight: 300;
+    transition: color 0.2s ease, transform 0.2s ease;
+  }
+  .seo-regions-list a:hover {
+    transform: translateY(-2px);
+    border-color: var(--red);
+    box-shadow: 0 6px 16px -6px rgba(184, 35, 47, 0.25);
+    color: var(--red);
+  }
+  .seo-regions-list a:hover::after {
+    color: var(--red);
+    transform: translateX(3px);
+  }
+  /* 키워드 태그 */
+  .seo-regions-keywords {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 8px;
+    padding: 0;
+    margin: 0;
+  }
+  .seo-regions-keywords span {
+    display: inline-flex;
+    align-items: center;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    letter-spacing: -0.01em;
+    transition: border-color 0.2s ease, color 0.2s ease;
+  }
+  .seo-regions-keywords span:hover {
+    border-color: var(--red);
+    color: var(--red);
+  }
   @media (max-width: 768px) {
     .seo-regions {
-      padding: 36px 18px 28px;
+      padding: 48px 18px 56px;
     }
-    .seo-regions-title { font-size: 16px; }
-    .seo-regions-desc { font-size: 12.5px; }
-    .seo-regions-list { gap: 6px 16px; }
-    .seo-regions-list a { font-size: 12.5px; }
-    .seo-regions-subtitle { font-size: 13px; margin-top: 22px; }
-    .seo-regions-keywords { font-size: 11px; }
+    .seo-regions-header { margin-bottom: 32px; }
+    .seo-regions-eyebrow { font-size: 10px; }
+    .seo-regions-title { font-size: 20px; }
+    .seo-regions-desc { font-size: 12.5px; line-height: 1.7; }
+    .seo-regions-subtitle { font-size: 13px; margin: 32px 0 14px; }
+    .seo-regions-list { gap: 8px; grid-template-columns: 1fr 1fr; }
+    .seo-regions-list a { font-size: 12px; padding: 12px 14px; }
+    .seo-regions-keywords span { font-size: 11px; padding: 5px 10px; }
   }
   .footer-inner {
     max-width: 1400px;
@@ -4505,37 +4573,62 @@
 
 <!-- SEO 보강: 지역별 키워드 (시맨틱 + 검색엔진용) -->
 <section class="seo-regions" aria-label="전국 웨딩박람회 지역별 안내">
-  <h2 class="seo-regions-title">전국 웨딩박람회 일정과 무료초대권 신청 안내</h2>
-  <p class="seo-regions-desc">
-    Wedding&amp;Scoop은 <strong>전국 웨딩박람회 일정</strong>과 <strong>무료초대권 신청</strong> 정보를 실시간으로 제공하는 웨딩박람회 모음 사이트입니다.
-    서울, 경기, 인천, 부산, 대구, 대전, 광주, 울산, 제주를 비롯한 <strong>전국 모든 지역의 웨딩박람회·결혼박람회·웨딩페어 일정</strong>을 한눈에 확인하고,
-    <strong>5만원 상당의 무료초대권</strong>을 추가 비용 없이 신청할 수 있습니다. 매일 신규 박람회가 자동 업데이트되며, 마감임박 순으로 정렬되어 놓치지 않고 신청 가능합니다.
-  </p>
+  <div class="seo-regions-inner">
+    <div class="seo-regions-header">
+      <span class="seo-regions-eyebrow">REGIONS</span>
+      <h2 class="seo-regions-title">
+        전국 웨딩박람회 일정과 <span class="accent">무료초대권 신청 안내</span>
+      </h2>
+      <p class="seo-regions-desc">
+        Wedding&amp;Scoop은 <strong>전국 웨딩박람회 일정</strong>과 <strong>무료초대권 신청</strong> 정보를 실시간으로 제공합니다.
+        서울, 경기, 인천, 부산, 대구, 대전, 광주, 울산, 제주를 비롯한 <strong>전국 모든 지역의 웨딩박람회</strong>를 한눈에 확인하고,
+        <strong>5만원 상당의 무료초대권</strong>을 추가 비용 없이 신청하세요.
+      </p>
+    </div>
 
-  <h3 class="seo-regions-subtitle">지역별 웨딩박람회 바로가기</h3>
-  <ul class="seo-regions-list">
-    <li><a href="/seoul">서울 웨딩박람회 일정 · 신청</a></li>
-    <li><a href="/gyeonggi">경기도 웨딩박람회 (수원·일산·분당·용인·성남)</a></li>
-    <li><a href="/incheon">인천 웨딩박람회 일정 · 신청</a></li>
-    <li><a href="/busan">부산 웨딩박람회 일정 · 신청</a></li>
-    <li><a href="/chungcheong">충청 웨딩박람회 (대전·청주·천안·세종)</a></li>
-    <li><a href="/jeolla">전라 웨딩박람회 (광주·전주)</a></li>
-    <li><a href="/gangwon">강원 웨딩박람회 (춘천·강릉)</a></li>
-    <li><a href="/gyeongsang">경상 웨딩박람회 (대구·울산·창원·포항)</a></li>
-    <li><a href="/jeju">제주 웨딩박람회 일정 · 신청</a></li>
-  </ul>
+    <h3 class="seo-regions-subtitle">지역별 웨딩박람회 바로가기</h3>
+    <ul class="seo-regions-list">
+      <li><a href="/seoul">서울 웨딩박람회</a></li>
+      <li><a href="/gyeonggi">경기도 웨딩박람회</a></li>
+      <li><a href="/incheon">인천 웨딩박람회</a></li>
+      <li><a href="/busan">부산 웨딩박람회</a></li>
+      <li><a href="/chungcheong">충청 웨딩박람회</a></li>
+      <li><a href="/jeolla">전라 웨딩박람회</a></li>
+      <li><a href="/gangwon">강원 웨딩박람회</a></li>
+      <li><a href="/gyeongsang">경상 웨딩박람회</a></li>
+      <li><a href="/jeju">제주 웨딩박람회</a></li>
+    </ul>
 
-  <h3 class="seo-regions-subtitle">자주 검색되는 키워드</h3>
-  <p class="seo-regions-keywords">
-    전국 웨딩박람회 · 전국 웨딩박람회 일정 · 전국 웨딩박람회 신청 · 전국 결혼박람회 ·
-    서울 웨딩박람회 · 서울 결혼박람회 · 서울 웨딩페어 ·
-    부산 웨딩박람회 · 부산 결혼박람회 · 부산 웨딩페어 ·
-    경기 웨딩박람회 일정 · 인천 결혼박람회 신청 ·
-    대구 웨딩박람회 · 대전 결혼박람회 · 광주 웨딩박람회 ·
-    제주 웨딩박람회 · 코엑스 웨딩박람회 · 워커힐 웨딩박람회 ·
-    웨딩박람회 무료초대권 신청 · 결혼박람회 일정 · 웨딩페어 신청 ·
-    예비신부 추천 · 스드메 박람회 · 웨딩홀 박람회 · 드레스 박람회 · 허니문 박람회
-  </p>
+    <h3 class="seo-regions-subtitle">자주 검색되는 키워드</h3>
+    <div class="seo-regions-keywords">
+      <span>전국 웨딩박람회</span>
+      <span>전국 웨딩박람회 일정</span>
+      <span>전국 웨딩박람회 신청</span>
+      <span>전국 결혼박람회</span>
+      <span>서울 웨딩박람회</span>
+      <span>서울 결혼박람회</span>
+      <span>서울 웨딩페어</span>
+      <span>부산 웨딩박람회</span>
+      <span>부산 결혼박람회</span>
+      <span>부산 웨딩페어</span>
+      <span>경기 웨딩박람회</span>
+      <span>인천 결혼박람회</span>
+      <span>대구 웨딩박람회</span>
+      <span>대전 결혼박람회</span>
+      <span>광주 웨딩박람회</span>
+      <span>제주 웨딩박람회</span>
+      <span>코엑스 웨딩박람회</span>
+      <span>워커힐 웨딩박람회</span>
+      <span>웨딩박람회 무료초대권</span>
+      <span>결혼박람회 일정</span>
+      <span>웨딩페어 신청</span>
+      <span>예비신부 추천</span>
+      <span>스드메 박람회</span>
+      <span>웨딩홀 박람회</span>
+      <span>드레스 박람회</span>
+      <span>허니문 박람회</span>
+    </div>
+  </div>
 </section>
 
 <footer>
