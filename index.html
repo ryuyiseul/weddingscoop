@@ -2400,6 +2400,18 @@
     position: relative;
     overflow: hidden;
   }
+  .card-cta::after {
+    content: '▶';
+    font-size: 0.75em;
+    color: var(--paper);
+    display: inline-block;
+    flex-shrink: 0;
+    line-height: 1;
+    transition: transform 0.3s ease;
+  }
+  .card:hover .card-cta::after {
+    transform: translateX(4px);
+  }
   .card-cta > span:first-child {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -6070,7 +6082,6 @@
           <div class="card-cta-row">
             <div class="card-cta">
               <span class="card-cta-text">무료초대권 신청</span>
-              <span class="card-cta-arrow" aria-hidden="true">▶</span>
             </div>
             <button class="card-share" data-share-idx="${start + i}" aria-label="카카오톡으로 공유하기" type="button">
               <svg viewBox="0 0 24 24" aria-hidden="true">
