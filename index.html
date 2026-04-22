@@ -2007,6 +2007,7 @@
     border: 1px solid var(--ink);
     border-radius: 2px;
     transition: border-color 0.2s ease;
+    box-sizing: border-box;
   }
   .search-wrap:focus-within {
     border-color: var(--red);
@@ -2032,6 +2033,8 @@
     padding: 8px 32px 8px 32px;
     width: 240px;
     letter-spacing: -0.01em;
+    line-height: 1.4;
+    box-sizing: border-box;
   }
   .search-input::placeholder {
     color: var(--muted-dark);
@@ -2090,6 +2093,8 @@
     cursor: pointer;
     letter-spacing: -0.01em;
     transition: border-color 0.2s ease, color 0.2s ease;
+    box-sizing: border-box;
+    line-height: 1.4;
   }
   .sort-select:hover {
     border-color: var(--red);
@@ -4321,7 +4326,7 @@
     }
     .sort-select {
       font-size: 12px;
-      padding: 7px 24px 7px 10px;
+      padding: 8px 24px 8px 10px;
     }
 
     /* 메인 그리드 — 모바일 2열 */
