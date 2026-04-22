@@ -479,6 +479,37 @@
   }
   .chat-option-btn:active { transform: scale(0.96); }
 
+  /* 뒤로가기/네비 버튼 — 옅은 배경 */
+  .chat-nav-options {
+    display: flex;
+    gap: 8px;
+    align-self: flex-start;
+    margin-top: 4px;
+    padding-left: 36px;
+    animation: msgIn 0.4s ease 0.1s both;
+  }
+  .chat-nav-btn {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--muted-dark);
+    padding: 7px 12px;
+    border-radius: 999px;
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: -0.01em;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .chat-nav-btn:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+  .chat-nav-btn:active { transform: scale(0.96); }
+
   /* 박람회 결과 카드 (챗봇 안) */
   .chat-expo-card {
     display: flex;
@@ -3152,7 +3183,7 @@
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
   </svg>
-  <span class="toggle-label">맞춤 박람회<br/>추천</span>
+  <span class="toggle-label">나에게 맞는<br/>박람회 찾기</span>
   <span class="badge-dot"></span>
 </button>
 <div class="chatbot-panel" id="chatbotPanel" role="dialog" aria-label="박람회 추천 챗봇">
@@ -3862,6 +3893,60 @@
       }, 200);
     }
 
+    // 네비게이션 버튼 (뒤로/홈) 추가
+    function addNavButtons({ back = null, showHome = true } = {}) {
+      const wrap = document.createElement('div');
+      wrap.className = 'chat-nav-options';
+      let html = '';
+      if (back) {
+        html += `<button class="chat-nav-btn" data-nav="back">← 뒤로</button>`;
+      }
+      if (showHome) {
+        html += `<button class="chat-nav-btn" data-nav="home">🏠 메인으로</button>`;
+      }
+      wrap.innerHTML = html;
+      messages.appendChild(wrap);
+      const backBtn = wrap.querySelector('[data-nav="back"]');
+      const homeBtn = wrap.querySelector('[data-nav="home"]');
+      if (backBtn && typeof back === 'function') {
+        backBtn.addEventListener('click', () => {
+          // 이전 봇 메시지 + 옵션 + 네비 삭제 (한 스텝만)
+          removeLastStep();
+          back();
+        });
+      }
+      if (homeBtn) {
+        homeBtn.addEventListener('click', () => {
+          closeChat();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      }
+      scrollToBottom();
+      return wrap;
+    }
+
+    // 마지막 단계의 메시지들 제거 (뒤로가기용)
+    function removeLastStep() {
+      // 마지막 .chat-nav-options, .chat-options, .chat-msg-bot 순서대로 제거
+      const selectors = ['.chat-nav-options', '.chat-options', '.chat-msg'];
+      // 같은 단계에서 추가된 "사용자 메시지"도 같이 제거
+      const children = Array.from(messages.children).reverse();
+      let removedBotMsg = false;
+      for (const el of children) {
+        if (el.classList.contains('chat-nav-options')) {
+          el.remove();
+        } else if (el.classList.contains('chat-options')) {
+          el.remove();
+        } else if (el.classList.contains('chat-msg')) {
+          el.remove();
+          if (el.classList.contains('chat-msg-bot')) {
+            removedBotMsg = true;
+            break; // 봇 메시지 하나 지우면 끝
+          }
+        }
+      }
+    }
+
     function showRegionOptions() {
       const regions = FIXED_REGIONS.filter(r => r !== '전체보기');
       const html = regions.map(r =>
@@ -3875,6 +3960,8 @@
         btn.addEventListener('click', () => {
           chatState.region = btn.dataset.region;
           wrap.remove();
+          // region 단계의 nav도 제거
+          messages.querySelectorAll('.chat-nav-options').forEach(n => n.remove());
           addUserMessage(chatState.region);
           // 해당 권역에 도시 옵션이 있으면 → askCity, 없으면 바로 askType
           if (REGION_CITIES[chatState.region]) {
@@ -3884,6 +3971,8 @@
           }
         });
       });
+      // 첫 단계: 홈 버튼만
+      addNavButtons({ back: null, showHome: true });
       scrollToBottom();
     }
 
@@ -3922,10 +4011,19 @@
         btn.addEventListener('click', () => {
           chatState.city = btn.dataset.city || null;
           opts.remove();
+          messages.querySelectorAll('.chat-nav-options').forEach(n => n.remove());
           const label = chatState.city || `${chatState.region} 전체`;
           addUserMessage(label);
           setTimeout(() => askType(), 400);
         });
+      });
+      // 뒤로: 지역 선택으로
+      addNavButtons({
+        back: () => {
+          chatState.region = null;
+          startChat();
+        },
+        showHome: true
       });
     }
 
@@ -3941,9 +4039,28 @@
         btn.addEventListener('click', () => {
           chatState.type = btn.dataset.type;
           opts.remove();
+          messages.querySelectorAll('.chat-nav-options').forEach(n => n.remove());
           addUserMessage(TYPE_LABELS[chatState.type]);
           setTimeout(() => showResults(), 600);
         });
+      });
+      // 뒤로가기 — 도시 단계가 있었으면 도시로, 없었으면 지역으로
+      const hasCity = REGION_CITIES[chatState.region] && chatState.city !== undefined;
+      addNavButtons({
+        back: () => {
+          if (REGION_CITIES[chatState.region]) {
+            // 도시 단계가 있는 권역 → askCity로
+            chatState.city = null;
+            chatState.type = null;
+            askCity();
+          } else {
+            // 도시 단계 없는 권역 → 지역 선택으로
+            chatState.region = null;
+            chatState.type = null;
+            startChat();
+          }
+        },
+        showHome: true
       });
     }
 
@@ -4009,10 +4126,9 @@
       wrap.className = 'chat-options';
       wrap.innerHTML = `
         <button class="chat-option-btn" id="chatRestart">🔄 처음부터 다시</button>
-        <button class="chat-option-btn" id="chatViewAll">📋 전체 보기</button>
+        <button class="chat-option-btn" id="chatViewAll">📋 해당 지역 전체 보기</button>
       `;
       messages.appendChild(wrap);
-      scrollToBottom();
       wrap.querySelector('#chatRestart').addEventListener('click', () => {
         startChat();
       });
@@ -4020,6 +4136,14 @@
         closeChat();
         const targetBtn = document.querySelector(`#regionFilter .filter-btn[data-region="${chatState.region}"]`);
         if (targetBtn) targetBtn.click();
+      });
+      // 네비: 뒤로(종류 재선택) + 메인으로
+      addNavButtons({
+        back: () => {
+          chatState.type = null;
+          askType();
+        },
+        showHome: true
       });
     }
   })();
