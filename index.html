@@ -866,9 +866,10 @@
      ═══════════════════════════════════════════ */
   .ai-recommend-section {
     background: var(--paper);
-    padding: 56px 40px;
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
+    padding: 32px 40px;
+    border-top: 4px solid var(--red);
+    border-bottom: 4px solid var(--red);
+    position: relative;
   }
   .ai-recommend-inner {
     max-width: 1100px;
@@ -879,20 +880,17 @@
     align-items: center;
     gap: 28px;
     width: 100%;
-    background: var(--ink);
-    color: var(--paper);
+    background: transparent;
+    color: var(--ink);
     border: none;
-    border-radius: 18px;
-    padding: 36px 44px;
+    border-radius: 0;
+    padding: 0;
     cursor: pointer;
     text-align: left;
-    box-shadow:
-      0 6px 0 rgba(0, 0, 0, 0.85),
-      0 14px 40px -8px rgba(0, 0, 0, 0.4),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    transition: transform 0.25s cubic-bezier(.34, 1.56, .64, 1), box-shadow 0.25s ease, background 0.3s ease;
+    box-shadow: none;
+    transition: transform 0.25s ease, color 0.3s ease;
     position: relative;
-    overflow: hidden;
+    overflow: visible;
     font-family: inherit;
   }
   .ai-recommend-btn::before {
@@ -902,50 +900,40 @@
     left: -100%;
     width: 60%;
     height: 100%;
-    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.18) 50%, transparent 100%);
+    background: linear-gradient(90deg, transparent 0%, rgba(184, 35, 47, 0.06) 50%, transparent 100%);
     animation: ctaShimmer 3s ease-in-out infinite;
     pointer-events: none;
   }
   .ai-recommend-btn:hover {
-    background: var(--red);
-    transform: translateY(-3px);
-    box-shadow:
-      0 9px 0 rgba(139, 20, 30, 0.9),
-      0 20px 50px -8px rgba(184, 35, 47, 0.5),
-      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    background: transparent;
+    transform: translateX(4px);
+    box-shadow: none;
   }
   .ai-recommend-btn:active {
-    transform: translateY(2px);
-    box-shadow:
-      0 4px 0 rgba(139, 20, 30, 0.9),
-      0 8px 20px -4px rgba(184, 35, 47, 0.4);
+    transform: translateX(0);
+    box-shadow: none;
   }
   .ai-recommend-icon {
     flex-shrink: 0;
-    width: 80px;
-    height: 80px;
+    width: 72px;
+    height: 72px;
     background: var(--red);
-    border-radius: 20px;
+    border-radius: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 16px rgba(184, 35, 47, 0.4);
+    box-shadow: 0 4px 16px rgba(184, 35, 47, 0.3);
     position: relative;
     z-index: 1;
-    transition: background 0.3s ease;
+    transition: transform 0.3s ease;
   }
   .ai-recommend-btn:hover .ai-recommend-icon {
-    background: var(--paper);
-    color: var(--red);
+    transform: rotate(-6deg) scale(1.05);
   }
   .ai-recommend-icon svg {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     color: var(--paper);
-    transition: color 0.3s ease;
-  }
-  .ai-recommend-btn:hover .ai-recommend-icon svg {
-    color: var(--red);
   }
   .ai-recommend-text {
     flex: 1;
@@ -963,59 +951,57 @@
     letter-spacing: 0.3em;
     color: var(--red);
     text-transform: uppercase;
-    transition: color 0.3s ease;
-  }
-  .ai-recommend-btn:hover .ai-recommend-label {
-    color: var(--paper);
-    opacity: 0.8;
   }
   .ai-recommend-title {
     font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
     font-size: 26px;
     font-weight: 800;
     letter-spacing: -0.025em;
-    color: var(--paper);
+    color: var(--ink);
     line-height: 1.2;
+    transition: color 0.3s ease;
+  }
+  .ai-recommend-btn:hover .ai-recommend-title {
+    color: var(--red);
   }
   .ai-recommend-desc {
     font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
     font-size: 14px;
     font-weight: 500;
-    color: rgba(255,255,255,0.75);
+    color: var(--ink-soft);
     letter-spacing: -0.01em;
     line-height: 1.5;
   }
   .ai-recommend-arrow {
     flex-shrink: 0;
-    width: 56px;
-    height: 56px;
-    background: var(--red);
+    width: 52px;
+    height: 52px;
+    background: var(--ink);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--paper);
-    box-shadow: 0 4px 14px rgba(184, 35, 47, 0.4);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
     position: relative;
     z-index: 1;
     transition: transform 0.3s cubic-bezier(.34, 1.56, .64, 1), background 0.3s ease;
   }
   .ai-recommend-btn:hover .ai-recommend-arrow {
     transform: translateX(6px);
-    background: var(--paper);
-    color: var(--red);
+    background: var(--red);
   }
   .ai-recommend-arrow svg {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     margin-left: 2px;
   }
   @media (max-width: 768px) {
-    .ai-recommend-section { padding: 36px 18px; }
+    .ai-recommend-section { padding: 24px 18px; border-top-width: 3px; border-bottom-width: 3px; }
     .ai-recommend-btn {
       gap: 14px;
-      padding: 22px 20px;
-      border-radius: 14px;
+      padding: 0;
+      border-radius: 0;
     }
     .ai-recommend-icon {
       width: 52px;
@@ -1035,7 +1021,7 @@
   @media (max-width: 480px) {
     .ai-recommend-desc { display: none; }
     .ai-recommend-title { font-size: 15px; }
-    .ai-recommend-btn { padding: 18px 16px; gap: 12px; }
+    .ai-recommend-btn { padding: 0; gap: 12px; }
     .ai-recommend-icon { width: 46px; height: 46px; }
     .ai-recommend-arrow { width: 36px; height: 36px; }
   }
@@ -4493,18 +4479,30 @@
   </div>
 </section>
 
-<!-- ═══ INTRO CTA (Hero CTA와 동일 디자인) ═══ -->
-<section class="hero-cta-section intro-cta-section">
-  <a class="hero-cta-btn" href="#campaigns" onclick="document.getElementById('campaigns').scrollIntoView({behavior: 'smooth'}); return false;">
-    <span class="btn-text">전국 웨딩박람회 무료초대권</span>
-    <span class="btn-arrow">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="5" y1="12" x2="19" y2="12"/>
-        <polyline points="12 5 19 12 12 19"/>
-      </svg>
-    </span>
-  </a>
+<!-- ═══ AI 맞춤 추천 (독립 풀너비 섹션) ═══ -->
+<section class="ai-recommend-section">
+  <div class="ai-recommend-inner">
+    <button class="ai-recommend-btn" id="aiRecommendBtn" type="button">
+      <span class="ai-recommend-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5L12 2z"/>
+          <path d="M19 15l.8 2.4L22 18l-2.2.6L19 21l-.8-2.4L16 18l2.2-.6L19 15z"/>
+        </svg>
+      </span>
+      <span class="ai-recommend-text">
+        <span class="ai-recommend-label">AI 맞춤 추천</span>
+        <span class="ai-recommend-title">나에게 맞는 웨딩박람회 찾기</span>
+        <span class="ai-recommend-desc">지역과 원하는 박람회 종류만 선택하면 딱 맞는 박람회를 추천드려요</span>
+      </span>
+      <span class="ai-recommend-arrow">
+        <svg viewBox="0 0 24 24">
+          <polygon points="7,4 20,12 7,20" fill="currentColor"/>
+        </svg>
+      </span>
+    </button>
+  </div>
 </section>
+
 
 <!-- ═══ 사전신청 혜택 4가지 (SEO 보강 + 사용자 어필) ═══ -->
 <section class="benefits-section">
@@ -4569,29 +4567,6 @@
   </div>
 </section>
 
-<!-- ═══ AI 맞춤 추천 (독립 풀너비 섹션) ═══ -->
-<section class="ai-recommend-section">
-  <div class="ai-recommend-inner">
-    <button class="ai-recommend-btn" id="aiRecommendBtn" type="button">
-      <span class="ai-recommend-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5L12 2z"/>
-          <path d="M19 15l.8 2.4L22 18l-2.2.6L19 21l-.8-2.4L16 18l2.2-.6L19 15z"/>
-        </svg>
-      </span>
-      <span class="ai-recommend-text">
-        <span class="ai-recommend-label">AI 맞춤 추천</span>
-        <span class="ai-recommend-title">나에게 맞는 웨딩박람회 찾기</span>
-        <span class="ai-recommend-desc">지역과 원하는 박람회 종류만 선택하면 딱 맞는 박람회를 추천드려요</span>
-      </span>
-      <span class="ai-recommend-arrow">
-        <svg viewBox="0 0 24 24">
-          <polygon points="7,4 20,12 7,20" fill="currentColor"/>
-        </svg>
-      </span>
-    </button>
-  </div>
-</section>
 
 <!-- ═══ 진행 과정 (HOW IT WORKS) ═══ -->
 <section class="process-section">
