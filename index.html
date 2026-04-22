@@ -663,7 +663,7 @@
   /* ═══ AI 추천 버튼 섹션 ═══ */
   .ai-cta-section {
     background: var(--paper);
-    padding: 24px 40px 48px;
+    padding: 32px 40px 72px;
     width: 100%;
     box-sizing: border-box;
   }
@@ -676,7 +676,7 @@
     margin: 0 auto;
     background: var(--paper);
     color: var(--ink);
-    border: none;
+    border: 1px solid var(--line);
     border-top: 4px solid var(--red);
     border-bottom: 4px solid var(--red);
     padding: 28px 32px;
@@ -711,6 +711,7 @@
   .ai-cta-btn:hover {
     background: var(--ink);
     color: var(--paper);
+    border-color: var(--ink);
     border-top-color: var(--red);
     border-bottom-color: var(--red);
     transform: translateY(-2px);
@@ -2441,13 +2442,13 @@
 
     /* AI 추천 버튼 모바일 */
     .ai-cta-section {
-      padding: 18px 16px 36px;
+      padding: 24px 16px 56px;
     }
     .ai-cta-btn {
       padding: 20px 18px;
       gap: 14px;
       border-radius: 0;
-      border: none;
+      border: 1px solid var(--line);
       border-top: 3px solid var(--red);
       border-bottom: 3px solid var(--red);
     }
