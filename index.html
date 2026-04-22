@@ -846,6 +846,18 @@
     width: 100%;
     box-sizing: border-box;
   }
+  /* AI 추천 박스 - intro 섹션 안에서 사용하는 wrap */
+  .ai-cta-wrap {
+    margin-top: 40px;
+    width: 100%;
+  }
+  .ai-cta-wrap .ai-cta-btn {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  @media (max-width: 768px) {
+    .ai-cta-wrap { margin-top: 28px; }
+  }
   .ai-cta-btn {
     display: flex;
     align-items: center;
@@ -3925,55 +3937,6 @@
       <span class="visually-hidden">전국 웨딩박람회 일정 및 무료초대권 신청 - 서울 경기 인천 부산 대구 대전 광주 울산 제주 등 전 지역 결혼박람회·웨딩페어 정보</span>
     </h1>
   </div>
-
-  <div class="value-props">
-    <div class="value-prop">
-      <div class="value-num">혜택 1</div>
-      <div class="value-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 21s-7-7.5-7-12a7 7 0 0 1 14 0c0 4.5-7 12-7 12z"/>
-          <circle cx="12" cy="9" r="2.5"/>
-        </svg>
-      </div>
-      <h2 class="value-title"><span class="red-mark">매일</span><span class="emphasis-gap"> </span><span class="red-mark">업데이트</span>되는<br />전국 웨딩박람회를 한눈에</h2>
-      <p class="value-desc">서울 · 부산 · 대구 · 인천 · 광주<br />놓치는 일정 없이 한 자리에서 확인</p>
-    </div>
-    <div class="value-prop">
-      <div class="value-num">혜택 2</div>
-      <div class="value-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/>
-          <line x1="13" y1="5" x2="13" y2="7"/>
-          <line x1="13" y1="11" x2="13" y2="13"/>
-          <line x1="13" y1="17" x2="13" y2="19"/>
-        </svg>
-      </div>
-      <h2 class="value-title">최대 <span class="red-mark">5만원</span><span class="emphasis-gap"> </span><span class="red-mark">상당</span>의<br />무료초대권 증정</h2>
-      <p class="value-desc">웨딩스쿱을 통해 사전 신청만 하면<br />박람회 입장권 무료 제공</p>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ AI 추천 버튼 ═══ -->
-<section class="ai-cta-section">
-  <button class="ai-cta-btn" id="aiRecommendBtn" type="button">
-    <span class="ai-cta-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5L12 2z"/>
-        <path d="M19 15l.8 2.4L22 18l-2.2.6L19 21l-.8-2.4L16 18l2.2-.6L19 15z"/>
-      </svg>
-    </span>
-    <span class="ai-cta-text">
-      <span class="ai-cta-label">AI 맞춤 추천</span>
-      <span class="ai-cta-title">나에게 맞는 웨딩박람회 찾기</span>
-      <span class="ai-cta-desc">지역과 원하는 박람회 종류만 선택하면 딱 맞는 박람회를 추천드려요</span>
-    </span>
-    <span class="ai-cta-arrow">
-      <svg viewBox="0 0 24 24">
-        <polygon points="7,4 20,12 7,20" fill="currentColor"/>
-      </svg>
-    </span>
-  </button>
 </section>
 
 <!-- ═══ HERO CTA SECTION (위아래 빨간 선으로 구분) ═══ -->
@@ -4336,15 +4299,26 @@
         </div>
       </div>
     </div>
-    <div class="section-cta-wrap">
-      <a href="#campaigns" class="section-cta-btn" onclick="document.getElementById('campaigns').scrollIntoView({behavior: 'smooth'}); return false;">
-        지금 박람회 일정 확인하기
-        <span class="section-cta-btn-arrow">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
+    <!-- AI 맞춤 추천 박스 -->
+    <div class="ai-cta-wrap">
+      <button class="ai-cta-btn" id="aiRecommendBtn" type="button">
+        <span class="ai-cta-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5L12 2z"/>
+            <path d="M19 15l.8 2.4L22 18l-2.2.6L19 21l-.8-2.4L16 18l2.2-.6L19 15z"/>
+          </svg>
+        </span>
+        <span class="ai-cta-text">
+          <span class="ai-cta-label">AI 맞춤 추천</span>
+          <span class="ai-cta-title">나에게 맞는 웨딩박람회 찾기</span>
+          <span class="ai-cta-desc">지역과 원하는 박람회 종류만 선택하면 딱 맞는 박람회를 추천드려요</span>
+        </span>
+        <span class="ai-cta-arrow">
+          <svg viewBox="0 0 24 24">
             <polygon points="7,4 20,12 7,20" fill="currentColor"/>
           </svg>
         </span>
-      </a>
+      </button>
     </div>
   </div>
 </section>
@@ -4408,16 +4382,6 @@
         <h3 class="benefit-title">박람회 전용 할인</h3>
         <p class="benefit-desc">스드메, 웨딩홀, 혼수 등 박람회 기간 한정 특별 할인가로 계약할 수 있습니다.</p>
       </article>
-    </div>
-    <div class="section-cta-wrap">
-      <a href="#campaigns" class="section-cta-btn" onclick="document.getElementById('campaigns').scrollIntoView({behavior: 'smooth'}); return false;">
-        무료초대권 받으러 가기
-        <span class="section-cta-btn-arrow">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <polygon points="7,4 20,12 7,20" fill="currentColor"/>
-          </svg>
-        </span>
-      </a>
     </div>
   </div>
 </section>
