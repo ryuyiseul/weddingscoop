@@ -4434,6 +4434,22 @@
   } catch (e) {
     console.warn('Kakao SDK init failed:', e);
   }
+
+  // CTA 버튼들 공통: 캠페인 영역으로 부드럽게 스크롤
+  window.scrollToCampaigns = function(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    var el = document.getElementById('campaigns');
+    if (!el) return false;
+    var rect = el.getBoundingClientRect();
+    var targetY = rect.top + window.pageYOffset;
+    try {
+      window.scrollTo({ top: targetY, behavior: 'smooth' });
+    } catch (err) {
+      // 구형 브라우저 fallback
+      window.scrollTo(0, targetY);
+    }
+    return false;
+  };
 </script>
 </head>
 
@@ -4468,7 +4484,7 @@
     <span class="hero-headline-side hero-headline-side-right" aria-hidden="true"></span>
   </div>
   <div class="hero-headline-cta-wrap">
-    <a class="hero-headline-cta" href="#campaigns" onclick="document.getElementById('campaigns').scrollIntoView({behavior: 'smooth'}); return false;">
+    <a class="hero-headline-cta" href="#campaigns" onclick="scrollToCampaigns(event)">
       <span class="hhc-text">무료 웨딩박람회 초대권 받기</span>
       <span class="hhc-arrow">
         <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -5391,7 +5407,7 @@
       </p>
       <div class="faq-cta-wrap">
         <span class="faq-cta-mini">NOW LIVE</span>
-        <a class="faq-cta-btn" href="#campaigns" onclick="document.getElementById('campaigns').scrollIntoView({behavior: 'smooth'}); return false;">
+        <a class="faq-cta-btn" href="#campaigns" onclick="scrollToCampaigns(event)">
           <span class="btn-text">웨딩박람회 무료초대권 받기</span>
           <span class="btn-arrow">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
@@ -5406,7 +5422,7 @@
 </section>
 
 <!-- ═══ 플로팅 CTA (스크롤 따라다니는 버튼) ═══ -->
-<a class="floating-cta" id="floatingCta" href="#campaigns" onclick="document.getElementById('campaigns').scrollIntoView({behavior: 'smooth'}); return false;">
+<a class="floating-cta" id="floatingCta" href="#campaigns" onclick="scrollToCampaigns(event)">
   <span class="fc-icon">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
       <polyline points="6 9 12 15 18 9"/>
@@ -5497,7 +5513,7 @@
       <span>허니문 박람회</span>
     </div>
     <div class="section-cta-wrap">
-      <a href="#campaigns" class="section-cta-btn" onclick="document.getElementById('campaigns').scrollIntoView({behavior: 'smooth'}); return false;">
+      <a href="#campaigns" class="section-cta-btn" onclick="scrollToCampaigns(event)">
         내 지역 박람회 찾으러 가기
         <span class="section-cta-btn-arrow">
           <svg viewBox="0 0 24 24" aria-hidden="true">
