@@ -4451,6 +4451,11 @@
       });
     } catch (err) {
       console.error('[Kakao Share] failed:', err);
+      console.error('[Kakao Share] err message:', err && err.message);
+      console.error('[Kakao Share] err code:', err && err.code);
+      console.error('[Kakao Share] err details:', err && err.details);
+      console.error('[Kakao Share] err string:', String(err));
+      console.error('[Kakao Share] err JSON:', JSON.stringify(err, Object.getOwnPropertyNames(err || {})));
       fallbackCopy();
     }
   }
