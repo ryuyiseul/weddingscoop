@@ -2068,7 +2068,7 @@
 
   /* ═══════════════ FAQ SECTION ═══════════════ */
   .faq-section {
-    background: var(--paper-soft);
+    background: var(--paper);
     border-top: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
     padding: 80px 40px;
@@ -3068,6 +3068,89 @@
     .legal-modal-header { padding: 16px 20px 14px; }
     .legal-modal-title { font-size: 17px; }
     .legal-modal-body { padding: 18px 20px 24px; font-size: 13px; }
+  }
+
+  /* ═══════════════════════════════════════════
+     SECTION CTA (각 섹션 끝 박람회 보러가기 버튼)
+     ═══════════════════════════════════════════ */
+  .section-cta-wrap {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+  }
+  .section-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--ink);
+    color: var(--paper);
+    text-decoration: none;
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    padding: 16px 32px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    box-shadow:
+      0 4px 0 rgba(0, 0, 0, 0.85),
+      0 8px 20px -4px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: transform 0.2s cubic-bezier(.34, 1.56, .64, 1), box-shadow 0.2s ease, background 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .section-cta-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.2) 50%, transparent 100%);
+    animation: ctaShimmer 2.6s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .section-cta-btn:hover {
+    background: var(--red);
+    transform: translateY(-2px);
+    box-shadow:
+      0 6px 0 rgba(139, 20, 30, 0.9),
+      0 12px 24px -4px rgba(184, 35, 47, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+  .section-cta-btn:active {
+    transform: translateY(1px);
+    box-shadow:
+      0 3px 0 rgba(139, 20, 30, 0.9),
+      0 5px 10px -2px rgba(184, 35, 47, 0.4);
+  }
+  .section-cta-btn-arrow {
+    display: inline-flex;
+    align-items: center;
+    width: 14px;
+    height: 14px;
+    transition: transform 0.3s ease;
+  }
+  .section-cta-btn-arrow svg {
+    width: 100%;
+    height: 100%;
+  }
+  .section-cta-btn:hover .section-cta-btn-arrow {
+    transform: translateX(4px);
+  }
+  @media (max-width: 768px) {
+    .section-cta-wrap { margin-top: 28px; }
+    .section-cta-btn {
+      font-size: 13px;
+      padding: 13px 22px;
+      gap: 10px;
+    }
+    .section-cta-btn-arrow {
+      width: 12px;
+      height: 12px;
+    }
   }
 
   /* ═══════════════════════════════════════════
@@ -4253,6 +4336,16 @@
         </div>
       </div>
     </div>
+    <div class="section-cta-wrap">
+      <a href="#campaigns" class="section-cta-btn" onclick="document.getElementById('campaigns').scrollIntoView({behavior: 'smooth'}); return false;">
+        지금 박람회 일정 확인하기
+        <span class="section-cta-btn-arrow">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <polygon points="7,4 20,12 7,20" fill="currentColor"/>
+          </svg>
+        </span>
+      </a>
+    </div>
   </div>
 </section>
 
@@ -4315,6 +4408,16 @@
         <h3 class="benefit-title">박람회 전용 할인</h3>
         <p class="benefit-desc">스드메, 웨딩홀, 혼수 등 박람회 기간 한정 특별 할인가로 계약할 수 있습니다.</p>
       </article>
+    </div>
+    <div class="section-cta-wrap">
+      <a href="#campaigns" class="section-cta-btn" onclick="document.getElementById('campaigns').scrollIntoView({behavior: 'smooth'}); return false;">
+        무료초대권 받으러 가기
+        <span class="section-cta-btn-arrow">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <polygon points="7,4 20,12 7,20" fill="currentColor"/>
+          </svg>
+        </span>
+      </a>
     </div>
   </div>
 </section>
@@ -4627,6 +4730,16 @@
       <span>웨딩홀 박람회</span>
       <span>드레스 박람회</span>
       <span>허니문 박람회</span>
+    </div>
+    <div class="section-cta-wrap">
+      <a href="#campaigns" class="section-cta-btn" onclick="document.getElementById('campaigns').scrollIntoView({behavior: 'smooth'}); return false;">
+        내 지역 박람회 찾으러 가기
+        <span class="section-cta-btn-arrow">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <polygon points="7,4 20,12 7,20" fill="currentColor"/>
+          </svg>
+        </span>
+      </a>
     </div>
   </div>
 </section>
