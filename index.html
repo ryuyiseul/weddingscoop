@@ -4438,14 +4438,26 @@
   // CTA 버튼들 공통: 캠페인 영역으로 부드럽게 스크롤
   window.scrollToCampaigns = function(e) {
     if (e && e.preventDefault) e.preventDefault();
-    var el = document.getElementById('campaigns');
-    if (!el) return false;
-    var rect = el.getBoundingClientRect();
-    var targetY = rect.top + window.pageYOffset;
+    var filters = document.getElementById('campaigns');
+    var grid = document.getElementById('grid');
+    var target = grid || filters;
+    if (!target) return false;
+
+    // 현재 스크롤 위치 기준 타겟 절대 Y
+    var rect = target.getBoundingClientRect();
+    var absoluteY = rect.top + window.pageYOffset;
+
+    // 필터 섹션 높이(sticky 고려) 빼주기
+    var filterOffset = 0;
+    if (filters) {
+      var fRect = filters.getBoundingClientRect();
+      filterOffset = fRect.height;
+    }
+    var targetY = Math.max(0, absoluteY - filterOffset - 20);
+
     try {
       window.scrollTo({ top: targetY, behavior: 'smooth' });
     } catch (err) {
-      // 구형 브라우저 fallback
       window.scrollTo(0, targetY);
     }
     return false;
