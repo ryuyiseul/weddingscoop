@@ -1628,7 +1628,7 @@
     display: flex;
     justify-content: center;
     margin-top: 44px;
-    margin-bottom: 10px;
+    margin-bottom: 16px;
   }
   .hero-headline-cta {
     display: inline-flex;
@@ -1734,7 +1734,7 @@
     }
     .hero-headline-cta-wrap {
       margin-top: 26px;
-      margin-bottom: 4px;
+      margin-bottom: 10px;
       width: 100%;
       justify-content: center;
     }
@@ -4116,7 +4116,7 @@
     .topbar .live-center .tag-en { font-size: 9px; }
 
     /* 히어로 */
-    .hero { padding: 24px 18px 8px; }
+    .hero { padding: 24px 18px 4px; }
     .hero-inline {
       flex-direction: column;
       gap: 12px;
@@ -4564,7 +4564,7 @@
       font-size: 8.5px;
       letter-spacing: 0.08em;
     }
-    .hero { padding: 20px 16px 6px; }
+    .hero { padding: 20px 16px 2px; }
     .brand { font-size: clamp(28px, 8vw, 40px); }
 
     .value-props { gap: 8px; }
@@ -6800,19 +6800,16 @@
     if (!floatingCta || !campaignsEl || !gridEl || !heroEl) return;
 
     const scrollY = window.scrollY;
-    const heroBottom = heroEl.getBoundingClientRect().bottom + scrollY;
     const campaignsTop = campaignsEl.getBoundingClientRect().top + scrollY;
     const gridBottom = gridEl.getBoundingClientRect().bottom + scrollY;
     const viewportBottom = scrollY + window.innerHeight;
     const viewportTop = scrollY;
 
-    // 숨겨야 하는 조건:
-    // (1) 히어로 영역만 보이고 있을 때 (스크롤 아직 히어로 안)
-    // (2) 캠페인 영역(필터~그리드 끝)이 화면 안에 들어와 있을 때
-    const inHero = viewportBottom < heroBottom + 100;
+    // 캠페인 영역(필터~그리드 끝)이 화면 안에 들어와 있을 때만 숨김
+    // (맨 위 상태에서는 항상 표시)
     const inCampaigns = viewportBottom > campaignsTop + 150 && viewportTop < gridBottom - 100;
 
-    if (inHero || inCampaigns) {
+    if (inCampaigns) {
       floatingCta.classList.add('hidden');
     } else {
       floatingCta.classList.remove('hidden');
