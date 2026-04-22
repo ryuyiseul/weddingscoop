@@ -1647,9 +1647,17 @@
     color: var(--red);
   }
 
+  /* CTA 영역 (CTA + 공유버튼 가로) */
+  .card-cta-row {
+    margin-top: auto;
+    display: flex;
+    align-items: stretch;
+    gap: 6px;
+  }
+
   /* CTA 버튼 */
   .card-cta {
-    margin-top: auto;
+    flex: 1;
     background: var(--ink);
     color: var(--paper);
     text-align: center;
@@ -1704,6 +1712,32 @@
   }
   .card:hover .card-cta-arrow {
     transform: translateX(6px);
+  }
+
+  /* 카톡 공유 버튼 */
+  .card-share {
+    flex-shrink: 0;
+    width: 54px;
+    background: #FEE500;
+    color: #191919;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease, transform 0.2s ease;
+    padding: 0;
+    font-family: inherit;
+  }
+  .card-share:hover {
+    background: #FADA0A;
+  }
+  .card-share:active {
+    transform: scale(0.94);
+  }
+  .card-share svg {
+    width: 22px;
+    height: 22px;
   }
 
   /* 기존 요소들 비활성화 (하위 호환) */
@@ -2769,6 +2803,13 @@
     .card-cta-arrow {
       font-size: 14px;
     }
+    .card-share {
+      width: 40px;
+    }
+    .card-share svg {
+      width: 18px;
+      height: 18px;
+    }
 
     /* FAQ 모바일 */
     .faq-section { padding: 56px 18px; }
@@ -2945,6 +2986,18 @@
     }
   }
 </style>
+<!-- Kakao JavaScript SDK -->
+<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js" integrity="sha384-DKYJZ8NLiK8MN4/C5P2dtSmLQ4KwPaoqAfyA/DfmEc1VDxu4yyC7wy6K1Hs90nka" crossorigin="anonymous"></script>
+<script>
+  // Kakao SDK 초기화 (JavaScript 키)
+  try {
+    if (window.Kakao && !Kakao.isInitialized()) {
+      Kakao.init('7c323f1a0f61a633771bc7895d3a5282');
+    }
+  } catch (e) {
+    console.warn('Kakao SDK init failed:', e);
+  }
+</script>
 </head>
 
 <body>
@@ -3743,15 +3796,85 @@
             </div>
             ` : ''}
           </div>
-          <div class="card-cta">
-            <span>무료초대권 신청하기</span>
-            <span class="card-cta-arrow">→</span>
+          <div class="card-cta-row">
+            <div class="card-cta">
+              <span>무료초대권 신청하기</span>
+              <span class="card-cta-arrow">→</span>
+            </div>
+            <button class="card-share" data-share-idx="${start + i}" aria-label="카카오톡으로 공유하기" type="button">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 3C6.48 3 2 6.48 2 10.8c0 2.8 1.83 5.26 4.6 6.66-.2.68-.71 2.49-.82 2.88-.14.48.17.48.37.35.15-.1 2.4-1.63 3.37-2.28.81.12 1.63.18 2.48.18 5.52 0 10-3.48 10-7.79S17.52 3 12 3z"/>
+              </svg>
+            </button>
           </div>
         </div>
       </a>
     `).join('');
 
+    // 공유 버튼 이벤트 바인딩 (카드 <a> 링크 전파 차단)
+    grid.querySelectorAll('.card-share').forEach(btn => {
+      btn.addEventListener('click', (ev) => {
+        ev.preventDefault();
+        ev.stopPropagation();
+        const idx = parseInt(btn.dataset.shareIdx, 10);
+        const expo = pageItems[idx - start];
+        if (expo) shareToKakao(expo);
+      });
+    });
+
     renderPagination(totalPages);
+  }
+
+  // ═══════ 카카오톡 공유 ═══════
+  function shareToKakao(expo) {
+    const siteUrl = `${window.location.origin}${window.location.pathname}`;
+    const dateText = formatDate(expo.date, expo.endDate);
+
+    // Kakao SDK 가 로드되었는지 확인
+    if (!window.Kakao || !Kakao.isInitialized || !Kakao.isInitialized()) {
+      // SDK 없으면 폴백: URL 복사
+      const shareText = `${expo.title}\n📅 ${dateText} · 📍 ${expo.region}\n\n무료초대권 신청: ${siteUrl}`;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(shareText).then(() => {
+          alert('링크가 복사됐어요! 카카오톡에 붙여넣기 해주세요 📋');
+        }).catch(() => alert('공유 준비 중이에요. 잠시 후 다시 시도해주세요.'));
+      }
+      return;
+    }
+
+    try {
+      Kakao.Share.sendDefault({
+        objectType: 'feed',
+        content: {
+          title: expo.title,
+          description: `📅 ${dateText}\n📍 ${expo.region}${expo.location ? ' · ' + expo.location : ''}\n\n무료초대권 신청하기`,
+          imageUrl: expo.thumbnail || `${window.location.origin}/og-image.png`,
+          link: {
+            mobileWebUrl: siteUrl,
+            webUrl: siteUrl,
+          },
+        },
+        buttons: [
+          {
+            title: '사이트에서 보기',
+            link: {
+              mobileWebUrl: siteUrl,
+              webUrl: siteUrl,
+            },
+          },
+          {
+            title: '무료초대권 신청',
+            link: {
+              mobileWebUrl: expo.link,
+              webUrl: expo.link,
+            },
+          },
+        ],
+      });
+    } catch (err) {
+      console.error('Kakao share failed:', err);
+      alert('공유 중 오류가 발생했어요. 잠시 후 다시 시도해주세요.');
+    }
   }
 
   // 페이지네이션 렌더링
