@@ -247,7 +247,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 4px;
+    gap: 8px;
     padding: 10px 8px;
     transition: transform 0.3s ease, background 0.3s ease;
     animation: chatbotPulse 2.5s ease-in-out infinite;
@@ -258,23 +258,35 @@
     transform: translateY(-2px);
   }
   .chatbot-toggle .toggle-ai {
-    font-family: 'Fraunces', serif;
+    font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
     font-weight: 900;
-    font-size: 26px;
-    letter-spacing: 0.04em;
+    font-size: 24px;
+    letter-spacing: -0.02em;
     line-height: 1;
     color: var(--red);
-    text-shadow: 0 1px 0 rgba(255,255,255,0.08);
+    text-shadow:
+      0 1px 0 #6b0f17,
+      0 2px 0 #550c13,
+      0 3px 0 #3f090f,
+      0 4px 6px rgba(0, 0, 0, 0.45),
+      0 0 12px rgba(184, 35, 47, 0.35);
+    transition: text-shadow 0.3s ease, color 0.3s ease, transform 0.3s ease;
   }
   .chatbot-toggle:hover .toggle-ai {
     color: var(--paper);
+    text-shadow:
+      0 1px 0 rgba(0, 0, 0, 0.4),
+      0 2px 0 rgba(0, 0, 0, 0.3),
+      0 3px 0 rgba(0, 0, 0, 0.25),
+      0 4px 8px rgba(0, 0, 0, 0.35);
+    transform: translateY(-1px);
   }
   .chatbot-toggle .toggle-label {
     font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
     font-size: 10.5px;
     font-weight: 700;
     letter-spacing: -0.02em;
-    line-height: 1.15;
+    line-height: 1.2;
     text-align: center;
     white-space: nowrap;
   }
@@ -612,9 +624,14 @@
       height: 78px;
       border-radius: 16px;
       padding: 8px 6px;
+      gap: 6px;
     }
     .chatbot-toggle .toggle-ai {
-      font-size: 22px;
+      font-size: 21px;
+      text-shadow:
+        0 1px 0 #6b0f17,
+        0 2px 0 #550c13,
+        0 3px 5px rgba(0, 0, 0, 0.4);
     }
     .chatbot-toggle .toggle-label {
       font-size: 9.5px;
@@ -1754,8 +1771,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 12px;
-    height: 12px;
+    width: 15px;
+    height: 15px;
     transition: transform 0.3s ease;
   }
   .card-cta-arrow svg {
