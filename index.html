@@ -1965,6 +1965,10 @@
     background: #fefdfa;
     z-index: 50;
   }
+  .filters-section.unsticky {
+    position: relative;
+    top: auto;
+  }
   .filters-inner {
     max-width: 1400px;
     margin: 0 auto;
@@ -6908,20 +6912,39 @@
     }
   }
 
+  // 필터 sticky 해제: 캠페인 카드 그리드를 벗어나 아래 섹션으로 내려가면 unsticky
+  function updateFiltersSticky() {
+    const filters = document.getElementById('campaigns');
+    const gridEl = document.getElementById('grid');
+    if (!filters || !gridEl) return;
+    const gridBottom = gridEl.getBoundingClientRect().bottom;
+    // grid가 viewport 위쪽을 통과한 이후(그리드 끝이 화면 위로 올라감)부터 unsticky
+    if (gridBottom < 0) {
+      filters.classList.add('unsticky');
+    } else {
+      filters.classList.remove('unsticky');
+    }
+  }
+
   // 스크롤 이벤트 (성능 최적화 — requestAnimationFrame)
   let scrollTicking = false;
   window.addEventListener('scroll', () => {
     if (!scrollTicking) {
       requestAnimationFrame(() => {
         updateFloatingVisibility();
+        updateFiltersSticky();
         scrollTicking = false;
       });
       scrollTicking = true;
     }
   }, { passive: true });
 
-  window.addEventListener('resize', updateFloatingVisibility);
+  window.addEventListener('resize', () => {
+    updateFloatingVisibility();
+    updateFiltersSticky();
+  });
   updateFloatingVisibility(); // 초기 상태
+  updateFiltersSticky();
 
   // ═══════ 법적 고지 모달 ═══════
   (function() {
