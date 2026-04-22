@@ -2549,7 +2549,7 @@
   /* ═══ FOOTER ═══ */
   footer {
     border-top: 2px solid var(--ink);
-    padding: 60px 40px 30px;
+    padding: 36px 40px 20px;
     background: var(--ink);
     color: var(--paper);
   }
@@ -2558,13 +2558,13 @@
     margin: 0 auto;
     display: grid;
     grid-template-columns: 2fr 1fr;
-    gap: 40px;
+    gap: 32px;
     align-items: start;
   }
   .footer-brand {
     font-family: 'Fraunces', serif;
     font-weight: 900;
-    font-size: 32px;
+    font-size: 26px;
     letter-spacing: -0.03em;
     line-height: 1;
   }
@@ -2572,27 +2572,21 @@
   .footer-text {
     font-family: 'Pretendard Variable', 'Pretendard', -apple-system, 'Noto Sans KR', sans-serif;
     font-size: 11px;
-    line-height: 1.7;
+    line-height: 1.65;
     color: rgba(255,255,255,0.4);
-    margin-top: 18px;
-    max-width: 500px;
-    letter-spacing: -0.005em;
-  }
-  .footer-disclosure {
-    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
-    font-size: 10.5px;
-    line-height: 1.6;
-    color: rgba(255,255,255,0.55);
     margin-top: 12px;
-    padding: 10px 14px;
-    background: rgba(255,255,255,0.05);
-    border-left: 2px solid var(--red);
     max-width: 500px;
     letter-spacing: -0.005em;
   }
-  .footer-disclosure strong {
-    color: var(--paper);
-    font-weight: 700;
+  .footer-meta {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .footer-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
   }
   .footer-link {
     color: var(--paper);
@@ -2628,22 +2622,24 @@
   }
   .footer-label {
     font-family: 'Inter', sans-serif;
-    font-size: 10px;
-    letter-spacing: 0.3em;
+    font-size: 9.5px;
+    letter-spacing: 0.25em;
     text-transform: uppercase;
     color: var(--red);
-    margin-bottom: 12px;
+    margin-bottom: 0;
     font-weight: 600;
   }
   .footer-val {
-    font-family: 'Fraunces', serif;
-    font-size: 16px;
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
     color: var(--paper);
+    letter-spacing: -0.01em;
   }
   .footer-bottom {
     max-width: 1400px;
-    margin: 50px auto 0;
-    padding-top: 24px;
+    margin: 24px auto 0;
+    padding-top: 18px;
     border-top: 1px solid rgba(255,255,255,0.12);
     font-family: 'Inter', sans-serif;
     font-size: 10px;
@@ -2793,8 +2789,8 @@
     .hero { padding: 60px 28px 0; }
     .filters-section { padding: 24px 28px; }
     main { padding: 60px 28px 80px; }
-    footer { padding: 50px 28px 28px; }
-    .footer-inner { grid-template-columns: 1fr 1fr; gap: 32px; }
+    footer { padding: 32px 28px 20px; }
+    .footer-inner { grid-template-columns: 1fr 1fr; gap: 24px; }
     .footer-inner > div:first-child { grid-column: 1 / -1; }
     .grid { gap: 48px 24px; }
   }
@@ -3190,7 +3186,7 @@
     .urgency-text span { font-size: 12px; }
 
     /* 풋터 */
-    footer { padding: 40px 18px 24px; }
+    footer { padding: 24px 18px 18px; }
     .footer-inner {
       grid-template-columns: 1fr;
       gap: 28px;
@@ -3964,12 +3960,16 @@
         정보는 주최측 사정에 의해 변경될 수 있으며, 본 사이트를 통해 수수료를 받을 수 있습니다.
       </p>
     </div>
-    <div>
-      <div class="footer-label">Updated</div>
-      <div class="footer-val" id="lastUpdate">—</div>
-      <div class="footer-label" style="margin-top: 18px;">Contact</div>
-      <div class="footer-val">
-        <a href="mailto:weddingscoop.help@gmail.com" class="footer-link">weddingscoop.help@gmail.com</a>
+    <div class="footer-meta">
+      <div class="footer-meta-item">
+        <div class="footer-label">Updated</div>
+        <div class="footer-val" id="lastUpdate">—</div>
+      </div>
+      <div class="footer-meta-item">
+        <div class="footer-label">Contact</div>
+        <div class="footer-val">
+          <a href="mailto:weddingscoop.help@gmail.com" class="footer-link">weddingscoop.help@gmail.com</a>
+        </div>
       </div>
     </div>
   </div>
