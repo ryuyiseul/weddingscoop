@@ -1627,19 +1627,25 @@
   .hero-headline-cta-wrap {
     display: flex;
     justify-content: center;
-    margin-top: 44px;
-    margin-bottom: 14px;
+    margin-top: 24px;
+    margin-bottom: 12px;
+  }
+  .hero-headline-cta-wrap .hero-headline-cta {
+    width: 100%;
+    max-width: 420px;
+    justify-content: center;
   }
   /* 신뢰 배지 (Trust Badges) */
   .trust-badges {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    gap: 18px;
+    gap: 10px;
     list-style: none;
-    padding: 0;
+    padding: 0 10px;
     margin: 0 auto;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    max-width: 420px;
   }
   .trust-badge {
     display: inline-flex;
@@ -1762,13 +1768,18 @@
       line-height: 1.3;
     }
     .hero-headline-cta-wrap {
-      margin-top: 26px;
+      margin-top: 16px;
       margin-bottom: 8px;
       width: 100%;
       justify-content: center;
     }
+    .hero-headline-cta-wrap .hero-headline-cta {
+      max-width: 340px;
+    }
     .trust-badges {
-      gap: 10px;
+      gap: 8px;
+      max-width: 340px;
+      padding: 0 6px;
     }
     .trust-badge {
       font-size: 10px;
