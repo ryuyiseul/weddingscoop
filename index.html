@@ -12,10 +12,18 @@
 <!-- SEO 메타 (기본값 — JS가 지역별로 동적 변경) -->
 <title id="pageTitle">웨딩박람회 무료초대권 실시간 정보 | Wedding&Scoop</title>
 <meta id="metaDescription" name="description" content="전국 웨딩박람회 일정과 무료초대권 혜택을 한 곳에서. 서울·경기·부산·제주 등 지역별 박람회 실시간 업데이트. 5만원 상당 무료초대권 신청 가능." />
-<meta name="keywords" content="웨딩박람회, 무료초대권, 웨딩페어, 결혼박람회, 예비신부, 스드메, 웨딩홀, 서울 웨딩박람회, 경기 웨딩박람회, 부산 웨딩박람회, 웨딩쇼, 결혼준비" />
+<meta name="keywords" content="전국 웨딩박람회, 웨딩박람회, 웨딩박람회 일정, 웨딩박람회 신청, 웨딩박람회 무료초대권, 무료초대권, 웨딩페어, 결혼박람회, 예비신부, 스드메 박람회, 웨딩홀 박람회, 드레스 박람회, 허니문 박람회, 서울 웨딩박람회, 경기 웨딩박람회, 부산 웨딩박람회, 인천 웨딩박람회, 대구 웨딩박람회, 대전 웨딩박람회, 광주 웨딩박람회, 울산 웨딩박람회, 제주 웨딩박람회, 청주 웨딩박람회, 창원 웨딩박람회, 수원 웨딩박람회, 일산 웨딩박람회, 분당 웨딩박람회, 용인 웨딩박람회, 성남 웨딩박람회, 천안 웨딩박람회, 세종 웨딩박람회, 춘천 웨딩박람회, 전주 웨딩박람회, 강남 웨딩박람회, 코엑스 웨딩박람회, 워커힐 웨딩박람회, 웨딩쇼, 결혼준비, 예식장 박람회" />
 <meta name="author" content="Wedding&Scoop" />
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
 <meta name="googlebot" content="index, follow" />
+
+<!-- 검색엔진 웹마스터 인증 (각 사이트 가입 후 발급된 값 입력) -->
+<!-- Google Search Console 등록 시: https://search.google.com/search-console -->
+<!-- <meta name="google-site-verification" content="YOUR_GOOGLE_VERIFICATION_CODE" /> -->
+<!-- 네이버 서치어드바이저: https://searchadvisor.naver.com/ -->
+<!-- <meta name="naver-site-verification" content="YOUR_NAVER_VERIFICATION_CODE" /> -->
+<!-- Bing 웹마스터: https://www.bing.com/webmasters -->
+<!-- <meta name="msvalidate.01" content="YOUR_BING_VERIFICATION_CODE" /> -->
 <link id="canonicalLink" rel="canonical" href="https://weddingscoop.vercel.app/" />
 <link rel="alternate" hreflang="ko-KR" href="https://weddingscoop.vercel.app/" />
 <link rel="alternate" hreflang="x-default" href="https://weddingscoop.vercel.app/" />
@@ -73,6 +81,78 @@
   "url": "https://weddingscoop.vercel.app",
   "inLanguage": "ko-KR",
   "description": "전국 웨딩박람회 일정과 무료초대권 혜택을 한눈에 확인할 수 있는 서비스"
+}
+</script>
+
+<!-- FAQPage 스키마 (Google FAQ 리치 결과) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "웨딩스쿱을 통해 박람회 신청하면 추가 비용이 있나요?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "아니요, 이용자에게 추가 비용은 일절 발생하지 않습니다. 박람회 주최측이 제공하는 동일한 무료초대권과 혜택을 그대로 받으실 수 있으며, 본 사이트는 제휴 수수료 구조로 운영됩니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "무료초대권은 어떻게 받나요?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "원하는 박람회를 선택하고 신청 페이지에서 이름과 연락처를 입력하시면 박람회 담당자가 연락드려 무료초대권을 발급해 드립니다. 박람회당 최대 5만원 상당의 혜택이 제공됩니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "박람회 정보는 얼마나 자주 업데이트되나요?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "신규 박람회는 매일 자동 업데이트되며, 마감된 박람회는 즉시 목록에서 제거됩니다. 실시간 반영되는 정보를 확인하실 수 있습니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "어느 지역의 박람회를 볼 수 있나요?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "서울, 경기도, 인천, 부산, 충청, 전라, 강원, 경상, 제주도 등 전국 모든 지역의 웨딩박람회를 확인하실 수 있습니다. 지역별 필터로 원하는 곳만 골라볼 수 있습니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "AI 맞춤 추천은 어떻게 작동하나요?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "지역과 원하는 박람회 종류(종합, 웨딩홀, 드레스, 신혼여행)를 선택하시면 조건에 맞는 박람회를 마감임박순으로 추천해드립니다. 별도 가입이나 개인정보 입력 없이 바로 이용 가능합니다."
+      }
+    }
+  ]
+}
+</script>
+
+<!-- BreadcrumbList 스키마 (지역 네비게이션) -->
+<script id="breadcrumbJsonLd" type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "홈",
+      "item": "https://weddingscoop.vercel.app/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "전국 웨딩박람회",
+      "item": "https://weddingscoop.vercel.app/"
+    }
+  ]
 }
 </script>
 
@@ -4412,6 +4492,49 @@
 
     // Event/ItemList JSON-LD 업데이트
     updateEventSchema(filtered, region);
+    // BreadcrumbList 업데이트
+    updateBreadcrumb(region);
+  }
+
+  // BreadcrumbList 스키마 업데이트
+  function updateBreadcrumb(region) {
+    const scriptEl = document.getElementById('breadcrumbJsonLd');
+    if (!scriptEl) return;
+
+    const origin = 'https://weddingscoop.vercel.app';
+    const items = [
+      { "@type": "ListItem", "position": 1, "name": "홈", "item": origin + "/" }
+    ];
+
+    if (region && region !== '전체보기') {
+      const slug = REGION_TO_SLUG[region] || '';
+      items.push({
+        "@type": "ListItem",
+        "position": 2,
+        "name": "전국 웨딩박람회",
+        "item": origin + "/"
+      });
+      items.push({
+        "@type": "ListItem",
+        "position": 3,
+        "name": region + " 웨딩박람회",
+        "item": slug ? (origin + "/" + slug) : origin
+      });
+    } else {
+      items.push({
+        "@type": "ListItem",
+        "position": 2,
+        "name": "전국 웨딩박람회",
+        "item": origin + "/"
+      });
+    }
+
+    const breadcrumb = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": items
+    };
+    scriptEl.textContent = JSON.stringify(breadcrumb);
   }
 
   // Event + ItemList 스키마 생성 (Google 리치 결과 / 캐러셀용)

@@ -5,15 +5,26 @@ User-agent: *
 Allow: /
 Disallow: /api/
 
-# 주요 검색 엔진
+# Google
 User-agent: Googlebot
 Allow: /
 Disallow: /api/
 
+# 네이버
 User-agent: Yeti
 Allow: /
 Disallow: /api/
 
+# 다음 (카카오)
+User-agent: Daum
+Allow: /
+Disallow: /api/
+
+User-agent: Daumoa
+Allow: /
+Disallow: /api/
+
+# Bing
 User-agent: bingbot
 Allow: /
 Disallow: /api/
