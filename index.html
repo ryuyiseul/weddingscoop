@@ -862,11 +862,11 @@
   }
 
   /* ═══════════════════════════════════════════
-     AI 맞춤 추천 (독립 풀너비 섹션 - 큼직하게)
+     AI 맞춤 추천 (대화형 레이아웃)
      ═══════════════════════════════════════════ */
   .ai-recommend-section {
     background: var(--paper);
-    padding: 32px 40px;
+    padding: 40px 40px;
     border-top: 4px solid var(--red);
     border-bottom: 4px solid var(--red);
     position: relative;
@@ -878,152 +878,225 @@
   .ai-recommend-btn {
     display: flex;
     align-items: center;
-    gap: 28px;
+    gap: 24px;
     width: 100%;
     background: transparent;
     color: var(--ink);
     border: none;
-    border-radius: 0;
     padding: 0;
     cursor: pointer;
     text-align: left;
-    box-shadow: none;
-    transition: transform 0.25s ease, color 0.3s ease;
+    transition: transform 0.25s ease;
     position: relative;
     overflow: visible;
     font-family: inherit;
   }
-  .ai-recommend-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 60%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent 0%, rgba(184, 35, 47, 0.06) 50%, transparent 100%);
-    animation: ctaShimmer 3s ease-in-out infinite;
-    pointer-events: none;
-  }
   .ai-recommend-btn:hover {
-    background: transparent;
-    transform: translateX(4px);
-    box-shadow: none;
+    transform: translateY(-2px);
   }
-  .ai-recommend-btn:active {
-    transform: translateX(0);
-    box-shadow: none;
-  }
-  .ai-recommend-icon {
+
+  /* 왼쪽: 아바타 영역 */
+  .ai-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
     flex-shrink: 0;
-    width: 72px;
-    height: 72px;
-    background: var(--red);
-    border-radius: 18px;
+  }
+  .ai-avatar {
+    position: relative;
+    width: 58px;
+    height: 58px;
+    background: linear-gradient(135deg, #ff1a1a 0%, #b8232f 60%, #6b0f17 100%);
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 16px rgba(184, 35, 47, 0.3);
-    position: relative;
-    z-index: 1;
-    transition: transform 0.3s ease;
+    box-shadow: 0 4px 16px rgba(184, 35, 47, 0.35);
+    flex-shrink: 0;
   }
-  .ai-recommend-btn:hover .ai-recommend-icon {
-    transform: rotate(-6deg) scale(1.05);
-  }
-  .ai-recommend-icon svg {
-    width: 36px;
-    height: 36px;
+  .ai-avatar svg {
+    width: 28px;
+    height: 28px;
     color: var(--paper);
   }
-  .ai-recommend-text {
+  /* 아바타 우하단 라이브 닷 */
+  .ai-avatar-dot {
+    position: absolute;
+    right: 2px;
+    bottom: 2px;
+    width: 14px;
+    height: 14px;
+    background: #22c55e;
+    border: 2.5px solid var(--paper);
+    border-radius: 50%;
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6);
+    animation: aiPulse 2s ease-in-out infinite;
+  }
+  @keyframes aiPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6); }
+    50% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+  }
+  .ai-status {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .ai-status-label {
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.015em;
+  }
+  .ai-status-online {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    color: #22c55e;
+    letter-spacing: -0.005em;
+  }
+  .ai-live-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: #22c55e;
+    border-radius: 50%;
+    animation: aiBlink 1.4s ease-in-out infinite;
+  }
+  @keyframes aiBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
+  }
+
+  /* 가운데: 말풍선 */
+  .ai-bubble-wrap {
     flex: 1;
     display: flex;
     flex-direction: column;
     gap: 6px;
     min-width: 0;
-    position: relative;
-    z-index: 1;
   }
-  .ai-recommend-label {
-    font-family: 'Inter', sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.3em;
-    color: var(--red);
-    text-transform: uppercase;
-  }
-  .ai-recommend-title {
+  .ai-bubble {
+    display: inline-flex;
+    align-items: center;
+    background: #f4f0ea;
+    border: 1px solid #e8dfd2;
+    border-radius: 16px 16px 16px 4px;
+    padding: 14px 18px;
     font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
-    font-size: 26px;
-    font-weight: 800;
-    letter-spacing: -0.025em;
+    font-size: 15px;
+    font-weight: 600;
     color: var(--ink);
-    line-height: 1.2;
-    transition: color 0.3s ease;
+    letter-spacing: -0.015em;
+    line-height: 1.4;
+    position: relative;
+    max-width: 100%;
+    transition: background 0.3s ease, border-color 0.3s ease;
   }
-  .ai-recommend-btn:hover .ai-recommend-title {
-    color: var(--red);
+  .ai-recommend-btn:hover .ai-bubble {
+    background: #fff5f5;
+    border-color: rgba(184, 35, 47, 0.25);
   }
-  .ai-recommend-desc {
+  .ai-bubble-text {
+    position: relative;
+  }
+  /* 타이핑 커서 */
+  .ai-bubble-caret {
+    display: inline-block;
+    width: 2px;
+    height: 1.1em;
+    background: var(--red);
+    margin-left: 4px;
+    vertical-align: middle;
+    animation: aiCaret 1s steps(2, end) infinite;
+  }
+  @keyframes aiCaret {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+  .ai-bubble-hint {
     font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
-    font-size: 14px;
+    font-size: 11.5px;
     font-weight: 500;
-    color: var(--ink-soft);
-    letter-spacing: -0.01em;
-    line-height: 1.5;
+    color: var(--muted-dark);
+    letter-spacing: -0.005em;
+    padding-left: 6px;
   }
-  .ai-recommend-arrow {
+
+  /* 오른쪽: 대화 시작 버튼 */
+  .ai-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
     flex-shrink: 0;
-    width: 52px;
-    height: 52px;
-    background: var(--ink);
-    border-radius: 50%;
+  }
+  .ai-right-label {
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--red);
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+  .ai-right-arrow {
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: var(--ink);
     color: var(--paper);
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
-    position: relative;
-    z-index: 1;
-    transition: transform 0.3s cubic-bezier(.34, 1.56, .64, 1), background 0.3s ease;
+    border-radius: 50%;
+    transition: background 0.3s ease, transform 0.3s cubic-bezier(.34, 1.56, .64, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
   }
-  .ai-recommend-btn:hover .ai-recommend-arrow {
-    transform: translateX(6px);
-    background: var(--red);
-  }
-  .ai-recommend-arrow svg {
-    width: 18px;
-    height: 18px;
+  .ai-right-arrow svg {
+    width: 16px;
+    height: 16px;
     margin-left: 2px;
   }
+  .ai-recommend-btn:hover .ai-right-arrow {
+    background: var(--red);
+    transform: translateX(4px);
+  }
+
+  /* 태블릿 */
+  @media (max-width: 1024px) {
+    .ai-recommend-section { padding: 32px 28px; }
+    .ai-bubble { font-size: 14px; padding: 12px 16px; }
+    .ai-right-label { display: none; }
+  }
+  /* 모바일 */
   @media (max-width: 768px) {
     .ai-recommend-section { padding: 24px 18px; border-top-width: 3px; border-bottom-width: 3px; }
     .ai-recommend-btn {
       gap: 14px;
-      padding: 0;
-      border-radius: 0;
+      flex-wrap: wrap;
     }
-    .ai-recommend-icon {
-      width: 52px;
-      height: 52px;
-      border-radius: 14px;
+    .ai-left { gap: 10px; }
+    .ai-avatar { width: 46px; height: 46px; }
+    .ai-avatar svg { width: 22px; height: 22px; }
+    .ai-avatar-dot { width: 11px; height: 11px; bottom: 1px; right: 1px; border-width: 2px; }
+    .ai-status-label { font-size: 12px; }
+    .ai-status-online { font-size: 10px; }
+    .ai-bubble-wrap {
+      flex: 1 1 100%;
+      order: 3;
     }
-    .ai-recommend-icon svg { width: 26px; height: 26px; }
-    .ai-recommend-label { font-size: 9.5px; }
-    .ai-recommend-title { font-size: 17px; }
-    .ai-recommend-desc { font-size: 12px; }
-    .ai-recommend-arrow {
-      width: 40px;
-      height: 40px;
-    }
-    .ai-recommend-arrow svg { width: 16px; height: 16px; }
+    .ai-bubble { font-size: 13px; padding: 10px 14px; }
+    .ai-bubble-hint { font-size: 10.5px; }
+    .ai-right { margin-left: auto; }
+    .ai-right-arrow { width: 38px; height: 38px; }
+    .ai-right-arrow svg { width: 14px; height: 14px; }
   }
   @media (max-width: 480px) {
-    .ai-recommend-desc { display: none; }
-    .ai-recommend-title { font-size: 15px; }
-    .ai-recommend-btn { padding: 0; gap: 12px; }
-    .ai-recommend-icon { width: 46px; height: 46px; }
-    .ai-recommend-arrow { width: 36px; height: 36px; }
+    .ai-avatar { width: 42px; height: 42px; }
+    .ai-avatar svg { width: 20px; height: 20px; }
+    .ai-bubble { font-size: 12.5px; padding: 9px 12px; }
+    .ai-bubble-hint { display: none; }
   }
   .ai-cta-btn {
     display: flex;
@@ -4955,26 +5028,46 @@
   </div>
 </section>
 
-<!-- ═══ AI 맞춤 추천 (독립 풀너비 섹션) ═══ -->
+<!-- ═══ AI 맞춤 추천 (대화형 레이아웃) ═══ -->
 <section class="ai-recommend-section">
   <div class="ai-recommend-inner">
-    <button class="ai-recommend-btn" id="aiRecommendBtn" type="button">
-      <span class="ai-recommend-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5L12 2z"/>
-          <path d="M19 15l.8 2.4L22 18l-2.2.6L19 21l-.8-2.4L16 18l2.2-.6L19 15z"/>
-        </svg>
-      </span>
-      <span class="ai-recommend-text">
-        <span class="ai-recommend-label">AI 맞춤 추천</span>
-        <span class="ai-recommend-title">나에게 맞는 웨딩박람회 찾기</span>
-        <span class="ai-recommend-desc">지역과 원하는 박람회 종류만 선택하면 딱 맞는 박람회를 추천드려요</span>
-      </span>
-      <span class="ai-recommend-arrow">
-        <svg viewBox="0 0 24 24">
-          <polygon points="7,4 20,12 7,20" fill="currentColor"/>
-        </svg>
-      </span>
+    <button class="ai-recommend-btn" id="aiRecommendBtn" type="button" aria-label="AI 맞춤 웨딩박람회 추천 받기">
+      <!-- 왼쪽: 아바타 + 상태 -->
+      <div class="ai-left">
+        <div class="ai-avatar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5L12 2z"/>
+            <path d="M19 15l.8 2.4L22 18l-2.2.6L19 21l-.8-2.4L16 18l2.2-.6L19 15z"/>
+          </svg>
+          <span class="ai-avatar-dot" aria-hidden="true"></span>
+        </div>
+        <div class="ai-status">
+          <span class="ai-status-label">AI 어시스턴트</span>
+          <span class="ai-status-online">
+            <span class="ai-live-dot" aria-hidden="true"></span>
+            <span>온라인 · 응답 대기 중</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- 가운데: 말풍선 + 타이핑 -->
+      <div class="ai-bubble-wrap">
+        <div class="ai-bubble">
+          <span class="ai-bubble-text">안녕하세요! 어떤 박람회를 찾으시나요?</span>
+          <span class="ai-bubble-caret" aria-hidden="true"></span>
+        </div>
+        <span class="ai-bubble-hint">지역과 박람회 종류만 알려주세요 · 5초면 추천 완료</span>
+      </div>
+
+      <!-- 오른쪽: 응답 아이콘 + 화살표 -->
+      <div class="ai-right">
+        <span class="ai-right-label">대화 시작하기</span>
+        <span class="ai-right-arrow" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <polygon points="7,4 20,12 7,20" fill="currentColor"/>
+          </svg>
+        </span>
+      </div>
     </button>
   </div>
 </section>
