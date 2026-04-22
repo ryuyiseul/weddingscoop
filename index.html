@@ -2401,12 +2401,15 @@
     overflow: hidden;
   }
   .card-cta::after {
-    content: '▶';
-    font-size: 0.75em;
-    color: var(--paper);
-    display: inline-block;
-    flex-shrink: 0;
-    line-height: 1;
+    content: '\25B6' !important;
+    font-size: 11px !important;
+    color: #fefdfa !important;
+    display: inline-block !important;
+    flex-shrink: 0 !important;
+    line-height: 1 !important;
+    margin-left: 4px !important;
+    position: relative !important;
+    z-index: 2 !important;
     transition: transform 0.3s ease;
   }
   .card:hover .card-cta::after {
