@@ -3850,6 +3850,10 @@
     // 수익 링크(popo9110 포함) — 공유 클릭 시 여기로 바로 이동
     const affiliateUrl = expo.link;
 
+    // 디버그: 실제 공유되는 URL 확인 (F12 Console에 출력)
+    console.log('[Kakao Share] affiliate URL:', affiliateUrl);
+    console.log('[Kakao Share] expo data:', expo);
+
     // Kakao SDK 가 로드되었는지 확인
     if (!window.Kakao || !Kakao.isInitialized || !Kakao.isInitialized()) {
       // SDK 없으면 폴백: 수익 링크 복사
