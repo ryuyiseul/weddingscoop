@@ -1751,10 +1751,16 @@
     z-index: 1;
   }
   .card-cta-arrow {
-    font-family: 'Fraunces', serif;
-    font-weight: 300;
-    font-size: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 12px;
+    height: 12px;
     transition: transform 0.3s ease;
+  }
+  .card-cta-arrow svg {
+    width: 100%;
+    height: 100%;
   }
   .card:hover .card-cta-arrow {
     transform: translateX(6px);
@@ -3908,7 +3914,11 @@
           <div class="card-cta-row">
             <div class="card-cta">
               <span>무료초대권 신청하기</span>
-              <span class="card-cta-arrow">→</span>
+              <span class="card-cta-arrow">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <polygon points="7,4 20,12 7,20" fill="currentColor"/>
+                </svg>
+              </span>
             </div>
             <button class="card-share" data-share-idx="${start + i}" aria-label="카카오톡으로 공유하기" type="button">
               <svg viewBox="0 0 24 24" aria-hidden="true">
