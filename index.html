@@ -2918,7 +2918,7 @@
     gap: 16px;
     margin: 0;
     max-width: none;
-    padding: 28px 24px;
+    padding: 18px 24px;
     background: transparent;
     border: none;
   }
@@ -3138,8 +3138,9 @@
   }
   .stat-divider {
     width: 1px;
-    height: 36px;
+    height: 28px;
     background: var(--line);
+    opacity: 0.7;
   }
 
   /* 후기 슬라이더 */
@@ -4233,12 +4234,18 @@
     /* 히어로 프루프 */
     .hero-proof-section { padding: 20px 18px 24px; }
     .hero-proof-inner .proof-stats {
-      grid-template-columns: 1fr 1fr 1fr;
-      padding: 20px 12px;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      padding: 14px 10px;
       gap: 6px;
       margin: 0;
     }
-    .hero-proof-inner .stat-divider { display: none; }
+    .hero-proof-inner .stat-divider {
+      display: block;
+      width: 1px;
+      height: 24px;
+      background: var(--line);
+      opacity: 0.6;
+    }
     .hero-proof-inner .proof-slider { margin-bottom: 28px; }
     .hero-proof-inner .proof-card { padding: 14px 16px; min-height: 160px; }
     .proof-quote { font-size: 13.5px; line-height: 1.75; }
@@ -4497,12 +4504,18 @@
     .process-badge { width: 20px; height: 20px; }
     .process-badge svg { width: 11px; height: 11px; }
     .proof-stats {
-      grid-template-columns: 1fr 1fr 1fr;
-      padding: 20px 12px;
-      margin-bottom: 28px;
-      gap: 6px;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      padding: 12px 8px;
+      margin-bottom: 0;
+      gap: 4px;
     }
-    .stat-divider { display: none; }
+    .stat-divider {
+      display: block;
+      width: 1px;
+      height: 20px;
+      background: var(--line);
+      opacity: 0.6;
+    }
     .stat-label { font-size: 11px; }
     .proof-urgency {
       padding: 16px 18px;
