@@ -6594,19 +6594,19 @@
       list.appendChild(li);
     }
 
-    // 전역 함수: 한 건 추가 (맨 위에) + 오래된 것 제거
+    // 전역 함수: 한 건 추가 (맨 위에) — 먼저 맨 아래 제거 후 삽입해서 항상 3개 유지
     window.addLiveApplyItem = function() {
+      // 1. 4개가 되기 전에 미리 맨 아래 제거
+      const items = list.querySelectorAll('.live-apply-item');
+      if (items.length >= MAX_VISIBLE) {
+        const last = items[items.length - 1];
+        last.remove();
+      }
+
+      // 2. 새 항목을 맨 위에 추가 (슬라이드 인 애니메이션)
       const entry = randomEntry();
       const li = renderEntry(entry);
       list.insertBefore(li, list.firstChild);
-
-      // 4개 이상이면 맨 아래 제거
-      const items = list.querySelectorAll('.live-apply-item');
-      if (items.length > MAX_VISIBLE) {
-        const last = items[items.length - 1];
-        last.classList.add('leaving');
-        setTimeout(() => last.remove(), 400);
-      }
     };
   })();
 
