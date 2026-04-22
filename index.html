@@ -257,9 +257,17 @@
     animation-play-state: paused;
     transform: translateY(-2px);
   }
-  .chatbot-toggle svg {
-    width: 28px;
-    height: 28px;
+  .chatbot-toggle .toggle-ai {
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    font-size: 26px;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    color: var(--red);
+    text-shadow: 0 1px 0 rgba(255,255,255,0.08);
+  }
+  .chatbot-toggle:hover .toggle-ai {
+    color: var(--paper);
   }
   .chatbot-toggle .toggle-label {
     font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
@@ -478,6 +486,20 @@
   }
   .chat-option-btn:active { transform: scale(0.96); }
 
+  /* 카카오톡 공유 버튼 (노란색) */
+  .chat-option-btn.chat-option-kakao {
+    background: #FEE500;
+    border-color: #FEE500;
+    color: #191919;
+    display: inline-flex;
+    align-items: center;
+  }
+  .chat-option-btn.chat-option-kakao:hover {
+    background: #FADA0A;
+    border-color: #FADA0A;
+    color: #191919;
+  }
+
   /* 뒤로가기/네비 버튼 — 옅은 배경 */
   .chat-nav-options {
     display: flex;
@@ -591,9 +613,8 @@
       border-radius: 16px;
       padding: 8px 6px;
     }
-    .chatbot-toggle svg {
-      width: 24px;
-      height: 24px;
+    .chatbot-toggle .toggle-ai {
+      font-size: 22px;
     }
     .chatbot-toggle .toggle-label {
       font-size: 9.5px;
@@ -3622,9 +3643,7 @@
 
 <!-- ═══ 챗봇 ═══ -->
 <button class="chatbot-toggle" id="chatbotToggle" aria-label="박람회 추천 챗봇 열기">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-  </svg>
+  <span class="toggle-ai">AI</span>
   <span class="toggle-label">나에게 맞는<br/>박람회 찾기</span>
   <span class="badge-dot"></span>
 </button>
@@ -4768,7 +4787,7 @@
         }
 
         const buttonsDelay = fallback.length === 0 ? 200 : 200 * (fallback.length + 2);
-        setTimeout(() => addEndOptions(), buttonsDelay);
+        setTimeout(() => addEndOptions(fallback, locLabel), buttonsDelay);
       } else {
         addBotMessage(`<strong>${locLabel}</strong>의 ${TYPE_LABELS[chatState.type]} 박람회를 <strong>${filtered.length}개</strong> 찾았어요! 🎉<br/>마감임박 순으로 보여드릴게요.`);
         top.forEach((expo, i) => {
@@ -4779,18 +4798,33 @@
             addEmpty(`+${filtered.length - 5}개 박람회가 더 있어요. 메인 페이지에서 확인하세요.`);
           }, 200 * (top.length + 1));
         }
-        setTimeout(() => addEndOptions(), 200 * (top.length + 2));
+        setTimeout(() => addEndOptions(top, locLabel), 200 * (top.length + 2));
       }
     }
 
-    function addEndOptions() {
+    function addEndOptions(shownExpos, locLabel) {
+      // 공유할 박람회가 있을 때만 카톡 공유 버튼 노출
+      const shareBtnHtml = (shownExpos && shownExpos.length > 0)
+        ? `<button class="chat-option-btn chat-option-kakao" id="chatShareKakao">
+             <svg viewBox="0 0 24 24" fill="currentColor" style="width:14px;height:14px;margin-right:4px;vertical-align:-2px;">
+               <path d="M12 3C6.48 3 2 6.48 2 10.8c0 2.8 1.83 5.26 4.6 6.66-.2.68-.71 2.49-.82 2.88-.14.48.17.48.37.35.15-.1 2.4-1.63 3.37-2.28.81.12 1.63.18 2.48.18 5.52 0 10-3.48 10-7.79S17.52 3 12 3z"/>
+             </svg>추천 결과 카톡 공유
+           </button>`
+        : '';
+
       const wrap = document.createElement('div');
       wrap.className = 'chat-options';
       wrap.innerHTML = `
+        ${shareBtnHtml}
         <button class="chat-option-btn" id="chatRestart">🔄 처음부터 다시</button>
         <button class="chat-option-btn" id="chatViewAll">📋 해당 지역 전체 보기</button>
       `;
       messages.appendChild(wrap);
+      if (shownExpos && shownExpos.length > 0) {
+        wrap.querySelector('#chatShareKakao').addEventListener('click', () => {
+          shareRecommendations(shownExpos, locLabel);
+        });
+      }
       wrap.querySelector('#chatRestart').addEventListener('click', () => {
         startChat();
       });
@@ -4807,6 +4841,62 @@
         },
         showHome: true
       });
+    }
+
+    // 추천 리스트를 카카오톡으로 공유 (list template)
+    function shareRecommendations(expos, locLabel) {
+      const siteUrl = `${window.location.origin}${window.location.pathname}`;
+      const typeLabel = TYPE_LABELS[chatState.type] || '박람회';
+
+      if (!window.Kakao || !Kakao.isInitialized || !Kakao.isInitialized()) {
+        // 폴백: 텍스트로 클립보드 복사
+        const lines = expos.map((e, i) => {
+          const d = formatChatDate(e.date, e.endDate);
+          return `${i + 1}. ${e.title}\n   📅 ${d} · 📍 ${e.region}\n   ${e.link}`;
+        }).join('\n\n');
+        const text = `[웨딩스쿱] ${locLabel} ${typeLabel} 추천\n\n${lines}\n\n🔗 ${siteUrl}`;
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(text).then(() => {
+            alert('추천 목록이 복사됐어요! 카카오톡에 붙여넣기 해주세요 📋');
+          });
+        }
+        return;
+      }
+
+      try {
+        // 최대 3개까지 list template 지원
+        const contents = expos.slice(0, 3).map(e => ({
+          title: e.title,
+          description: `📅 ${formatChatDate(e.date, e.endDate)} · 📍 ${e.region}`,
+          imageUrl: e.thumbnail || `${window.location.origin}/og-image.png`,
+          link: {
+            mobileWebUrl: e.link,
+            webUrl: e.link,
+          },
+        }));
+
+        Kakao.Share.sendDefault({
+          objectType: 'list',
+          headerTitle: `${locLabel} ${typeLabel} 추천 ${expos.length}개`,
+          headerLink: {
+            mobileWebUrl: siteUrl,
+            webUrl: siteUrl,
+          },
+          contents: contents,
+          buttons: [
+            {
+              title: '전체 목록 보기',
+              link: {
+                mobileWebUrl: siteUrl,
+                webUrl: siteUrl,
+              },
+            },
+          ],
+        });
+      } catch (err) {
+        console.error('Kakao list share failed:', err);
+        alert('공유 중 오류가 발생했어요. 잠시 후 다시 시도해주세요.');
+      }
     }
   })();
 </script>
