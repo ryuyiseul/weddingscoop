@@ -8,8 +8,17 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="format-detection" content="telephone=no" />
-<title>Wedding&Scoop — 전국 웨딩박람회 혜택 | 무료초대권 신청</title>
-<meta name="description" content="전국 웨딩박람회 혜택을 한눈에. 매일 업데이트되는 박람회 정보와 무료초대권 신청 서비스." />
+
+<!-- SEO 메타 (기본값 — JS가 지역별로 동적 변경) -->
+<title id="pageTitle">웨딩박람회 무료초대권 실시간 정보 | Wedding&Scoop</title>
+<meta id="metaDescription" name="description" content="전국 웨딩박람회 일정과 무료초대권 혜택을 한 곳에서. 서울·경기·부산·제주 등 지역별 박람회 실시간 업데이트. 5만원 상당 무료초대권 신청 가능." />
+<meta name="keywords" content="웨딩박람회, 무료초대권, 웨딩페어, 결혼박람회, 예비신부, 스드메, 웨딩홀, 서울 웨딩박람회, 경기 웨딩박람회, 부산 웨딩박람회, 웨딩쇼, 결혼준비" />
+<meta name="author" content="Wedding&Scoop" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<meta name="googlebot" content="index, follow" />
+<link id="canonicalLink" rel="canonical" href="https://weddingscoop.vercel.app/" />
+<link rel="alternate" hreflang="ko-KR" href="https://weddingscoop.vercel.app/" />
+<link rel="alternate" hreflang="x-default" href="https://weddingscoop.vercel.app/" />
 
 <!-- Favicon (W 마크, 인라인 SVG) -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0a0a'/%3E%3Ctext x='16' y='23' font-family='Georgia, serif' font-size='22' font-weight='900' text-anchor='middle' fill='%23fefdfa'%3EW%3C/text%3E%3Ccircle cx='24' cy='9' r='3' fill='%23b8232f'/%3E%3C/svg%3E" />
@@ -17,10 +26,10 @@
 
 <!-- Open Graph (카톡/페북 공유 시 미리보기) -->
 <meta property="og:site_name" content="Wedding&Scoop" />
-<meta property="og:title" content="Wedding&Scoop" />
-<meta property="og:description" content="전국 웨딩박람회 혜택 | 무료초대권 신청" />
+<meta id="ogTitle" property="og:title" content="웨딩박람회 무료초대권 실시간 정보 | Wedding&Scoop" />
+<meta id="ogDescription" property="og:description" content="전국 웨딩박람회 일정과 무료초대권 혜택을 한 곳에서. 지역별 박람회 실시간 업데이트." />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="https://weddingscoop.vercel.app" />
+<meta id="ogUrl" property="og:url" content="https://weddingscoop.vercel.app/" />
 <meta property="og:image" content="https://weddingscoop.vercel.app/og-image.png" />
 <meta property="og:image:secure_url" content="https://weddingscoop.vercel.app/og-image.png" />
 <meta property="og:image:type" content="image/png" />
@@ -31,12 +40,50 @@
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Wedding&Scoop" />
-<meta name="twitter:description" content="전국 웨딩박람회 혜택 | 무료초대권 신청" />
+<meta id="twTitle" name="twitter:title" content="웨딩박람회 무료초대권 실시간 정보 | Wedding&Scoop" />
+<meta id="twDescription" name="twitter:description" content="전국 웨딩박람회 일정과 무료초대권 혜택을 한 곳에서." />
 <meta name="twitter:image" content="https://weddingscoop.vercel.app/og-image.png" />
+
+<!-- Organization 스키마 (브랜드 정보) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Wedding&Scoop",
+  "alternateName": "웨딩스쿱",
+  "url": "https://weddingscoop.vercel.app",
+  "logo": "https://weddingscoop.vercel.app/og-image.png",
+  "description": "전국 웨딩박람회 일정과 무료초대권 혜택을 실시간으로 제공하는 서비스",
+  "email": "weddingscoop.help@gmail.com",
+  "areaServed": {
+    "@type": "Country",
+    "name": "대한민국"
+  },
+  "sameAs": []
+}
+</script>
+
+<!-- WebSite 스키마 (사이트 정보 + 검색 박스) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Wedding&Scoop",
+  "alternateName": "웨딩스쿱",
+  "url": "https://weddingscoop.vercel.app",
+  "inLanguage": "ko-KR",
+  "description": "전국 웨딩박람회 일정과 무료초대권 혜택을 한눈에 확인할 수 있는 서비스"
+}
+</script>
+
+<!-- Event 스키마 — JS가 동적으로 주입 -->
+<script id="eventListJsonLd" type="application/ld+json"></script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preconnect" href="https://cpaad.co.kr" />
+<link rel="dns-prefetch" href="https://ad.cpaad.co.kr" />
+<link rel="dns-prefetch" href="https://t1.kakaocdn.net" />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,900&family=Inter:wght@300;400;500;600&family=Noto+Serif+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 
@@ -4319,16 +4366,130 @@
   function updateUrlAndTitle(region) {
     const slug = REGION_TO_SLUG[region];
     const newPath = slug ? `/${slug}` : '/';
+    const origin = 'https://weddingscoop.vercel.app';
+    const fullUrl = origin + newPath;
+
     // 현재 URL과 다를 때만 push (중복 히스토리 방지)
     if (window.location.pathname !== newPath) {
       window.history.pushState({ region }, '', newPath);
     }
-    // SEO용 title + description 동적 변경
+
+    // 지역별 SEO 메타 동적 설정
+    const filtered = region === '전체보기'
+      ? (window.allExpos || [])
+      : (window.allExpos || []).filter(e => e.region === region);
+    const count = filtered.length;
+
+    let title, description;
     if (region === '전체보기') {
-      document.title = 'Wedding&Scoop — 전국 웨딩박람회 혜택 | 무료초대권 신청';
+      title = '웨딩박람회 무료초대권 실시간 정보 | Wedding&Scoop';
+      description = `전국 웨딩박람회 ${count || ''}개의 일정과 무료초대권 혜택을 한 곳에서. 서울·경기·부산·제주 등 지역별 실시간 업데이트. 5만원 상당 무료초대권 신청 가능.`;
     } else {
-      document.title = `${region} 웨딩박람회 혜택 | 무료초대권 신청 — Wedding&Scoop`;
+      title = `${region} 웨딩박람회 무료초대권 | ${count || ''}개 실시간 | Wedding&Scoop`;
+      description = `${region} 지역 웨딩박람회 ${count || ''}개의 최신 일정과 무료초대권 혜택. 마감임박 순 실시간 업데이트. 5만원 상당 초대권 신청 가능.`;
     }
+
+    // title, description, canonical 업데이트
+    document.title = title;
+    const metaDesc = document.getElementById('metaDescription');
+    if (metaDesc) metaDesc.setAttribute('content', description);
+    const canonical = document.getElementById('canonicalLink');
+    if (canonical) canonical.setAttribute('href', fullUrl);
+
+    // OG 태그 업데이트
+    const ogTitle = document.getElementById('ogTitle');
+    const ogDesc = document.getElementById('ogDescription');
+    const ogUrl = document.getElementById('ogUrl');
+    if (ogTitle) ogTitle.setAttribute('content', title);
+    if (ogDesc) ogDesc.setAttribute('content', description);
+    if (ogUrl) ogUrl.setAttribute('content', fullUrl);
+
+    // Twitter 태그 업데이트
+    const twTitle = document.getElementById('twTitle');
+    const twDesc = document.getElementById('twDescription');
+    if (twTitle) twTitle.setAttribute('content', title);
+    if (twDesc) twDesc.setAttribute('content', description);
+
+    // Event/ItemList JSON-LD 업데이트
+    updateEventSchema(filtered, region);
+  }
+
+  // Event + ItemList 스키마 생성 (Google 리치 결과 / 캐러셀용)
+  function updateEventSchema(expos, region) {
+    const scriptEl = document.getElementById('eventListJsonLd');
+    if (!scriptEl || !expos || expos.length === 0) return;
+
+    // 마감임박순 상위 10개만 주입 (너무 많으면 구글이 무시)
+    const top = expos
+      .slice()
+      .sort((a, b) => new Date(a.endDate || a.date) - new Date(b.endDate || b.date))
+      .slice(0, 10);
+
+    const events = top.map((e) => {
+      const startDate = e.date ? new Date(e.date).toISOString().split('T')[0] : null;
+      const endDate = e.endDate ? new Date(e.endDate).toISOString().split('T')[0] : startDate;
+      if (!startDate) return null;
+
+      const addressParts = (e.rawLocation || '').split('||').map(s => s.trim()).filter(Boolean);
+      const streetAddress = addressParts[0] || '';
+      const venueName = addressParts[addressParts.length - 1] || e.location || e.title;
+
+      return {
+        "@context": "https://schema.org",
+        "@type": "Event",
+        "name": e.title,
+        "description": `${e.region} 웨딩박람회 - 무료초대권 신청 가능`,
+        "startDate": startDate,
+        "endDate": endDate,
+        "eventStatus": "https://schema.org/EventScheduled",
+        "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+        "image": e.thumbnail,
+        "url": `https://weddingscoop.vercel.app${REGION_TO_SLUG[e.region] ? '/' + REGION_TO_SLUG[e.region] : '/'}`,
+        "location": {
+          "@type": "Place",
+          "name": venueName,
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": streetAddress,
+            "addressLocality": e.region,
+            "addressCountry": "KR"
+          }
+        },
+        "offers": {
+          "@type": "Offer",
+          "name": "무료초대권",
+          "price": "0",
+          "priceCurrency": "KRW",
+          "availability": "https://schema.org/InStock",
+          "url": e.link,
+          "validFrom": startDate
+        },
+        "organizer": {
+          "@type": "Organization",
+          "name": "Wedding&Scoop",
+          "url": "https://weddingscoop.vercel.app"
+        }
+      };
+    }).filter(Boolean);
+
+    if (events.length === 0) return;
+
+    // ItemList로 감싸서 캐러셀 힌트 제공
+    const itemList = {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": region === '전체보기'
+        ? '전국 웨딩박람회 목록'
+        : `${region} 웨딩박람회 목록`,
+      "numberOfItems": events.length,
+      "itemListElement": events.map((event, idx) => ({
+        "@type": "ListItem",
+        "position": idx + 1,
+        "item": event
+      }))
+    };
+
+    scriptEl.textContent = JSON.stringify(itemList);
   }
 
   // URL 변경 시 activeRegion 동기화 (초기 로드 + 뒤로가기/앞으로가기)

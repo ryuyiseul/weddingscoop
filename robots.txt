@@ -1,0 +1,22 @@
+# Wedding&Scoop — 전국 웨딩박람회 정보
+# https://weddingscoop.vercel.app
+
+User-agent: *
+Allow: /
+Disallow: /api/
+
+# 주요 검색 엔진
+User-agent: Googlebot
+Allow: /
+Disallow: /api/
+
+User-agent: Yeti
+Allow: /
+Disallow: /api/
+
+User-agent: bingbot
+Allow: /
+Disallow: /api/
+
+# Sitemap 위치
+Sitemap: https://weddingscoop.vercel.app/sitemap.xml
