@@ -5798,15 +5798,15 @@
 
     <h3 class="seo-regions-subtitle">지역별 웨딩박람회 바로가기</h3>
     <ul class="seo-regions-list">
-      <li><a href="/seoul">서울 웨딩박람회</a></li>
-      <li><a href="/gyeonggi">경기도 웨딩박람회</a></li>
-      <li><a href="/incheon">인천 웨딩박람회</a></li>
-      <li><a href="/busan">부산 웨딩박람회</a></li>
-      <li><a href="/chungcheong">충청 웨딩박람회</a></li>
-      <li><a href="/jeolla">전라 웨딩박람회</a></li>
-      <li><a href="/gangwon">강원 웨딩박람회</a></li>
-      <li><a href="/gyeongsang">경상 웨딩박람회</a></li>
-      <li><a href="/jeju">제주 웨딩박람회</a></li>
+      <li><a href="/seoul" onclick="return selectRegionAndScroll(event, 'seoul')">서울 웨딩박람회</a></li>
+      <li><a href="/gyeonggi" onclick="return selectRegionAndScroll(event, 'gyeonggi')">경기도 웨딩박람회</a></li>
+      <li><a href="/incheon" onclick="return selectRegionAndScroll(event, 'incheon')">인천 웨딩박람회</a></li>
+      <li><a href="/busan" onclick="return selectRegionAndScroll(event, 'busan')">부산 웨딩박람회</a></li>
+      <li><a href="/chungcheong" onclick="return selectRegionAndScroll(event, 'chungcheong')">충청 웨딩박람회</a></li>
+      <li><a href="/jeolla" onclick="return selectRegionAndScroll(event, 'jeolla')">전라 웨딩박람회</a></li>
+      <li><a href="/gangwon" onclick="return selectRegionAndScroll(event, 'gangwon')">강원 웨딩박람회</a></li>
+      <li><a href="/gyeongsang" onclick="return selectRegionAndScroll(event, 'gyeongsang')">경상 웨딩박람회</a></li>
+      <li><a href="/jeju" onclick="return selectRegionAndScroll(event, 'jeju')">제주 웨딩박람회</a></li>
     </ul>
 
     <h3 class="seo-regions-subtitle">자주 검색되는 키워드</h3>
@@ -6446,6 +6446,28 @@
       });
     });
   }
+
+  // SEO 하단 지역 링크용: 지역 선택 + 필터 섹션으로 스크롤
+  window.selectRegionAndScroll = function(e, slug) {
+    if (e && e.preventDefault) e.preventDefault();
+    const region = SLUG_TO_REGION[slug] || '전체보기';
+    activeRegion = region;
+    currentPage = 1;
+    // 필터 버튼 active 갱신
+    regionFilter.querySelectorAll('.filter-btn').forEach(b => {
+      if (b.dataset.region === region) b.classList.add('active');
+      else b.classList.remove('active');
+    });
+    updateUrlAndTitle(region);
+    render();
+    // 필터/캠페인 섹션으로 스크롤
+    if (typeof window.scrollToCampaigns === 'function') {
+      window.scrollToCampaigns();
+    } else {
+      document.getElementById('campaigns')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    return false;
+  };
 
   // ═══════ 정렬 드롭다운 이벤트 ═══════
   const sortSelect = document.getElementById('sortSelect');
