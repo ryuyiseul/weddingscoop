@@ -4396,17 +4396,28 @@
 
     // 디버그: 실제 공유되는 URL 확인 (F12 Console에 출력)
     console.log('[Kakao Share] affiliate URL:', affiliateUrl);
-    console.log('[Kakao Share] expo data:', expo);
+    console.log('[Kakao Share] Kakao available:', !!window.Kakao);
+    console.log('[Kakao Share] Kakao initialized:', window.Kakao && Kakao.isInitialized && Kakao.isInitialized());
 
-    // Kakao SDK 가 로드되었는지 확인
-    if (!window.Kakao || !Kakao.isInitialized || !Kakao.isInitialized()) {
-      // SDK 없으면 폴백: 수익 링크 복사
+    // 폴백: 클립보드 복사
+    function fallbackCopy() {
       const shareText = `${expo.title}\n📅 ${dateText} · 📍 ${expo.region}\n\n무료초대권 신청: ${affiliateUrl}`;
       if (navigator.clipboard) {
         navigator.clipboard.writeText(shareText).then(() => {
-          alert('링크가 복사됐어요! 카카오톡에 붙여넣기 해주세요 📋');
-        }).catch(() => alert('공유 준비 중이에요. 잠시 후 다시 시도해주세요.'));
+          alert('카카오톡 공유에 일시적인 문제가 있어\n링크를 복사했어요!\n카카오톡에 붙여넣기 해주세요 📋');
+        }).catch(() => {
+          // 클립보드도 실패하면 prompt로 보여주기
+          window.prompt('아래 링크를 복사해서 공유해주세요:', affiliateUrl);
+        });
+      } else {
+        window.prompt('아래 링크를 복사해서 공유해주세요:', affiliateUrl);
       }
+    }
+
+    // Kakao SDK 가 로드되었는지 확인
+    if (!window.Kakao || !Kakao.isInitialized || !Kakao.isInitialized()) {
+      console.warn('[Kakao Share] SDK not ready, using fallback');
+      fallbackCopy();
       return;
     }
 
@@ -4423,8 +4434,6 @@
           link: {
             mobileWebUrl: affiliateUrl,
             webUrl: affiliateUrl,
-            mobileExecutionParams: `url=${encodeURIComponent(affiliateUrl)}`,
-            executionParams: `url=${encodeURIComponent(affiliateUrl)}`,
           },
         },
         buttons: [
@@ -4436,10 +4445,13 @@
             },
           },
         ],
+        serverCallbackArgs: {
+          source: 'weddingscoop'
+        }
       });
     } catch (err) {
-      console.error('Kakao share failed:', err);
-      alert('공유 중 오류가 발생했어요. 잠시 후 다시 시도해주세요.');
+      console.error('[Kakao Share] failed:', err);
+      fallbackCopy();
     }
   }
 
