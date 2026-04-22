@@ -676,13 +676,15 @@
     margin: 0 auto;
     background: var(--paper);
     color: var(--ink);
-    border: 2px solid var(--ink);
-    padding: 22px 32px;
+    border: none;
+    border-top: 4px solid var(--red);
+    border-bottom: 4px solid var(--red);
+    padding: 28px 32px;
     border-radius: 0;
     cursor: pointer;
     font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
     text-align: left;
-    transition: transform 0.3s cubic-bezier(.2,.7,.2,1), box-shadow 0.3s cubic-bezier(.2,.7,.2,1), background 0.3s ease;
+    transition: transform 0.3s cubic-bezier(.2,.7,.2,1), background 0.3s ease, border-color 0.3s ease;
     position: relative;
     overflow: hidden;
   }
@@ -709,6 +711,8 @@
   .ai-cta-btn:hover {
     background: var(--ink);
     color: var(--paper);
+    border-top-color: var(--red);
+    border-bottom-color: var(--red);
     transform: translateY(-2px);
   }
   .ai-cta-btn:active { transform: translateY(0); }
@@ -2440,10 +2444,12 @@
       padding: 18px 16px 36px;
     }
     .ai-cta-btn {
-      padding: 16px 18px;
+      padding: 20px 18px;
       gap: 14px;
       border-radius: 0;
-      border-width: 2px;
+      border: none;
+      border-top: 3px solid var(--red);
+      border-bottom: 3px solid var(--red);
     }
     .ai-cta-icon {
       width: 44px;
