@@ -678,14 +678,14 @@
     background: var(--paper);
     color: var(--ink);
     border: 1px solid var(--line);
-    border-top: 4px solid var(--red);
-    border-bottom: 4px solid var(--red);
+    border-top: 4px solid var(--ink);
+    border-bottom: 4px solid var(--ink);
     padding: 28px 32px;
     border-radius: 0;
     cursor: pointer;
     font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
     text-align: left;
-    transition: transform 0.3s cubic-bezier(.2,.7,.2,1), background 0.3s ease, border-color 0.3s ease;
+    transition: transform 0.3s cubic-bezier(.2,.7,.2,1), background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
     position: relative;
     overflow: hidden;
   }
@@ -710,11 +710,11 @@
     60%, 100% { left: 150%; }
   }
   .ai-cta-btn:hover {
-    background: var(--ink);
+    background: var(--red);
     color: var(--paper);
     border-color: var(--ink);
-    border-top-color: var(--red);
-    border-bottom-color: var(--red);
+    border-top-color: var(--ink);
+    border-bottom-color: var(--ink);
     transform: translateY(-2px);
   }
   .ai-cta-btn:active { transform: translateY(0); }
@@ -731,10 +731,12 @@
     color: var(--paper);
     position: relative;
     z-index: 1;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
   }
   .ai-cta-btn:hover .ai-cta-icon {
     transform: rotate(12deg) scale(1.05);
+    background: var(--paper);
+    color: var(--red);
   }
   .ai-cta-icon svg {
     width: 26px;
@@ -755,6 +757,10 @@
     color: var(--red);
     letter-spacing: 0.12em;
     text-transform: uppercase;
+    transition: color 0.3s ease;
+  }
+  .ai-cta-btn:hover .ai-cta-label {
+    color: var(--paper);
   }
   .ai-cta-title {
     font-size: 20px;
@@ -772,7 +778,7 @@
     transition: color 0.3s ease;
   }
   .ai-cta-btn:hover .ai-cta-desc {
-    color: rgba(254, 253, 250, 0.7);
+    color: rgba(254, 253, 250, 0.85);
   }
 
   /* 삼각형 화살표 */
@@ -786,12 +792,13 @@
     background: var(--ink);
     color: var(--paper);
     border-radius: 50%;
-    transition: transform 0.3s ease, background 0.3s ease;
+    transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
     position: relative;
     z-index: 1;
   }
   .ai-cta-btn:hover .ai-cta-arrow {
-    background: var(--red);
+    background: var(--paper);
+    color: var(--red);
     transform: translateX(4px);
   }
   .ai-cta-arrow svg {
@@ -2452,8 +2459,8 @@
       gap: 14px;
       border-radius: 0;
       border: 1px solid var(--line);
-      border-top: 3px solid var(--red);
-      border-bottom: 3px solid var(--red);
+      border-top: 3px solid var(--ink);
+      border-bottom: 3px solid var(--ink);
     }
     .ai-cta-icon {
       width: 44px;
