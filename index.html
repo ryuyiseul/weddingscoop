@@ -3869,18 +3869,23 @@
     try {
       Kakao.Share.sendDefault({
         objectType: 'feed',
+        installTalk: true,
         content: {
           title: expo.title,
           description: `📅 ${dateText}\n📍 ${expo.region}${expo.location ? ' · ' + expo.location : ''}\n\n✨ 무료초대권 신청하기`,
           imageUrl: expo.thumbnail || `${window.location.origin}/og-image.png`,
+          imageWidth: 800,
+          imageHeight: 800,
           link: {
             mobileWebUrl: affiliateUrl,
             webUrl: affiliateUrl,
+            mobileExecutionParams: `url=${encodeURIComponent(affiliateUrl)}`,
+            executionParams: `url=${encodeURIComponent(affiliateUrl)}`,
           },
         },
         buttons: [
           {
-            title: '무료초대권 신청',
+            title: '무료초대권 신청 →',
             link: {
               mobileWebUrl: affiliateUrl,
               webUrl: affiliateUrl,
