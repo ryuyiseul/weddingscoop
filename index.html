@@ -2902,6 +2902,176 @@
     border: 1px solid var(--line);
     border-top: 3px solid var(--red);
   }
+
+  /* ═══════════════════════════════════════════
+     실시간 신청 현황
+     ═══════════════════════════════════════════ */
+  .live-apply {
+    max-width: 720px;
+    margin: 20px auto 0;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .live-apply-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 18px;
+    background: var(--paper-soft);
+    border-bottom: 1px solid var(--line);
+    flex-wrap: wrap;
+  }
+  .live-apply-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    background: #22c55e;
+    border-radius: 50%;
+    animation: liveApplyPulse 1.6s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+  @keyframes liveApplyPulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5); }
+    50% { opacity: 0.7; box-shadow: 0 0 0 5px rgba(34, 197, 94, 0); }
+  }
+  .live-apply-title {
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .live-apply-hint {
+    margin-left: auto;
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: 10px;
+    color: var(--muted-dark);
+    font-weight: 400;
+    letter-spacing: -0.005em;
+  }
+  .live-apply-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .live-apply-item {
+    display: grid;
+    grid-template-columns: 72px 1fr auto;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--line);
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    animation: liveItemSlideIn 0.5s ease-out;
+  }
+  .live-apply-item:last-child {
+    border-bottom: none;
+  }
+  .live-apply-item.leaving {
+    animation: liveItemFadeOut 0.4s ease-in forwards;
+  }
+  @keyframes liveItemSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+      background: rgba(184, 35, 47, 0.06);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+      background: transparent;
+    }
+  }
+  @keyframes liveItemFadeOut {
+    to {
+      opacity: 0;
+      transform: translateY(6px);
+      max-height: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+  }
+  .live-apply-date {
+    font-size: 11px;
+    color: var(--muted-dark);
+    font-weight: 600;
+    letter-spacing: -0.005em;
+  }
+  .live-apply-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    font-size: 13px;
+  }
+  .live-apply-name {
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.015em;
+  }
+  .live-apply-region {
+    color: var(--ink-soft);
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: -0.01em;
+  }
+  .live-apply-region::before {
+    content: '·';
+    margin: 0 4px;
+    color: var(--muted);
+  }
+  .live-apply-benefit {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(184, 35, 47, 0.08);
+    color: var(--red);
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+    letter-spacing: -0.005em;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 768px) {
+    .live-apply {
+      margin-top: 16px;
+    }
+    .live-apply-header {
+      padding: 10px 14px;
+      gap: 6px;
+    }
+    .live-apply-title { font-size: 11px; }
+    .live-apply-hint {
+      font-size: 9.5px;
+      flex-basis: 100%;
+      margin-left: 0;
+      padding-left: 15px;
+    }
+    .live-apply-item {
+      grid-template-columns: 58px 1fr;
+      grid-template-rows: auto auto;
+      gap: 6px 10px;
+      padding: 10px 14px;
+    }
+    .live-apply-date {
+      font-size: 10.5px;
+    }
+    .live-apply-info {
+      font-size: 12px;
+    }
+    .live-apply-region {
+      font-size: 11px;
+    }
+    .live-apply-benefit {
+      grid-column: 2;
+      justify-self: start;
+      font-size: 9.5px;
+      padding: 3px 8px;
+    }
+  }
   .stat-item {
     text-align: center;
   }
@@ -4532,6 +4702,18 @@
         <div class="stat-num">4.8<span class="stat-unit">/5</span></div>
         <div class="stat-label">만족도</div>
       </div>
+    </div>
+
+    <!-- 실시간 신청 현황 -->
+    <div class="live-apply">
+      <div class="live-apply-header">
+        <span class="live-apply-dot" aria-hidden="true"></span>
+        <span class="live-apply-title">실시간 신청 현황</span>
+        <span class="live-apply-hint">* 실제 신청 내역을 가공하여 표시됩니다</span>
+      </div>
+      <ul class="live-apply-list" id="liveApplyList">
+        <!-- JS로 채워짐 -->
+      </ul>
     </div>
   </div>
 </section>
@@ -6361,6 +6543,11 @@
       void el.offsetWidth; // 리플로우 트리거
       el.classList.add('flash');
 
+      // 실시간 신청 목록에도 한 건 추가
+      if (typeof window.addLiveApplyItem === 'function') {
+        window.addLiveApplyItem();
+      }
+
       // 다음 tick — 2~4초 랜덤
       const nextDelay = 2000 + Math.random() * 2000;
       setTimeout(tick, nextDelay);
@@ -6369,6 +6556,83 @@
     // 초기 딜레이 후 시작
     setTimeout(tick, 1500);
   }
+
+  // ═══════ 실시간 신청 현황 ═══════
+  (function initLiveApply() {
+    const list = document.getElementById('liveApplyList');
+    if (!list) return;
+
+    const SURNAMES = ['김','이','박','최','정','강','조','윤','장','임','한','오','신','권','황','안','송','전','홍','유','서','백','문','손','양'];
+    const REGIONS = ['서울','경기','부산','인천','대구','대전','광주','울산','제주','강원','충북','충남','전북','전남','경북','경남'];
+    const BENEFITS = [
+      '무료초대권 + 사은품',
+      '무료초대권 + 우선상담',
+      '무료초대권 + 전용할인',
+      '무료초대권 + 기프티콘',
+      '무료초대권 + VIP 컨설팅',
+      '무료초대권 + 드레스 혜택',
+      '무료초대권 + 스드메 할인',
+      '무료초대권 + 예물 혜택',
+    ];
+    const MAX_VISIBLE = 3;
+
+    // 한 건 생성 (임의 데이터)
+    function randomEntry(date) {
+      const surname = SURNAMES[Math.floor(Math.random() * SURNAMES.length)];
+      const region = REGIONS[Math.floor(Math.random() * REGIONS.length)];
+      const benefit = BENEFITS[Math.floor(Math.random() * BENEFITS.length)];
+      return {
+        date: date || formatToday(),
+        name: surname + '○○',
+        region: region,
+        benefit: benefit,
+      };
+    }
+
+    // 오늘 날짜 포맷 "M월 D일"
+    function formatToday(offsetMinutes) {
+      const d = new Date();
+      if (offsetMinutes) d.setMinutes(d.getMinutes() - offsetMinutes);
+      return (d.getMonth() + 1) + '월 ' + d.getDate() + '일';
+    }
+
+    function renderEntry(entry) {
+      const li = document.createElement('li');
+      li.className = 'live-apply-item';
+      li.innerHTML =
+        '<span class="live-apply-date">' + entry.date + '</span>' +
+        '<span class="live-apply-info">' +
+          '<span class="live-apply-name">' + entry.name + '님</span>' +
+          '<span class="live-apply-region">' + entry.region + '</span>' +
+        '</span>' +
+        '<span class="live-apply-benefit">' + entry.benefit + '</span>';
+      return li;
+    }
+
+    // 초기 3개 삽입 (모두 오늘 날짜)
+    for (let i = 0; i < MAX_VISIBLE; i++) {
+      const entry = randomEntry();
+      const li = renderEntry(entry);
+      // 초기는 애니메이션 없이 즉시
+      li.style.animation = 'none';
+      list.appendChild(li);
+    }
+
+    // 전역 함수: 한 건 추가 (맨 위에) + 오래된 것 제거
+    window.addLiveApplyItem = function() {
+      const entry = randomEntry();
+      const li = renderEntry(entry);
+      list.insertBefore(li, list.firstChild);
+
+      // 4개 이상이면 맨 아래 제거
+      const items = list.querySelectorAll('.live-apply-item');
+      if (items.length > MAX_VISIBLE) {
+        const last = items[items.length - 1];
+        last.classList.add('leaving');
+        setTimeout(() => last.remove(), 400);
+      }
+    };
+  })();
 
   const proofObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
