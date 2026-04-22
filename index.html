@@ -865,10 +865,8 @@
      AI 맞춤 추천 (대화형 레이아웃)
      ═══════════════════════════════════════════ */
   .ai-recommend-section {
-    background: var(--paper);
+    background: var(--ink);
     padding: 40px 40px;
-    border-top: 4px solid var(--red);
-    border-bottom: 4px solid var(--red);
     position: relative;
   }
   .ai-recommend-inner {
@@ -881,7 +879,7 @@
     gap: 24px;
     width: 100%;
     background: transparent;
-    color: var(--ink);
+    color: var(--paper);
     border: none;
     padding: 0;
     cursor: pointer;
@@ -911,7 +909,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 16px rgba(184, 35, 47, 0.35);
+    box-shadow: 0 4px 20px rgba(184, 35, 47, 0.5);
     flex-shrink: 0;
   }
   .ai-avatar svg {
@@ -927,7 +925,7 @@
     width: 14px;
     height: 14px;
     background: #22c55e;
-    border: 2.5px solid var(--paper);
+    border: 2.5px solid var(--ink);
     border-radius: 50%;
     box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6);
     animation: aiPulse 2s ease-in-out infinite;
@@ -945,7 +943,7 @@
     font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
     font-size: 13px;
     font-weight: 700;
-    color: var(--ink);
+    color: var(--paper);
     letter-spacing: -0.015em;
   }
   .ai-status-online {
@@ -955,14 +953,14 @@
     font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
     font-size: 11px;
     font-weight: 500;
-    color: #22c55e;
+    color: #4ade80;
     letter-spacing: -0.005em;
   }
   .ai-live-dot {
     display: inline-block;
     width: 6px;
     height: 6px;
-    background: #22c55e;
+    background: #4ade80;
     border-radius: 50%;
     animation: aiBlink 1.4s ease-in-out infinite;
   }
@@ -982,23 +980,24 @@
   .ai-bubble {
     display: inline-flex;
     align-items: center;
-    background: #f4f0ea;
-    border: 1px solid #e8dfd2;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 16px 16px 16px 4px;
     padding: 14px 18px;
     font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
     font-size: 15px;
     font-weight: 600;
-    color: var(--ink);
+    color: var(--paper);
     letter-spacing: -0.015em;
     line-height: 1.4;
     position: relative;
     max-width: 100%;
     transition: background 0.3s ease, border-color 0.3s ease;
+    backdrop-filter: blur(4px);
   }
   .ai-recommend-btn:hover .ai-bubble {
-    background: #fff5f5;
-    border-color: rgba(184, 35, 47, 0.25);
+    background: rgba(184, 35, 47, 0.18);
+    border-color: rgba(184, 35, 47, 0.4);
   }
   .ai-bubble-text {
     position: relative;
@@ -1008,7 +1007,7 @@
     display: inline-block;
     width: 2px;
     height: 1.1em;
-    background: var(--red);
+    background: #ff4d5e;
     margin-left: 4px;
     vertical-align: middle;
     animation: aiCaret 1s steps(2, end) infinite;
@@ -1021,7 +1020,7 @@
     font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
     font-size: 11.5px;
     font-weight: 500;
-    color: var(--muted-dark);
+    color: rgba(255, 255, 255, 0.55);
     letter-spacing: -0.005em;
     padding-left: 6px;
   }
@@ -1037,7 +1036,7 @@
     font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
     font-size: 13px;
     font-weight: 700;
-    color: var(--red);
+    color: #ff4d5e;
     letter-spacing: -0.01em;
     white-space: nowrap;
   }
@@ -1047,11 +1046,11 @@
     justify-content: center;
     width: 44px;
     height: 44px;
-    background: var(--ink);
-    color: var(--paper);
+    background: var(--paper);
+    color: var(--ink);
     border-radius: 50%;
-    transition: background 0.3s ease, transform 0.3s cubic-bezier(.34, 1.56, .64, 1);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+    transition: background 0.3s ease, transform 0.3s cubic-bezier(.34, 1.56, .64, 1), color 0.3s ease;
+    box-shadow: 0 3px 14px rgba(255, 255, 255, 0.15);
   }
   .ai-right-arrow svg {
     width: 16px;
@@ -1060,6 +1059,7 @@
   }
   .ai-recommend-btn:hover .ai-right-arrow {
     background: var(--red);
+    color: var(--paper);
     transform: translateX(4px);
   }
 
@@ -1071,7 +1071,7 @@
   }
   /* 모바일 */
   @media (max-width: 768px) {
-    .ai-recommend-section { padding: 24px 18px; border-top-width: 3px; border-bottom-width: 3px; }
+    .ai-recommend-section { padding: 24px 18px; }
     .ai-recommend-btn {
       gap: 14px;
       flex-wrap: wrap;
