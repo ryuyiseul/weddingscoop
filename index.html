@@ -270,7 +270,7 @@
 
   /* ═══ HERO (가운데 정렬 버전) ═══ */
   .hero {
-    padding: 70px 40px 0;
+    padding: 90px 40px 50px;
     position: relative;
     text-align: center;
   }
@@ -282,14 +282,16 @@
     max-width: 1400px;
     margin: 0 auto;
     flex-wrap: wrap;
+    padding: 12px 0;
   }
   .brand {
     font-family: 'Fraunces', serif;
     font-weight: 900;
     font-size: clamp(52px, 9vw, 128px);
-    line-height: 0.9;
+    line-height: 1.05;
     letter-spacing: -0.045em;
     color: var(--ink);
+    padding: 0.1em 0;
   }
   .brand .amp {
     font-style: italic;
@@ -857,6 +859,185 @@
   }
   @media (max-width: 768px) {
     .ai-cta-wrap { margin-top: 28px; }
+  }
+
+  /* ═══════════════════════════════════════════
+     AI 맞춤 추천 (독립 풀너비 섹션 - 큼직하게)
+     ═══════════════════════════════════════════ */
+  .ai-recommend-section {
+    background: var(--paper);
+    padding: 56px 40px;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .ai-recommend-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .ai-recommend-btn {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    width: 100%;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    border-radius: 18px;
+    padding: 36px 44px;
+    cursor: pointer;
+    text-align: left;
+    box-shadow:
+      0 6px 0 rgba(0, 0, 0, 0.85),
+      0 14px 40px -8px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: transform 0.25s cubic-bezier(.34, 1.56, .64, 1), box-shadow 0.25s ease, background 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    font-family: inherit;
+  }
+  .ai-recommend-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.18) 50%, transparent 100%);
+    animation: ctaShimmer 3s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .ai-recommend-btn:hover {
+    background: var(--red);
+    transform: translateY(-3px);
+    box-shadow:
+      0 9px 0 rgba(139, 20, 30, 0.9),
+      0 20px 50px -8px rgba(184, 35, 47, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+  .ai-recommend-btn:active {
+    transform: translateY(2px);
+    box-shadow:
+      0 4px 0 rgba(139, 20, 30, 0.9),
+      0 8px 20px -4px rgba(184, 35, 47, 0.4);
+  }
+  .ai-recommend-icon {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    background: var(--red);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(184, 35, 47, 0.4);
+    position: relative;
+    z-index: 1;
+    transition: background 0.3s ease;
+  }
+  .ai-recommend-btn:hover .ai-recommend-icon {
+    background: var(--paper);
+    color: var(--red);
+  }
+  .ai-recommend-icon svg {
+    width: 40px;
+    height: 40px;
+    color: var(--paper);
+    transition: color 0.3s ease;
+  }
+  .ai-recommend-btn:hover .ai-recommend-icon svg {
+    color: var(--red);
+  }
+  .ai-recommend-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+    position: relative;
+    z-index: 1;
+  }
+  .ai-recommend-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    color: var(--red);
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+  }
+  .ai-recommend-btn:hover .ai-recommend-label {
+    color: var(--paper);
+    opacity: 0.8;
+  }
+  .ai-recommend-title {
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: var(--paper);
+    line-height: 1.2;
+  }
+  .ai-recommend-desc {
+    font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.75);
+    letter-spacing: -0.01em;
+    line-height: 1.5;
+  }
+  .ai-recommend-arrow {
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    background: var(--red);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--paper);
+    box-shadow: 0 4px 14px rgba(184, 35, 47, 0.4);
+    position: relative;
+    z-index: 1;
+    transition: transform 0.3s cubic-bezier(.34, 1.56, .64, 1), background 0.3s ease;
+  }
+  .ai-recommend-btn:hover .ai-recommend-arrow {
+    transform: translateX(6px);
+    background: var(--paper);
+    color: var(--red);
+  }
+  .ai-recommend-arrow svg {
+    width: 20px;
+    height: 20px;
+    margin-left: 2px;
+  }
+  @media (max-width: 768px) {
+    .ai-recommend-section { padding: 36px 18px; }
+    .ai-recommend-btn {
+      gap: 14px;
+      padding: 22px 20px;
+      border-radius: 14px;
+    }
+    .ai-recommend-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+    }
+    .ai-recommend-icon svg { width: 26px; height: 26px; }
+    .ai-recommend-label { font-size: 9.5px; }
+    .ai-recommend-title { font-size: 17px; }
+    .ai-recommend-desc { font-size: 12px; }
+    .ai-recommend-arrow {
+      width: 40px;
+      height: 40px;
+    }
+    .ai-recommend-arrow svg { width: 16px; height: 16px; }
+  }
+  @media (max-width: 480px) {
+    .ai-recommend-desc { display: none; }
+    .ai-recommend-title { font-size: 15px; }
+    .ai-recommend-btn { padding: 18px 16px; gap: 12px; }
+    .ai-recommend-icon { width: 46px; height: 46px; }
+    .ai-recommend-arrow { width: 36px; height: 36px; }
   }
   .ai-cta-btn {
     display: flex;
@@ -3362,7 +3543,7 @@
 
   /* === 태블릿 (1024px 이하) === */
   @media (max-width: 1024px) {
-    .hero { padding: 60px 28px 0; }
+    .hero { padding: 70px 28px 36px; }
     .filters-section { padding: 24px 28px; }
     main { padding: 60px 28px 80px; }
     footer { padding: 32px 28px 20px; }
@@ -3406,7 +3587,7 @@
     .topbar .live-center .tag-en { font-size: 9px; }
 
     /* 히어로 */
-    .hero { padding: 44px 18px 0; }
+    .hero { padding: 56px 18px 28px; }
     .hero-inline {
       flex-direction: column;
       gap: 18px;
@@ -3819,7 +4000,7 @@
       font-size: 10px;
       letter-spacing: 0.02em;
     }
-    .hero { padding: 36px 16px 0; }
+    .hero { padding: 48px 16px 24px; }
     .brand { font-size: clamp(42px, 12vw, 64px); }
 
     .value-props { gap: 8px; }
@@ -4299,27 +4480,30 @@
         </div>
       </div>
     </div>
-    <!-- AI 맞춤 추천 박스 -->
-    <div class="ai-cta-wrap">
-      <button class="ai-cta-btn" id="aiRecommendBtn" type="button">
-        <span class="ai-cta-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5L12 2z"/>
-            <path d="M19 15l.8 2.4L22 18l-2.2.6L19 21l-.8-2.4L16 18l2.2-.6L19 15z"/>
-          </svg>
-        </span>
-        <span class="ai-cta-text">
-          <span class="ai-cta-label">AI 맞춤 추천</span>
-          <span class="ai-cta-title">나에게 맞는 웨딩박람회 찾기</span>
-          <span class="ai-cta-desc">지역과 원하는 박람회 종류만 선택하면 딱 맞는 박람회를 추천드려요</span>
-        </span>
-        <span class="ai-cta-arrow">
-          <svg viewBox="0 0 24 24">
-            <polygon points="7,4 20,12 7,20" fill="currentColor"/>
-          </svg>
-        </span>
-      </button>
-    </div>
+  </div>
+</section>
+
+<!-- ═══ AI 맞춤 추천 (독립 풀너비 섹션) ═══ -->
+<section class="ai-recommend-section">
+  <div class="ai-recommend-inner">
+    <button class="ai-recommend-btn" id="aiRecommendBtn" type="button">
+      <span class="ai-recommend-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5L12 2z"/>
+          <path d="M19 15l.8 2.4L22 18l-2.2.6L19 21l-.8-2.4L16 18l2.2-.6L19 15z"/>
+        </svg>
+      </span>
+      <span class="ai-recommend-text">
+        <span class="ai-recommend-label">AI 맞춤 추천</span>
+        <span class="ai-recommend-title">나에게 맞는 웨딩박람회 찾기</span>
+        <span class="ai-recommend-desc">지역과 원하는 박람회 종류만 선택하면 딱 맞는 박람회를 추천드려요</span>
+      </span>
+      <span class="ai-recommend-arrow">
+        <svg viewBox="0 0 24 24">
+          <polygon points="7,4 20,12 7,20" fill="currentColor"/>
+        </svg>
+      </span>
+    </button>
   </div>
 </section>
 
