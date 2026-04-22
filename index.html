@@ -1565,13 +1565,13 @@
     background: linear-gradient(90deg, var(--red) 0%, transparent 100%);
   }
   .hero-headline-text {
-    display: flex;
+    display: inline-flex;
     flex-direction: column;
-    align-items: center;
-    gap: 14px;
+    align-items: stretch;
+    gap: 4px;
     flex-shrink: 0;
     text-align: center;
-    margin: 0;
+    margin: 0 auto;
   }
   /* 위쪽 영문 라벨 */
   .hero-headline-tag {
@@ -1585,16 +1585,19 @@
     border-radius: 999px;
     text-transform: uppercase;
     background: var(--paper);
+    align-self: center;
   }
-  /* 메인 헤드라인 */
+  /* 메인 헤드라인 — 기준 너비 */
   .hero-headline-main {
+    display: block;
     font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
-    font-size: clamp(20px, 2.6vw, 30px);
+    font-size: clamp(24px, 3.4vw, 38px);
     font-weight: 800;
     letter-spacing: -0.025em;
     color: var(--ink);
-    line-height: 1.3;
-    word-break: keep-all;
+    line-height: 1.2;
+    white-space: nowrap;
+    text-align: center;
   }
   .hero-headline-main .accent {
     background: linear-gradient(135deg, #ff1a1a 0%, #b8232f 50%, #6b0f17 100%);
@@ -1605,14 +1608,19 @@
     font-weight: 900;
     display: inline;
   }
-  /* 서브 설명 */
+  /* 서브 설명 — 메인 너비에 맞춰 양쪽 정렬로 펴짐 */
   .hero-headline-sub {
+    display: block;
     font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
-    font-size: 13px;
+    font-size: 0.5em;
     font-weight: 500;
     color: var(--muted-dark);
-    letter-spacing: -0.01em;
-    line-height: 1.5;
+    letter-spacing: -0.005em;
+    line-height: 1.3;
+    width: 100%;
+    text-align: justify;
+    text-align-last: justify;
+    text-justify: inter-character;
   }
   /* 헤드라인 아래 CTA 버튼 */
   .hero-headline-cta-wrap {
@@ -1700,9 +1708,8 @@
       align-items: center;
     }
     .hero-headline-text {
-      gap: 10px;
-      align-items: center;
-      text-align: center;
+      gap: 3px;
+      align-items: stretch;
       flex-shrink: 1;
       min-width: 0;
     }
@@ -1717,12 +1724,12 @@
       padding: 4px 10px;
     }
     .hero-headline-main {
-      font-size: 15px;
-      text-align: center;
+      font-size: clamp(16px, 5vw, 22px);
+      line-height: 1.2;
     }
     .hero-headline-sub {
-      font-size: 11px;
-      text-align: center;
+      font-size: 0.52em;
+      line-height: 1.3;
     }
     .hero-headline-cta-wrap {
       margin-top: 26px;
@@ -1742,8 +1749,8 @@
   }
   @media (max-width: 480px) {
     .hero-headline-side { display: block; }
-    .hero-headline-main { font-size: 14px; }
-    .hero-headline-sub { font-size: 10.5px; }
+    .hero-headline-main { font-size: clamp(15px, 4.6vw, 18px); }
+    .hero-headline-sub { font-size: 0.54em; }
     .hero-headline-cta { font-size: 12px; padding: 11px 18px; }
   }
 
