@@ -1,5 +1,5 @@
 # Wedding&Scoop — 전국 웨딩박람회 정보
-# https://weddingscoop.vercel.app
+# https://weddingscoop.co.kr
 
 User-agent: *
 Allow: /
@@ -30,4 +30,4 @@ Allow: /
 Disallow: /api/
 
 # Sitemap 위치
-Sitemap: https://weddingscoop.vercel.app/sitemap.xml
+Sitemap: https://weddingscoop.co.kr/sitemap.xml
