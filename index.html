@@ -675,9 +675,9 @@
     width: 100%;
     max-width: 1400px;
     margin: 0 auto;
-    background: var(--paper);
-    color: var(--ink);
-    border: 1px solid var(--line);
+    background: var(--red);
+    color: var(--paper);
+    border: 1px solid var(--ink);
     border-top: 4px solid var(--ink);
     border-bottom: 4px solid var(--ink);
     padding: 28px 32px;
@@ -699,7 +699,7 @@
     background: linear-gradient(
       90deg,
       transparent 0%,
-      rgba(184, 35, 47, 0.08) 50%,
+      rgba(255, 255, 255, 0.2) 50%,
       transparent 100%
     );
     animation: aiShimmer 3s ease-in-out infinite;
@@ -710,7 +710,7 @@
     60%, 100% { left: 150%; }
   }
   .ai-cta-btn:hover {
-    background: var(--red);
+    background: var(--ink);
     color: var(--paper);
     border-color: var(--ink);
     border-top-color: var(--ink);
@@ -724,19 +724,19 @@
     width: 52px;
     height: 52px;
     border-radius: 50%;
-    background: var(--red);
+    background: var(--paper);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--paper);
+    color: var(--red);
     position: relative;
     z-index: 1;
     transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
   }
   .ai-cta-btn:hover .ai-cta-icon {
     transform: rotate(12deg) scale(1.05);
-    background: var(--paper);
-    color: var(--red);
+    background: var(--red);
+    color: var(--paper);
   }
   .ai-cta-icon svg {
     width: 26px;
@@ -754,13 +754,13 @@
   .ai-cta-label {
     font-size: 11px;
     font-weight: 800;
-    color: var(--red);
+    color: rgba(254, 253, 250, 0.85);
     letter-spacing: 0.12em;
     text-transform: uppercase;
     transition: color 0.3s ease;
   }
   .ai-cta-btn:hover .ai-cta-label {
-    color: var(--paper);
+    color: var(--red);
   }
   .ai-cta-title {
     font-size: 20px;
@@ -771,14 +771,14 @@
   .ai-cta-desc {
     font-size: 13px;
     font-weight: 500;
-    color: var(--muted-dark);
+    color: rgba(254, 253, 250, 0.75);
     letter-spacing: -0.01em;
     line-height: 1.4;
     margin-top: 2px;
     transition: color 0.3s ease;
   }
   .ai-cta-btn:hover .ai-cta-desc {
-    color: rgba(254, 253, 250, 0.85);
+    color: rgba(254, 253, 250, 0.7);
   }
 
   /* 삼각형 화살표 */
@@ -798,7 +798,7 @@
   }
   .ai-cta-btn:hover .ai-cta-arrow {
     background: var(--paper);
-    color: var(--red);
+    color: var(--ink);
     transform: translateX(4px);
   }
   .ai-cta-arrow svg {
