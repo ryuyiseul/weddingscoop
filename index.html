@@ -6592,7 +6592,31 @@
       '무료초대권 + 스드메 할인',
       '무료초대권 + 예물 혜택',
     ];
+    const INITIAL_COUNT = 2;
     const MAX_VISIBLE = 3;
+
+    // 초기 2개 삽입 (애니메이션 없이)
+    for (let i = 0; i < INITIAL_COUNT; i++) {
+      const entry = randomEntry();
+      const li = renderEntry(entry);
+      li.style.animation = 'none';
+      list.appendChild(li);
+    }
+
+    // 전역 함수: 한 건 추가 (맨 위에)
+    // - 3개 미만이면 그냥 추가
+    // - 3개면 맨 아래 먼저 제거 후 추가
+    window.addLiveApplyItem = function() {
+      const items = list.querySelectorAll('.live-apply-item');
+      if (items.length >= MAX_VISIBLE) {
+        const last = items[items.length - 1];
+        last.remove();
+      }
+
+      const entry = randomEntry();
+      const li = renderEntry(entry);
+      list.insertBefore(li, list.firstChild);
+    };
 
     // 한 건 생성 (임의 데이터)
     function randomEntry(date) {
@@ -6624,30 +6648,6 @@
         '<span class="live-apply-benefit">' + entry.benefit + '</span>';
       return li;
     }
-
-    // 초기 3개 삽입 (모두 오늘 날짜)
-    for (let i = 0; i < MAX_VISIBLE; i++) {
-      const entry = randomEntry();
-      const li = renderEntry(entry);
-      // 초기는 애니메이션 없이 즉시
-      li.style.animation = 'none';
-      list.appendChild(li);
-    }
-
-    // 전역 함수: 한 건 추가 (맨 위에) — 먼저 맨 아래 제거 후 삽입해서 항상 3개 유지
-    window.addLiveApplyItem = function() {
-      // 1. 4개가 되기 전에 미리 맨 아래 제거
-      const items = list.querySelectorAll('.live-apply-item');
-      if (items.length >= MAX_VISIBLE) {
-        const last = items[items.length - 1];
-        last.remove();
-      }
-
-      // 2. 새 항목을 맨 위에 추가 (슬라이드 인 애니메이션)
-      const entry = randomEntry();
-      const li = renderEntry(entry);
-      list.insertBefore(li, list.firstChild);
-    };
   })();
 
   const proofObserver = new IntersectionObserver((entries) => {
