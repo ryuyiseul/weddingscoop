@@ -1608,7 +1608,7 @@
     font-weight: 900;
     display: inline;
   }
-  /* 서브 설명 — 메인 너비에 맞춰 양쪽 정렬로 펴짐 */
+  /* 서브 설명 — 메인보다 작게 (크기만으로 자연스러운 너비) */
   .hero-headline-sub {
     display: block;
     font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
@@ -1617,10 +1617,8 @@
     color: var(--muted-dark);
     letter-spacing: -0.005em;
     line-height: 1.3;
-    width: 100%;
-    text-align: justify;
-    text-align-last: justify;
-    text-justify: inter-character;
+    text-align: center;
+    white-space: nowrap;
   }
   /* 헤드라인 아래 CTA 버튼 */
   .hero-headline-cta-wrap {
