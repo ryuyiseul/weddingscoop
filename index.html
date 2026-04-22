@@ -1740,25 +1740,41 @@
     flex-shrink: 0;
     width: 54px;
     background: #FEE500;
-    color: #191919;
+    color: #3C1E1E;
     border: none;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.2s ease, transform 0.2s ease;
+    transition: background 0.25s ease, transform 0.15s ease, box-shadow 0.25s ease;
     padding: 0;
     font-family: inherit;
+    position: relative;
+    overflow: hidden;
+  }
+  .card-share::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.35), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
   }
   .card-share:hover {
-    background: #FADA0A;
+    background: #FDD835;
+  }
+  .card-share:hover::before {
+    opacity: 1;
   }
   .card-share:active {
     transform: scale(0.94);
   }
   .card-share svg {
-    width: 22px;
-    height: 22px;
+    width: 26px;
+    height: 26px;
+    position: relative;
+    z-index: 1;
   }
 
   /* 기존 요소들 비활성화 (하위 호환) */
@@ -2825,11 +2841,11 @@
       font-size: 14px;
     }
     .card-share {
-      width: 40px;
+      width: 42px;
     }
     .card-share svg {
-      width: 18px;
-      height: 18px;
+      width: 22px;
+      height: 22px;
     }
 
     /* FAQ 모바일 */
@@ -3822,7 +3838,7 @@
             </div>
             <button class="card-share" data-share-idx="${start + i}" aria-label="카카오톡으로 공유하기" type="button">
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M12 3C6.48 3 2 6.48 2 10.8c0 2.8 1.83 5.26 4.6 6.66-.2.68-.71 2.49-.82 2.88-.14.48.17.48.37.35.15-.1 2.4-1.63 3.37-2.28.81.12 1.63.18 2.48.18 5.52 0 10-3.48 10-7.79S17.52 3 12 3z"/>
+                <path d="M12 3C6.48 3 2 6.58 2 11c0 2.87 1.88 5.39 4.71 6.81-.17.65-.65 2.42-.75 2.8-.12.47.17.46.36.34.15-.1 2.43-1.66 3.42-2.33.73.1 1.48.15 2.26.15 5.52 0 10-3.58 10-8s-4.48-8-10-8z"/>
               </svg>
             </button>
           </div>
