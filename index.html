@@ -3846,13 +3846,14 @@
 
   // ═══════ 카카오톡 공유 ═══════
   function shareToKakao(expo) {
-    const siteUrl = `${window.location.origin}${window.location.pathname}`;
     const dateText = formatDate(expo.date, expo.endDate);
+    // 수익 링크(popo9110 포함) — 공유 클릭 시 여기로 바로 이동
+    const affiliateUrl = expo.link;
 
     // Kakao SDK 가 로드되었는지 확인
     if (!window.Kakao || !Kakao.isInitialized || !Kakao.isInitialized()) {
-      // SDK 없으면 폴백: URL 복사
-      const shareText = `${expo.title}\n📅 ${dateText} · 📍 ${expo.region}\n\n무료초대권 신청: ${siteUrl}`;
+      // SDK 없으면 폴백: 수익 링크 복사
+      const shareText = `${expo.title}\n📅 ${dateText} · 📍 ${expo.region}\n\n무료초대권 신청: ${affiliateUrl}`;
       if (navigator.clipboard) {
         navigator.clipboard.writeText(shareText).then(() => {
           alert('링크가 복사됐어요! 카카오톡에 붙여넣기 해주세요 📋');
@@ -3866,26 +3867,19 @@
         objectType: 'feed',
         content: {
           title: expo.title,
-          description: `📅 ${dateText}\n📍 ${expo.region}${expo.location ? ' · ' + expo.location : ''}\n\n무료초대권 신청하기`,
+          description: `📅 ${dateText}\n📍 ${expo.region}${expo.location ? ' · ' + expo.location : ''}\n\n✨ 무료초대권 신청하기`,
           imageUrl: expo.thumbnail || `${window.location.origin}/og-image.png`,
           link: {
-            mobileWebUrl: siteUrl,
-            webUrl: siteUrl,
+            mobileWebUrl: affiliateUrl,
+            webUrl: affiliateUrl,
           },
         },
         buttons: [
           {
-            title: '사이트에서 보기',
-            link: {
-              mobileWebUrl: siteUrl,
-              webUrl: siteUrl,
-            },
-          },
-          {
             title: '무료초대권 신청',
             link: {
-              mobileWebUrl: expo.link,
-              webUrl: expo.link,
+              mobileWebUrl: affiliateUrl,
+              webUrl: affiliateUrl,
             },
           },
         ],
