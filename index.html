@@ -1196,6 +1196,12 @@
   .hcs-line {
     display: none;
   }
+  /* intro 섹션 다음에 오는 CTA - 위 패딩도 추가 (intro와 분리) */
+  .intro-cta-section {
+    padding-top: 48px;
+    padding-bottom: 48px;
+    background: var(--paper);
+  }
   .hero-cta-section .hero-cta-btn {
     display: inline-flex;
     align-items: center;
@@ -4412,68 +4418,6 @@
   </div>
 </section>
 
-<!-- ═══ 사전신청 혜택 4가지 (SEO 보강 + 사용자 어필) ═══ -->
-<section class="benefits-section">
-  <div class="benefits-inner">
-    <div class="benefits-header">
-      <span class="benefits-eyebrow">BENEFITS</span>
-      <h2 class="benefits-title">사전신청만으로 받는 <span class="accent">4가지 특별 혜택</span></h2>
-      <p class="benefits-sub">현장 방문보다 더 체계적인 상담과 다양한 특별 혜택을 누리세요.</p>
-    </div>
-    <div class="benefits-grid">
-      <article class="benefit-card">
-        <div class="benefit-badge">FREE</div>
-        <div class="benefit-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="2" y="6" width="20" height="12" rx="2"/>
-            <path d="M2 10h20"/>
-            <circle cx="7" cy="14" r="1"/>
-            <circle cx="12" cy="14" r="1"/>
-            <circle cx="17" cy="14" r="1"/>
-          </svg>
-        </div>
-        <h3 class="benefit-title">무료 입장권</h3>
-        <p class="benefit-desc">일반 입장료 없이 박람회 모든 부스를 자유롭게 이용할 수 있습니다.</p>
-      </article>
-      <article class="benefit-card">
-        <div class="benefit-badge">GIFT</div>
-        <div class="benefit-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="20 12 20 22 4 22 4 12"/>
-            <rect x="2" y="7" width="20" height="5"/>
-            <line x1="12" y1="22" x2="12" y2="7"/>
-            <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/>
-            <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>
-          </svg>
-        </div>
-        <h3 class="benefit-title">사은품 증정</h3>
-        <p class="benefit-desc">사전 신청자에게 웨딩 소품, 기프티콘 등 다양한 사은품을 제공합니다.</p>
-      </article>
-      <article class="benefit-card">
-        <div class="benefit-badge">VIP</div>
-        <div class="benefit-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-          </svg>
-        </div>
-        <h3 class="benefit-title">우선 상담 서비스</h3>
-        <p class="benefit-desc">대기시간 없이 전문 컨설턴트의 1:1 맞춤 상담을 우선적으로 받을 수 있습니다.</p>
-      </article>
-      <article class="benefit-card">
-        <div class="benefit-badge">SAVE</div>
-        <div class="benefit-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="19" y1="5" x2="5" y2="19"/>
-            <circle cx="6.5" cy="6.5" r="2.5"/>
-            <circle cx="17.5" cy="17.5" r="2.5"/>
-          </svg>
-        </div>
-        <h3 class="benefit-title">박람회 전용 할인</h3>
-        <p class="benefit-desc">스드메, 웨딩홀, 혼수 등 박람회 기간 한정 특별 할인가로 계약할 수 있습니다.</p>
-      </article>
-    </div>
-  </div>
-</section>
 
 
 <section class="filters-section" id="campaigns">
@@ -4545,6 +4489,82 @@
           <div class="stat-label">무료 신청<br/>추가 비용 없음</div>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ INTRO CTA (Hero CTA와 동일 디자인) ═══ -->
+<section class="hero-cta-section intro-cta-section">
+  <a class="hero-cta-btn" href="#campaigns" onclick="document.getElementById('campaigns').scrollIntoView({behavior: 'smooth'}); return false;">
+    <span class="btn-text">전국 웨딩박람회 무료초대권</span>
+    <span class="btn-arrow">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="5" y1="12" x2="19" y2="12"/>
+        <polyline points="12 5 19 12 12 19"/>
+      </svg>
+    </span>
+  </a>
+</section>
+
+<!-- ═══ 사전신청 혜택 4가지 (SEO 보강 + 사용자 어필) ═══ -->
+<section class="benefits-section">
+  <div class="benefits-inner">
+    <div class="benefits-header">
+      <span class="benefits-eyebrow">BENEFITS</span>
+      <h2 class="benefits-title">사전신청만으로 받는 <span class="accent">4가지 특별 혜택</span></h2>
+      <p class="benefits-sub">현장 방문보다 더 체계적인 상담과 다양한 특별 혜택을 누리세요.</p>
+    </div>
+    <div class="benefits-grid">
+      <article class="benefit-card">
+        <div class="benefit-badge">FREE</div>
+        <div class="benefit-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="6" width="20" height="12" rx="2"/>
+            <path d="M2 10h20"/>
+            <circle cx="7" cy="14" r="1"/>
+            <circle cx="12" cy="14" r="1"/>
+            <circle cx="17" cy="14" r="1"/>
+          </svg>
+        </div>
+        <h3 class="benefit-title">무료 입장권</h3>
+        <p class="benefit-desc">일반 입장료 없이 박람회 모든 부스를 자유롭게 이용할 수 있습니다.</p>
+      </article>
+      <article class="benefit-card">
+        <div class="benefit-badge">GIFT</div>
+        <div class="benefit-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 12 20 22 4 22 4 12"/>
+            <rect x="2" y="7" width="20" height="5"/>
+            <line x1="12" y1="22" x2="12" y2="7"/>
+            <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/>
+            <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>
+          </svg>
+        </div>
+        <h3 class="benefit-title">사은품 증정</h3>
+        <p class="benefit-desc">사전 신청자에게 웨딩 소품, 기프티콘 등 다양한 사은품을 제공합니다.</p>
+      </article>
+      <article class="benefit-card">
+        <div class="benefit-badge">VIP</div>
+        <div class="benefit-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+        </div>
+        <h3 class="benefit-title">우선 상담 서비스</h3>
+        <p class="benefit-desc">대기시간 없이 전문 컨설턴트의 1:1 맞춤 상담을 우선적으로 받을 수 있습니다.</p>
+      </article>
+      <article class="benefit-card">
+        <div class="benefit-badge">SAVE</div>
+        <div class="benefit-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="5" x2="5" y2="19"/>
+            <circle cx="6.5" cy="6.5" r="2.5"/>
+            <circle cx="17.5" cy="17.5" r="2.5"/>
+          </svg>
+        </div>
+        <h3 class="benefit-title">박람회 전용 할인</h3>
+        <p class="benefit-desc">스드메, 웨딩홀, 혼수 등 박람회 기간 한정 특별 할인가로 계약할 수 있습니다.</p>
+      </article>
     </div>
   </div>
 </section>
