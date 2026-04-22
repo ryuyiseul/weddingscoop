@@ -11,7 +11,7 @@
 
 <!-- SEO 메타 (기본값 — JS가 지역별로 동적 변경) -->
 <title id="pageTitle">웨딩박람회 무료초대권 실시간 정보 | Wedding&Scoop</title>
-<meta id="metaDescription" name="description" content="전국 웨딩박람회 일정과 무료초대권 혜택을 한 곳에서. 서울·경기·부산·제주 등 지역별 박람회 실시간 업데이트. 5만원 상당 무료초대권 신청 가능." />
+<meta id="metaDescription" name="description" content="전국 웨딩박람회 일정과 5만원 무료초대권을 한 곳에서. 서울·경기·부산·제주 실시간 업데이트." />
 <meta name="keywords" content="전국 웨딩박람회, 웨딩박람회, 웨딩박람회 일정, 웨딩박람회 신청, 웨딩박람회 무료초대권, 무료초대권, 웨딩페어, 결혼박람회, 예비신부, 스드메 박람회, 웨딩홀 박람회, 드레스 박람회, 허니문 박람회, 서울 웨딩박람회, 경기 웨딩박람회, 부산 웨딩박람회, 인천 웨딩박람회, 대구 웨딩박람회, 대전 웨딩박람회, 광주 웨딩박람회, 울산 웨딩박람회, 제주 웨딩박람회, 청주 웨딩박람회, 창원 웨딩박람회, 수원 웨딩박람회, 일산 웨딩박람회, 분당 웨딩박람회, 용인 웨딩박람회, 성남 웨딩박람회, 천안 웨딩박람회, 세종 웨딩박람회, 춘천 웨딩박람회, 전주 웨딩박람회, 강남 웨딩박람회, 코엑스 웨딩박람회, 워커힐 웨딩박람회, 웨딩쇼, 결혼준비, 예식장 박람회" />
 <meta name="author" content="Wedding&Scoop" />
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
@@ -35,7 +35,7 @@
 <!-- Open Graph (카톡/페북 공유 시 미리보기) -->
 <meta property="og:site_name" content="Wedding&Scoop" />
 <meta id="ogTitle" property="og:title" content="웨딩박람회 무료초대권 실시간 정보 | Wedding&Scoop" />
-<meta id="ogDescription" property="og:description" content="전국 웨딩박람회 일정과 무료초대권 혜택을 한 곳에서. 지역별 박람회 실시간 업데이트." />
+<meta id="ogDescription" property="og:description" content="전국 웨딩박람회 일정과 5만원 무료초대권을 한 곳에서. 서울·경기·부산·제주 실시간 업데이트." />
 <meta property="og:type" content="website" />
 <meta id="ogUrl" property="og:url" content="https://weddingscoop.co.kr/" />
 <meta property="og:image" content="https://weddingscoop.co.kr/og-image.png" />
@@ -4556,10 +4556,10 @@
     let title, description;
     if (region === '전체보기') {
       title = '웨딩박람회 무료초대권 실시간 정보 | Wedding&Scoop';
-      description = `전국 웨딩박람회 ${count || ''}개의 일정과 무료초대권 혜택을 한 곳에서. 서울·경기·부산·제주 등 지역별 실시간 업데이트. 5만원 상당 무료초대권 신청 가능.`;
+      description = `전국 웨딩박람회 ${count || ''}개의 일정과 5만원 무료초대권. 지역별 실시간 업데이트.`;
     } else {
       title = `${region} 웨딩박람회 무료초대권 | ${count || ''}개 실시간 | Wedding&Scoop`;
-      description = `${region} 지역 웨딩박람회 ${count || ''}개의 최신 일정과 무료초대권 혜택. 마감임박 순 실시간 업데이트. 5만원 상당 초대권 신청 가능.`;
+      description = `${region} 웨딩박람회 ${count || ''}개의 최신 일정과 5만원 무료초대권. 마감임박순 실시간 업데이트.`;
     }
 
     // title, description, canonical 업데이트
