@@ -1651,6 +1651,64 @@
     border-bottom: 1px solid var(--line);
   }
 
+  /* ═══ PAGINATION ═══ */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-top: 64px;
+    flex-wrap: wrap;
+  }
+  .pagination:empty { display: none; }
+  .page-btn {
+    min-width: 40px;
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: -0.01em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0;
+  }
+  .page-btn:hover:not(:disabled):not(.active) {
+    border-color: var(--red);
+    color: var(--red);
+  }
+  .page-btn.active {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+    cursor: default;
+  }
+  .page-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+  .page-btn-arrow {
+    font-size: 16px;
+    font-weight: 400;
+  }
+  .page-ellipsis {
+    min-width: 32px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted-dark);
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 14px;
+    user-select: none;
+  }
+
   /* ═══════════════ FAQ SECTION ═══════════════ */
   .faq-section {
     background: var(--paper-soft);
@@ -2563,6 +2621,23 @@
       gap: 28px 10px;
     }
 
+    /* 페이지네이션 모바일 */
+    .pagination {
+      gap: 4px;
+      margin-top: 44px;
+    }
+    .page-btn {
+      min-width: 34px;
+      height: 34px;
+      padding: 0 8px;
+      font-size: 13px;
+    }
+    .page-ellipsis {
+      min-width: 24px;
+      height: 34px;
+      font-size: 13px;
+    }
+
     /* 카드 */
     .card {
       padding: 0;
@@ -3165,6 +3240,7 @@
 
 <main>
   <div class="grid" id="grid"></div>
+  <nav class="pagination" id="pagination" aria-label="박람회 페이지 이동"></nav>
 </main>
 
 <!-- ═══ 진행 과정 (HOW IT WORKS) ═══ -->
@@ -3475,6 +3551,10 @@
     return `${m}월 ${day}일`;
   }
 
+  // 페이지네이션 상태
+  const ITEMS_PER_PAGE = 16;
+  let currentPage = 1;
+
   function render() {
     const filtered = activeRegion === '전체보기'
       ? allExpos
@@ -3498,10 +3578,17 @@
 
     if (filtered.length === 0) {
       grid.innerHTML = '<div class="empty">해당 지역의 박람회가 아직 준비중입니다.</div>';
+      renderPagination(0);
       return;
     }
 
-    grid.innerHTML = filtered.map((e, i) => `
+    // 페이지네이션: 현재 페이지 아이템만 자르기
+    const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+    if (currentPage > totalPages) currentPage = 1;
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    const pageItems = filtered.slice(start, start + ITEMS_PER_PAGE);
+
+    grid.innerHTML = pageItems.map((e, i) => `
       <a class="card" href="${e.link}" target="_blank" rel="noopener">
         <div class="card-image">
           <img src="${e.thumbnail}" alt="${e.title}" loading="lazy" />
@@ -3539,6 +3626,72 @@
         </div>
       </a>
     `).join('');
+
+    renderPagination(totalPages);
+  }
+
+  // 페이지네이션 렌더링
+  function renderPagination(totalPages) {
+    const pagination = document.getElementById('pagination');
+    if (!pagination) return;
+
+    if (totalPages <= 1) {
+      pagination.innerHTML = '';
+      return;
+    }
+
+    // 페이지 번호 계산 (현재 페이지 주변 + 처음/끝)
+    const pages = [];
+    const maxVisible = 5; // 양 끝 제외한 중간 표시 최대
+
+    if (totalPages <= 7) {
+      // 7개 이하면 모두 표시
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      pages.push(1);
+      let startPage = Math.max(2, currentPage - 1);
+      let endPage = Math.min(totalPages - 1, currentPage + 1);
+      // 현재 페이지 근처에서 페이지 3개 표시
+      if (currentPage <= 3) {
+        startPage = 2;
+        endPage = 4;
+      } else if (currentPage >= totalPages - 2) {
+        startPage = totalPages - 3;
+        endPage = totalPages - 1;
+      }
+      if (startPage > 2) pages.push('...');
+      for (let i = startPage; i <= endPage; i++) pages.push(i);
+      if (endPage < totalPages - 1) pages.push('...');
+      pages.push(totalPages);
+    }
+
+    const html = [
+      `<button class="page-btn page-btn-arrow" data-page="prev" ${currentPage === 1 ? 'disabled' : ''} aria-label="이전 페이지">‹</button>`,
+      ...pages.map(p => {
+        if (p === '...') return '<span class="page-ellipsis">···</span>';
+        return `<button class="page-btn ${p === currentPage ? 'active' : ''}" data-page="${p}">${p}</button>`;
+      }),
+      `<button class="page-btn page-btn-arrow" data-page="next" ${currentPage === totalPages ? 'disabled' : ''} aria-label="다음 페이지">›</button>`,
+    ].join('');
+
+    pagination.innerHTML = html;
+
+    // 이벤트 연결
+    pagination.querySelectorAll('.page-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const val = btn.dataset.page;
+        if (val === 'prev') {
+          if (currentPage > 1) currentPage--;
+        } else if (val === 'next') {
+          if (currentPage < totalPages) currentPage++;
+        } else {
+          currentPage = parseInt(val, 10);
+        }
+        render();
+        // 그리드 상단으로 스크롤
+        document.getElementById('campaigns')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
   }
 
   // 고정 지역 목록 — 박람회 유무와 관계없이 항상 표시
@@ -3606,6 +3759,7 @@
     regionFilter.querySelectorAll('.filter-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         activeRegion = btn.dataset.region;
+        currentPage = 1; // 지역 변경 시 1페이지로
         regionFilter.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         updateUrlAndTitle(activeRegion);
@@ -3621,6 +3775,7 @@
   if (sortSelect) {
     sortSelect.addEventListener('change', () => {
       currentSort = sortSelect.value;
+      currentPage = 1; // 정렬 변경 시 1페이지로
       render();
     });
   }
