@@ -11,6 +11,10 @@
 <title>Wedding&Scoop — 전국 웨딩박람회 혜택 | 무료초대권 신청</title>
 <meta name="description" content="전국 웨딩박람회 혜택을 한눈에. 매일 업데이트되는 박람회 정보와 무료초대권 신청 서비스." />
 
+<!-- Favicon (W 마크, 인라인 SVG) -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0a0a'/%3E%3Ctext x='16' y='23' font-family='Georgia, serif' font-size='22' font-weight='900' text-anchor='middle' fill='%23fefdfa'%3EW%3C/text%3E%3Ccircle cx='24' cy='9' r='3' fill='%23b8232f'/%3E%3C/svg%3E" />
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0a0a'/%3E%3Ctext x='16' y='23' font-family='Georgia, serif' font-size='22' font-weight='900' text-anchor='middle' fill='%23fefdfa'%3EW%3C/text%3E%3Ccircle cx='24' cy='9' r='3' fill='%23b8232f'/%3E%3C/svg%3E" />
+
 <!-- Open Graph (카톡/페북 공유 시 미리보기) -->
 <meta property="og:site_name" content="Wedding&Scoop" />
 <meta property="og:title" content="Wedding&Scoop" />
@@ -3449,6 +3453,7 @@
       link: buildPromoUrl(raw.ad_url),
       region: normalizeRegion(raw.region),
       location: cleanLocation(raw.ad_location),
+      rawLocation: raw.ad_location || '', // 원본 주소 전체 (챗봇 도시 매칭용)
       thumbnail: raw.ad_thumbnail || raw.ad_mainvisual || '',
       tag: '',
     };
@@ -3725,10 +3730,11 @@
       '강원': ['춘천', '원주', '강릉', '동해'],
     };
 
-    // 박람회의 ad_location에서 도시 매칭
+    // 박람회의 원본 주소(rawLocation)에서 도시 매칭
+    // rawLocation은 "전북 전주시 완산구..." 같은 전체 주소라 도시명 포함
     function matchesCity(expo, city) {
       if (!city) return true;
-      const loc = String(expo.location || '');
+      const loc = String(expo.rawLocation || expo.location || '');
       return loc.includes(city);
     }
 
