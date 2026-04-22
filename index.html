@@ -1340,6 +1340,79 @@
     width: 100%;
     padding-top: 4px;
   }
+  /* 검색창 */
+  .search-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    border-radius: 2px;
+    transition: border-color 0.2s ease;
+  }
+  .search-wrap:focus-within {
+    border-color: var(--red);
+  }
+  .search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 14px;
+    height: 14px;
+    color: var(--muted-dark);
+    pointer-events: none;
+  }
+  .search-input {
+    font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 8px 32px 8px 32px;
+    width: 240px;
+    letter-spacing: -0.01em;
+  }
+  .search-input::placeholder {
+    color: var(--muted-dark);
+    opacity: 0.7;
+  }
+  .search-input::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .search-clear {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 22px;
+    height: 22px;
+    background: transparent;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    color: var(--muted-dark);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .search-clear:hover {
+    background: var(--line);
+    color: var(--ink);
+  }
+  .search-clear svg {
+    width: 14px;
+    height: 14px;
+  }
+  .search-wrap.has-value .search-clear {
+    display: inline-flex;
+  }
+
   .sort-select-wrap {
     position: relative;
     display: inline-block;
@@ -2602,7 +2675,17 @@
     }
     .filters-right {
       padding-top: 0;
-      gap: 12px;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .search-wrap {
+      order: -1;
+      width: 100%;
+    }
+    .search-input {
+      width: 100%;
+      font-size: 13px;
     }
     .count-badge {
       font-size: 10px;
@@ -3226,6 +3309,19 @@
   <div class="filters-inner">
     <div class="filter-group" id="regionFilter"></div>
     <div class="filters-right">
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="search" id="searchInput" class="search-input" placeholder="박람회명 · 장소 검색 (예: 코엑스)" autocomplete="off" />
+        <button class="search-clear" id="searchClear" aria-label="검색어 지우기" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
       <div class="sort-select-wrap">
         <select id="sortSelect" class="sort-select">
           <option value="ending" selected>마감임박</option>
@@ -3554,11 +3650,35 @@
   // 페이지네이션 상태
   const ITEMS_PER_PAGE = 16;
   let currentPage = 1;
+  let searchQuery = '';
+
+  // HTML 이스케이프 (XSS 방지)
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
 
   function render() {
-    const filtered = activeRegion === '전체보기'
-      ? allExpos
+    let filtered = activeRegion === '전체보기'
+      ? allExpos.slice()
       : allExpos.filter(e => e.region === activeRegion);
+
+    // 검색 필터 (제목 + 장소)
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      filtered = filtered.filter(e => {
+        const haystack = (
+          (e.title || '') + ' ' +
+          (e.location || '') + ' ' +
+          (e.rawLocation || '')
+        ).toLowerCase();
+        return haystack.includes(q);
+      });
+    }
 
     // 정렬:
     //  - recent: cpaad API 응답 순서 (최신 등록 박람회가 위)
@@ -3577,7 +3697,11 @@
     countNum.textContent = String(filtered.length).padStart(2, '0');
 
     if (filtered.length === 0) {
-      grid.innerHTML = '<div class="empty">해당 지역의 박람회가 아직 준비중입니다.</div>';
+      if (searchQuery) {
+        grid.innerHTML = `<div class="empty">"${escapeHtml(searchQuery)}" 검색 결과가 없어요.<br/><small style="opacity:0.6;">다른 키워드로 검색해보세요.</small></div>`;
+      } else {
+        grid.innerHTML = '<div class="empty">해당 지역의 박람회가 아직 준비중입니다.</div>';
+      }
       renderPagination(0);
       return;
     }
@@ -3777,6 +3901,41 @@
       currentSort = sortSelect.value;
       currentPage = 1; // 정렬 변경 시 1페이지로
       render();
+    });
+  }
+
+  // ═══════ 검색 이벤트 ═══════
+  const searchInput = document.getElementById('searchInput');
+  const searchClear = document.getElementById('searchClear');
+  const searchWrap = searchInput ? searchInput.closest('.search-wrap') : null;
+
+  if (searchInput) {
+    let searchDebounce;
+    searchInput.addEventListener('input', () => {
+      const val = searchInput.value.trim();
+      // has-value 클래스로 clear 버튼 토글
+      if (searchWrap) {
+        if (val) searchWrap.classList.add('has-value');
+        else searchWrap.classList.remove('has-value');
+      }
+      // 디바운스 200ms
+      clearTimeout(searchDebounce);
+      searchDebounce = setTimeout(() => {
+        searchQuery = val;
+        currentPage = 1;
+        render();
+      }, 200);
+    });
+  }
+  if (searchClear) {
+    searchClear.addEventListener('click', () => {
+      if (!searchInput) return;
+      searchInput.value = '';
+      searchQuery = '';
+      if (searchWrap) searchWrap.classList.remove('has-value');
+      currentPage = 1;
+      render();
+      searchInput.focus();
     });
   }
 
