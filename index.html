@@ -1465,8 +1465,8 @@
 
   /* ═══ HERO PROOF SECTION (히어로 바로 밑) ═══ */
   .hero-proof-section {
-    background: var(--paper-soft);
-    padding: 56px 40px;
+    background: var(--paper);
+    padding: 24px 40px 64px;
     border-bottom: 1px solid var(--line);
   }
   .hero-proof-inner {
@@ -2563,10 +2563,10 @@
   }
   .proof-title {
     font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
-    font-size: clamp(22px, 2.5vw, 30px);
-    font-weight: 700;
-    line-height: 1.4;
-    letter-spacing: -0.025em;
+    font-size: clamp(28px, 3.5vw, 42px);
+    font-weight: 800;
+    line-height: 1.3;
+    letter-spacing: -0.03em;
     color: var(--ink);
     word-break: keep-all;
   }
@@ -2576,16 +2576,16 @@
     background-clip: text;
     -webkit-text-fill-color: transparent;
     color: transparent;
-    font-weight: 800;
+    font-weight: 900;
     display: inline;
     line-height: inherit;
   }
   .proof-title small {
     display: inline-block;
-    font-size: 0.7em;
+    font-size: 0.55em;
     font-weight: 600;
-    color: var(--ink);
-    margin-top: 8px;
+    color: var(--ink-soft);
+    margin-top: 12px;
     letter-spacing: -0.015em;
   }
 
@@ -4114,27 +4114,11 @@
   </div>
 </section>
 
-<!-- ═══ HERO CTA SECTION (위아래 빨간 선으로 구분) ═══ -->
-<section class="hero-cta-section">
-  <span class="hcs-line hcs-line-top"></span>
-  <a class="hero-cta-btn" href="#campaigns" onclick="document.getElementById('campaigns').scrollIntoView({behavior: 'smooth'}); return false;">
-    <span class="btn-text">전국 웨딩박람회 무료초대권</span>
-    <span class="btn-arrow">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="5" y1="12" x2="19" y2="12"/>
-        <polyline points="12 5 19 12 12 19"/>
-      </svg>
-    </span>
-  </a>
-  <span class="hcs-line hcs-line-bottom"></span>
-</section>
-
-<!-- ═══ SOCIAL PROOF — 통계 + 후기 (히어로 바로 아래) ═══ -->
+<!-- ═══ SOCIAL PROOF — Hero에 흡수 (통계 + 후기) ═══ -->
 <section class="hero-proof-section">
   <div class="hero-proof-inner">
     <div class="proof-header">
-      <span class="proof-eyebrow">REAL BENEFIT</span>
-      <h3 class="proof-title">이미 <span class="accent">수천 명</span>의 예비부부가<br /><small>웨딩스쿱을 통해 혜택을 받았습니다</small></h3>
+      <h2 class="proof-title">이미 <span class="accent">수많은</span> 예비부부가<br /><small>웨딩스쿱을 통해 혜택을 받았습니다</small></h2>
     </div>
 
     <div class="proof-stats">
