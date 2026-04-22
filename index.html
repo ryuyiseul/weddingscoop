@@ -270,7 +270,7 @@
 
   /* ═══ HERO (가운데 정렬 버전) ═══ */
   .hero {
-    padding: 90px 40px 50px;
+    padding: 48px 40px 24px;
     position: relative;
     text-align: center;
   }
@@ -282,7 +282,7 @@
     max-width: 1400px;
     margin: 0 auto;
     flex-wrap: wrap;
-    padding: 12px 0;
+    padding: 0;
   }
   .brand {
     font-family: 'Fraunces', serif;
@@ -291,7 +291,7 @@
     line-height: 1.05;
     letter-spacing: -0.045em;
     color: var(--ink);
-    padding: 0.1em 0;
+    padding: 0;
   }
   .brand .amp {
     font-style: italic;
@@ -1541,8 +1541,8 @@
   .hero-headline-cta-wrap {
     display: flex;
     justify-content: center;
-    margin-top: 32px;
-    margin-bottom: 12px;
+    margin-top: 44px;
+    margin-bottom: 22px;
   }
   .hero-headline-cta {
     display: inline-flex;
@@ -1615,12 +1615,21 @@
   @media (max-width: 768px) {
     .hero-headline {
       padding: 4px 18px 18px;
+      text-align: center;
     }
     .hero-headline-inner {
       gap: 14px;
+      flex-direction: column;
+      align-items: stretch;
+      width: 100%;
     }
     .hero-headline-text {
       gap: 8px;
+      width: 100%;
+      align-items: center;
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
     }
     .hero-headline-tag {
       font-size: 9.5px;
@@ -1629,17 +1638,21 @@
     }
     .hero-headline-main {
       font-size: 17px;
+      text-align: center;
     }
     .hero-headline-sub {
       font-size: 11.5px;
+      text-align: center;
     }
     .hero-headline-cta-wrap {
-      margin-top: 22px;
-      margin-bottom: 8px;
+      margin-top: 32px;
+      margin-bottom: 14px;
+      width: 100%;
+      justify-content: center;
     }
     .hero-headline-cta {
       font-size: 13.5px;
-      padding: 16px 24px;
+      padding: 18px 26px;
       gap: 10px;
     }
     .hhc-arrow {
@@ -2870,19 +2883,19 @@
     background: var(--paper);
     border: 1px solid var(--line);
     border-left: 4px solid var(--red);
-    padding: 28px 32px;
+    padding: 18px 28px;
     display: flex;
     flex-direction: column;
     position: relative;
     box-sizing: border-box;
-    min-height: 290px;
+    min-height: 200px;
   }
   .proof-card-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 18px;
-    padding-bottom: 14px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
     border-bottom: 1px dashed var(--line);
   }
   .proof-tag {
@@ -2909,14 +2922,14 @@
   }
   .proof-quote {
     font-family: 'Pretendard Variable', 'Pretendard', -apple-system, 'Noto Sans KR', sans-serif;
-    font-size: 15px;
-    line-height: 1.85;
+    font-size: 14px;
+    line-height: 1.7;
     color: var(--ink-soft);
     font-weight: 500;
     letter-spacing: -0.015em;
     word-break: keep-all;
     flex: 1;
-    margin-bottom: 24px;
+    margin-bottom: 14px;
     position: relative;
   }
   .proof-quote strong {
@@ -2928,10 +2941,10 @@
   .proof-quote::before {
     content: '"';
     position: absolute;
-    top: -20px;
-    left: -8px;
+    top: -16px;
+    left: -6px;
     font-family: 'Fraunces', serif;
-    font-size: 60px;
+    font-size: 44px;
     font-weight: 900;
     color: var(--red);
     opacity: 0.2;
@@ -2940,8 +2953,8 @@
   .proof-meta {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding-top: 18px;
+    gap: 10px;
+    padding-top: 12px;
     border-top: 1px solid var(--line);
   }
   .proof-initial {
@@ -3732,7 +3745,7 @@
 
   /* === 태블릿 (1024px 이하) === */
   @media (max-width: 1024px) {
-    .hero { padding: 70px 28px 36px; }
+    .hero { padding: 36px 28px 18px; }
     .filters-section { padding: 24px 28px; }
     main { padding: 60px 28px 80px; }
     footer { padding: 32px 28px 20px; }
@@ -3776,7 +3789,7 @@
     .topbar .live-center .tag-en { font-size: 9px; }
 
     /* 히어로 */
-    .hero { padding: 56px 18px 28px; }
+    .hero { padding: 28px 18px 14px; }
     .hero-inline {
       flex-direction: column;
       gap: 18px;
@@ -3902,7 +3915,7 @@
     }
     .hero-proof-inner .stat-divider { display: none; }
     .hero-proof-inner .proof-slider { margin-bottom: 28px; }
-    .hero-proof-inner .proof-card { padding: 20px 18px; min-height: 200px; }
+    .hero-proof-inner .proof-card { padding: 14px 16px; min-height: 160px; }
     .proof-quote { font-size: 13.5px; line-height: 1.75; }
     .proof-dots { margin-top: 18px; }
     .proof-dot { width: 14px; height: 3px; }
@@ -4189,7 +4202,7 @@
       font-size: 10px;
       letter-spacing: 0.02em;
     }
-    .hero { padding: 48px 16px 24px; }
+    .hero { padding: 24px 16px 12px; }
     .brand { font-size: clamp(32px, 9vw, 50px); }
 
     .value-props { gap: 8px; }
@@ -4314,7 +4327,6 @@
   <div class="hero-headline-inner">
     <span class="hero-headline-side hero-headline-side-left" aria-hidden="true"></span>
     <p class="hero-headline-text">
-      <span class="hero-headline-tag">SPECIAL OFFER</span>
       <span class="hero-headline-main">전국 웨딩박람회 <span class="accent">무료초대권</span> 증정</span>
       <span class="hero-headline-sub">사전 신청만으로 5만원 상당의 혜택을 받아보세요</span>
     </p>
@@ -4373,7 +4385,7 @@
             </div>
           </div>
           <p class="proof-quote">
-            혜택이 확실히 달라요. 챙겨주는 게 많아서 놀랐어요!
+            혜택이 진짜 다르더라고요. 직접 신청했을 땐 그냥 입장권만 줬는데 여기로 신청하니 사은품도 챙겨주고 상담도 디테일했어요.
           </p>
           <div class="proof-meta">
             <span class="proof-initial">김</span>
@@ -4396,7 +4408,7 @@
             </div>
           </div>
           <p class="proof-quote">
-            남편도 만족했어요. 분위기가 정말 편안했어요.
+            남편이랑 같이 갔는데 분위기가 너무 편안해서 좋았어요. 부담 없이 견적 받고 비교까지 가능해서 진짜 추천드려요!
           </p>
           <div class="proof-meta">
             <span class="proof-initial">이</span>
@@ -4419,7 +4431,7 @@
             </div>
           </div>
           <p class="proof-quote">
-            5만원 초대권 진짜네요. 친구한테도 추천했어요.
+            5만원 초대권 진짜 받았어요. 처음엔 의심했는데 현장 가보니 정말이더라고요. 친구들한테도 다 추천했습니다.
           </p>
           <div class="proof-meta">
             <span class="proof-initial">박</span>
@@ -4442,7 +4454,7 @@
             </div>
           </div>
           <p class="proof-quote">
-            예약 진행이 매끄럽고 혜택도 풍성했습니다.
+            예약 진행이 매끄럽고 안내도 친절했어요. 혜택도 풍성해서 결혼 준비 시작하시는 분들께 강추!
           </p>
           <div class="proof-meta">
             <span class="proof-initial">최</span>
@@ -4465,7 +4477,7 @@
             </div>
           </div>
           <p class="proof-quote">
-            처음이라 걱정했는데 안내가 친절해서 좋았어요.
+            처음이라 많이 걱정했는데 친절한 안내 덕분에 쉽게 진행했어요. 인천에서 이런 박람회 있다는 거 처음 알았네요.
           </p>
           <div class="proof-meta">
             <span class="proof-initial">정</span>
@@ -4488,7 +4500,7 @@
             </div>
           </div>
           <p class="proof-quote">
-            지방인데 정보가 잘 정리돼 있어서 편했어요.
+            지방이라 정보가 부족했는데 여기서 다 정리돼 있어서 너무 편했어요. 대구 박람회 정보 진심 감사합니다.
           </p>
           <div class="proof-meta">
             <span class="proof-initial">장</span>
@@ -4511,7 +4523,7 @@
             </div>
           </div>
           <p class="proof-quote">
-            스드메 비교가 한 번에 가능해서 시간 절약!
+            스드메 비교가 한 번에 가능해서 시간을 정말 많이 절약했어요. 발품 안 팔고도 견적 비교 끝!
           </p>
           <div class="proof-meta">
             <span class="proof-initial">윤</span>
@@ -4534,7 +4546,7 @@
             </div>
           </div>
           <p class="proof-quote">
-            프리미엄 박람회 추천. 혜택 만족도 100%.
+            프리미엄 박람회라 그런지 분위기가 정말 좋았어요. 받은 혜택도 다른 박람회보다 훨씬 알찼고 만족도 100%입니다.
           </p>
           <div class="proof-meta">
             <span class="proof-initial">한</span>
@@ -4557,7 +4569,7 @@
             </div>
           </div>
           <p class="proof-quote">
-            사은품도 알차고 상담도 빠르게 진행됐어요.
+            사은품도 알차고 상담도 빠르게 진행돼서 좋았어요. 부산에서 결혼 준비하시는 분들께 진심으로 추천드려요!
           </p>
           <div class="proof-meta">
             <span class="proof-initial">오</span>
@@ -4580,7 +4592,7 @@
             </div>
           </div>
           <p class="proof-quote">
-            후기 보고 신청했는데 진짜 만족했어요!
+            다른 후기 보고 신청했는데 진짜 만족했어요. 대전 박람회는 처음이었는데 시설도 좋고 상담도 디테일했어요.
           </p>
           <div class="proof-meta">
             <span class="proof-initial">신</span>
@@ -4603,7 +4615,7 @@
             </div>
           </div>
           <p class="proof-quote">
-            박람회 처음인데도 친절하게 안내해 주셨어요.
+            박람회 처음인데도 친절하게 안내해 주셔서 편하게 둘러봤어요. 강남이라 접근성도 좋고 분위기도 고급스러워요.
           </p>
           <div class="proof-meta">
             <span class="proof-initial">강</span>
@@ -4626,7 +4638,7 @@
             </div>
           </div>
           <p class="proof-quote">
-            예식장 비교까지 한자리에 다 됐어요.
+            예식장 비교까지 한자리에서 다 됐어요. 분당이라 차로 가기 편하고 주차도 잘 돼있어서 부담 없었어요.
           </p>
           <div class="proof-meta">
             <span class="proof-initial">조</span>
@@ -4649,7 +4661,7 @@
             </div>
           </div>
           <p class="proof-quote">
-            사전 예약 덕에 대기 없이 바로 상담 받았어요.
+            사전 예약 덕분에 대기 없이 바로 상담 받았어요. 시간 아낀 게 제일 큰 혜택! 부평 박람회 강추입니다.
           </p>
           <div class="proof-meta">
             <span class="proof-initial">임</span>
@@ -4672,7 +4684,7 @@
             </div>
           </div>
           <p class="proof-quote">
-            광주 박람회 정보가 부족했는데 여기서 다 찾았어요!
+            광주에서 박람회 정보 찾기 진짜 어려웠는데 여기서 다 정리돼 있어서 살았어요. 정보 감사합니다!
           </p>
           <div class="proof-meta">
             <span class="proof-initial">송</span>
@@ -4695,7 +4707,7 @@
             </div>
           </div>
           <p class="proof-quote">
-            혜택 비교 가능해서 합리적 선택이 가능했어요.
+            혜택 비교가 가능해서 합리적인 선택을 할 수 있었어요. 울산도 박람회 자주 열린다는 거 처음 알았네요.
           </p>
           <div class="proof-meta">
             <span class="proof-initial">노</span>
@@ -4718,7 +4730,7 @@
             </div>
           </div>
           <p class="proof-quote">
-            제주 박람회 정보 진짜 귀한데 잘 찾았어요.
+            제주 박람회 정보 진짜 귀한데 여기서 잘 찾았어요. 제주에서 결혼 준비하시는 예비신부님들 꼭 보세요!
           </p>
           <div class="proof-meta">
             <span class="proof-initial">전</span>
@@ -4741,7 +4753,7 @@
             </div>
           </div>
           <p class="proof-quote">
-            스튜디오·드레스·메이크업 견적이 다 나왔어요.
+            스튜디오·드레스·메이크업 견적이 한 번에 다 나왔어요. 수원이라 가깝고 박람회 규모도 크더라구요.
           </p>
           <div class="proof-meta">
             <span class="proof-initial">황</span>
@@ -4764,7 +4776,7 @@
             </div>
           </div>
           <p class="proof-quote">
-            친구 결혼 준비도 같이 와서 도움 받았어요.
+            친구 결혼 준비도 같이 가서 도움 받았어요. 안산에서도 이런 박람회 있다는 거 알게 돼서 너무 좋았어요!
           </p>
           <div class="proof-meta">
             <span class="proof-initial">백</span>
@@ -4787,7 +4799,7 @@
             </div>
           </div>
           <p class="proof-quote">
-            지방 박람회 일정 정리 진심 감사합니다!
+            지방 박람회 일정 정리 진심 감사합니다! 원주에서 결혼 준비하면서 정보 찾기 힘들었는데 살았어요.
           </p>
           <div class="proof-meta">
             <span class="proof-initial">유</span>
@@ -4810,7 +4822,7 @@
             </div>
           </div>
           <p class="proof-quote">
-            롯데월드타워 박람회 분위기 최고였어요!
+            롯데월드타워 옆에서 진행하는 박람회라 분위기가 진짜 최고였어요. 잠실 접근성도 좋고 시설도 너무 좋았어요!
           </p>
           <div class="proof-meta">
             <span class="proof-initial">권</span>
@@ -6202,7 +6214,7 @@
 
   function startAutoSlide() {
     stopAutoSlide();
-    sliderInterval = setInterval(nextSlide, 3000); // 3초마다 다음 슬라이드 (빠르게)
+    sliderInterval = setInterval(nextSlide, 2000); // 2초마다 다음 슬라이드 (더 빠르게)
   }
 
   function stopAutoSlide() {
