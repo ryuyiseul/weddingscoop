@@ -4279,13 +4279,16 @@
     }
     .filters-right {
       padding-top: 0;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
+      gap: 8px;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      align-items: center;
+      width: 100%;
     }
     .search-wrap {
-      order: -1;
-      width: 100%;
+      order: 0;
+      flex: 1;
+      min-width: 0;
     }
     .search-input {
       width: 100%;
@@ -4294,11 +4297,16 @@
     .count-badge {
       font-size: 10px;
       letter-spacing: 0.1em;
+      flex-shrink: 0;
+      white-space: nowrap;
     }
     .count-badge strong { font-size: 14px; }
+    .sort-select-wrap {
+      flex-shrink: 0;
+    }
     .sort-select {
       font-size: 12px;
-      padding: 7px 28px 7px 10px;
+      padding: 7px 24px 7px 10px;
     }
 
     /* 메인 그리드 — 모바일 2열 */
