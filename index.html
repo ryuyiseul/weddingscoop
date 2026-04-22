@@ -2777,22 +2777,29 @@
     letter-spacing: -0.03em;
     color: var(--ink);
     word-break: keep-all;
-    display: flex;
+    display: inline-flex;
     flex-direction: column;
-    align-items: center;
-    gap: 4px;
+    align-items: stretch;
+    gap: 6px;
+    margin: 0 auto;
   }
   .proof-title-line {
-    display: inline-block;
+    display: block;
     color: var(--ink);
+    text-align: center;
+    white-space: nowrap;
   }
-  /* 두 번째 줄 — 작고 얇게 (첫 줄과 같은 너비로 보이도록) */
+  /* 두 번째 줄 — 첫 줄 너비에 맞춰 자연스럽게 펴짐 */
   .proof-title-line-sub {
-    font-size: 0.5em;
-    font-weight: 400;
+    font-weight: 500;
     color: var(--ink);
-    letter-spacing: -0.015em;
-    margin-top: 2px;
+    letter-spacing: -0.005em;
+    /* 첫 줄과 같은 너비를 채우도록 폰트 크기 조정 */
+    font-size: 0.62em;
+    width: 100%;
+    text-align: justify;
+    text-align-last: justify;
+    text-justify: inter-character;
   }
   .proof-title .accent {
     background: linear-gradient(135deg, #ff1a1a 0%, #b8232f 50%, #6b0f17 100%);
