@@ -1647,6 +1647,17 @@
     flex-wrap: nowrap;
     max-width: 210px;
   }
+  /* PC & 태블릿 (769px 이상)에서만 버튼/배지 넓게 */
+  @media (min-width: 769px) {
+    .hero-headline-cta-wrap .hero-headline-cta {
+      max-width: 420px;
+      padding: 14px 48px;
+    }
+    .trust-badges {
+      max-width: 420px;
+      gap: 32px;
+    }
+  }
   .trust-badge {
     display: inline-flex;
     align-items: center;
