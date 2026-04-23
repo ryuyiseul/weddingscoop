@@ -2400,25 +2400,14 @@
     position: relative;
     overflow: hidden;
   }
-  .card-cta::after {
-    content: '\25B6' !important;
-    font-size: 11px !important;
-    color: #fefdfa !important;
-    display: inline-block !important;
-    flex-shrink: 0 !important;
-    line-height: 1 !important;
-    margin-left: 4px !important;
-    position: relative !important;
-    z-index: 2 !important;
-    transition: transform 0.3s ease;
-  }
-  .card:hover .card-cta::after {
-    transform: translateX(4px);
-  }
   .card-cta > span:first-child {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    min-width: 0;
+  }
+  .card-cta-text {
+    flex: 0 1 auto;
     min-width: 0;
   }
   .card-cta::before {
@@ -2465,13 +2454,10 @@
   .card-cta-arrow {
     display: inline-block;
     color: var(--paper);
-    font-size: 0.85em;
+    font-size: 11px;
+    line-height: 1;
     flex-shrink: 0;
     transition: transform 0.3s ease;
-  }
-  .card-cta-text {
-    flex: 0 1 auto;
-    min-width: 0;
   }
   .card:hover .card-cta-arrow {
     transform: translateX(6px);
@@ -4485,7 +4471,14 @@
     /* 모바일에서도 화살표 표시 */
     .card-cta-arrow {
       display: inline-block !important;
-      flex-shrink: 0;
+      visibility: visible !important;
+      opacity: 1 !important;
+      color: #fefdfa !important;
+      font-size: 10px !important;
+      line-height: 1 !important;
+      flex-shrink: 0 !important;
+      width: auto !important;
+      height: auto !important;
     }
     .card-share {
       width: 38px;
@@ -6085,6 +6078,7 @@
           <div class="card-cta-row">
             <div class="card-cta">
               <span class="card-cta-text">무료초대권 신청</span>
+              <span class="card-cta-arrow" aria-hidden="true">▶</span>
             </div>
             <button class="card-share" data-share-idx="${start + i}" aria-label="카카오톡으로 공유하기" type="button">
               <svg viewBox="0 0 24 24" aria-hidden="true">
