@@ -9,6 +9,18 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="format-detection" content="telephone=no" />
 
+<!-- ═══ Google Analytics 4 ═══ -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PTB4ED70MB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-PTB4ED70MB', {
+    'send_page_view': true,
+    'anonymize_ip': true
+  });
+</script>
+
 <!-- SEO 메타 (기본값 — JS가 지역별로 동적 변경) -->
 <title id="pageTitle">전국 웨딩박람회 일정·신청 | 무료초대권 | Wedding&Scoop</title>
 <meta id="metaDescription" name="description" content="전국 웨딩박람회·결혼박람회·웨딩페어 일정과 5만원 무료초대권 신청. 서울·경기·부산·제주 실시간 업데이트." />
@@ -6651,6 +6663,91 @@
       return end >= today;
     });
   }
+
+  // ═══════ GA4 이벤트 추적 ═══════
+  const trackEvent = (name, params = {}) => {
+    if (typeof window.gtag === 'function') {
+      try { window.gtag('event', name, params); } catch (e) {}
+    }
+  };
+
+  // 카드 클릭 추적 (수익 직결!) - grid 이벤트 위임
+  grid.addEventListener('click', (e) => {
+    const card = e.target.closest('a.card');
+    if (!card) return;
+    // share 버튼 클릭은 제외
+    if (e.target.closest('.card-share')) return;
+
+    const title = card.querySelector('.card-title')?.textContent?.trim() || '';
+    const region = card.querySelector('.card-badge')?.textContent?.trim() || '';
+    const link = card.getAttribute('href') || '';
+
+    trackEvent('expo_card_click', {
+      expo_title: title,
+      region: region,
+      destination_url: link,
+      active_filter: activeRegion || '전체보기',
+      page_number: currentPage,
+    });
+  });
+
+  // 카카오 공유 클릭 추적
+  grid.addEventListener('click', (e) => {
+    const shareBtn = e.target.closest('.card-share');
+    if (!shareBtn) return;
+    const card = shareBtn.closest('a.card');
+    const title = card?.querySelector('.card-title')?.textContent?.trim() || '';
+    trackEvent('kakao_share_click', { expo_title: title });
+  });
+
+  // 지역 필터 클릭 추적
+  document.getElementById('regionFilter')?.addEventListener('click', (e) => {
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    trackEvent('region_filter', { region: btn.dataset.region || '' });
+  });
+
+  // Hero CTA 클릭 추적
+  document.querySelector('.hero-headline-cta')?.addEventListener('click', () => {
+    trackEvent('hero_cta_click', { source: 'hero' });
+  });
+
+  // 플로팅 CTA 클릭 추적
+  document.querySelector('.floating-cta')?.addEventListener('click', () => {
+    trackEvent('floating_cta_click');
+  });
+
+  // AI 추천 챗봇 열림 추적
+  document.querySelector('.ai-recommend-btn')?.addEventListener('click', () => {
+    trackEvent('ai_recommend_open');
+  });
+
+  // 검색어 입력 추적 (디바운스)
+  let searchTrackTimer;
+  document.getElementById('searchInput')?.addEventListener('input', (e) => {
+    clearTimeout(searchTrackTimer);
+    searchTrackTimer = setTimeout(() => {
+      const q = e.target.value.trim();
+      if (q.length >= 2) trackEvent('search', { search_term: q });
+    }, 1500);
+  });
+
+  // 페이지 스크롤 깊이 추적 (25/50/75/100%)
+  (function trackScrollDepth() {
+    const milestones = [25, 50, 75, 100];
+    const reached = new Set();
+    window.addEventListener('scroll', () => {
+      const pct = Math.round(
+        ((window.scrollY + window.innerHeight) / document.documentElement.scrollHeight) * 100
+      );
+      milestones.forEach(m => {
+        if (pct >= m && !reached.has(m)) {
+          reached.add(m);
+          trackEvent('scroll_depth', { percent: m });
+        }
+      });
+    }, { passive: true });
+  })();
 
   // 데이터 로드
   async function loadExpos() {
