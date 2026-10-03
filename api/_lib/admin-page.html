@@ -174,10 +174,18 @@
   .serp-url { font-size: 12px; color: #1a7f37; }
   .serp-title { margin-top: 2px; font-size: 16px; color: #1a0dab; line-height: 1.35; font-weight: 600; word-break: break-all; }
   .serp-desc { margin-top: 4px; font-size: 12.5px; color: #4d5156; line-height: 1.5; }
-  .seo-list { list-style: none; margin-top: 12px; display: grid; gap: 7px; }
-  .seo-list li { display: grid; grid-template-columns: 18px 1fr; gap: 6px; font-size: 12.5px; line-height: 1.45; color: var(--ink-soft); }
-  .seo-list li small { display: block; color: var(--muted); }
-  .seo-list .i { font-size: 13px; }
+  .seo-list, .seo-done { list-style: none; margin-top: 12px; display: grid; gap: 7px; padding: 0; }
+  .seo-list li { display: grid; grid-template-columns: 18px 1fr; gap: 6px; font-size: 12.5px; line-height: 1.5; color: var(--ink-soft); }
+  .seo-list li b { font-size: 11px; font-weight: 700; color: var(--muted); margin-right: 2px; }
+  .seo-list li.must { color: #8a1a24; }
+  .seo-list li.seo-head { display: block; margin-top: 6px; font-size: 12px; font-weight: 800; }
+  .seo-list li.seo-head.must { color: var(--red); }
+  .seo-list li.seo-head.should { color: var(--amber); }
+  .seo-list li.seo-head.ok { color: var(--green); }
+  .seo-list li:has(> details) { display: block; }
+  .seo-list details summary { cursor: pointer; font-size: 12px; font-weight: 700; color: var(--green); margin-top: 6px; }
+  .seo-done { margin-top: 8px; }
+  .seo-list .i { font-size: 12px; }
 
   /* 알림 */
   .toast {
@@ -597,6 +605,7 @@
     list.innerHTML = '<div class="empty">불러오는 중…</div>';
     try {
       const { posts } = await api('/api/admin/posts');
+      knownPosts = posts;
       if (!posts.length) {
         list.innerHTML = '<div class="empty">아직 쓴 글이 없습니다. 첫 글을 써보세요!</div>';
         return;
@@ -642,6 +651,7 @@
   let dirty = false;
   let pending = new Map();   // blob:URL → { blob, ext }  (저장 전 사진)
   let thumbValue = '';       // 대표이미지 경로/주소 또는 blob:URL
+  let knownPosts = [];       // 다른 글 (키워드·제목 중복 확인용)
 
   window.addEventListener('beforeunload', (e) => {
     if (dirty) { e.preventDefault(); e.returnValue = ''; }
@@ -1118,68 +1128,148 @@
   let seoTimer;
   function scheduleSeo() { clearTimeout(seoTimer); seoTimer = setTimeout(updateSeo, 250); }
 
+  // 키워드 비교는 띄어쓰기·대소문자 무시 ("서울 웨딩박람회" = "서울웨딩박람회")
+  const norm = (s) => String(s || '').toLowerCase().replace(/\s+/g, '');
+  const countIn = (hay, kw) => (kw ? norm(hay).split(kw).length - 1 : 0);
+  const fmt = (n) => n.toLocaleString();
+  const cut = (s, n = 18) => (s.length > n ? s.slice(0, n) + '…' : s);
+
   function analyze() {
     const title = $('fTitle').value.trim();
     const seoTitle = $('fSeoTitle').value.trim() || title;
     const desc = $('fDesc').value.trim();
-    const kw = $('fKeyword').value.trim().toLowerCase();
+    const kwRaw = $('fKeyword').value.trim();
+    const kw = norm(kwRaw);
     const md = editor ? editor.getMarkdown() : '';
-    const images = [...md.matchAll(/!\[([^\]]*)\]\(([^)\s]+)/g)];
-    const noAlt = images.filter(m => !m[1].trim() || /^(사진|image|img)$/i.test(m[1].trim()));
-    const links = [...md.matchAll(/(?<!!)\[[^\]]*\]\(([^)\s]+)/g)].map(m => m[1]);
-    const internal = links.filter(u => u.startsWith('/') || u.includes('weddingscoop.co.kr'));
+
+    // ── 본문 분해 ──
+    const images = [...md.matchAll(/!\[([^\]]*)\]\(([^)\s]+)/g)].map(m => ({ alt: m[1].trim(), src: m[2] }));
+    const links = [...md.matchAll(/(?<!!)\[([^\]]*)\]\(([^)\s]+)/g)].map(m => ({ text: m[1], href: m[2] }));
+    const internal = links.filter(l => l.href.startsWith('/') || l.href.includes('weddingscoop.co.kr'));
+    const external = links.filter(l => /^https?:\/\//.test(l.href) && !l.href.includes('weddingscoop.co.kr') && !l.href.includes('unsplash.com'));
+    const ctas = md.split('\n').filter(l => /^\s*\[[^\]]+\]\([^)]+\)\s*$/.test(l));
     const lines = md.split('\n');
-    const headings = lines.filter(l => /^#{1,6}\s/.test(l)).join(' ').toLowerCase();
-    const text = md
+    const headings = lines.filter(l => /^#{1,6}\s/.test(l)).map(l => l.replace(/^#+\s*/, ''));
+    const plain = (s) => s
       .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')
       .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
       .replace(/<[^>]+>/g, ' ')
-      .replace(/[#>*_~`|▲-]/g, ' ');
-    const firstPara = (lines.find(l => l.trim() && !/^(#|!\[|>|\||-{3,}|▲)/.test(l.trim())) || '').toLowerCase();
+      .replace(/[#>*_~`|]/g, ' ')
+      .replace(/^\s*([-+]|\d+\.)\s+/gm, ' ')
+      .replace(/(💡|⚠️|✅|📌)/g, ' ');
+    const textLines = lines.filter(l => l.trim() && !/^\s*(#|!\[|\||-{3,}|\*{3,}|▲|<br)/.test(l)).map(l => plain(l).trim()).filter(Boolean);
+    const text = textLines.join('\n');
     const length = text.replace(/\s/g, '').length;
-    const count = kw ? text.toLowerCase().split(kw).length - 1 : 0;
+    const firstPara = textLines[0] || '';
+    const first100 = text.replace(/\s+/g, ' ').slice(0, 120);
+    const kwCount = countIn(text, kw);
+    const per1000 = length ? (kwCount / length) * 1000 : 0; // 1,000자당 키워드 횟수
+    const sentences = text.split(/(?<=[.!?])\s+|\n/).map(s => s.trim()).filter(s => s.length > 5);
+    const longSentences = sentences.filter(s => s.length > 80);
+    const longParas = textLines.filter(l => l.replace(/\s/g, '').length > 300);
+    // 소제목 사이 가장 긴 구간
+    let longestSection = 0;
+    let run = 0;
+    for (const l of lines) {
+      if (/^#{1,6}\s/.test(l)) { longestSection = Math.max(longestSection, run); run = 0; continue; }
+      run += plain(l).replace(/\s/g, '').length;
+    }
+    longestSection = Math.max(longestSection, run);
+    const badAlt = images.filter(i => !i.alt || /^(사진|이미지|image|img|photo|그림)$/i.test(i.alt) || /^(img|dsc|kakaotalk|screenshot)[_-]?\d*/i.test(i.alt) || i.alt.length < 5);
+    const thumb = thumbValue || (images[0] && images[0].src);
+    const others = (knownPosts || []).filter(p => p.slug !== originalSlug);
+    const sameKw = kw ? others.filter(p => norm(p.keyword) === kw) : [];
+    const sameTitle = others.filter(p => p.title.trim() && p.title.trim() === title);
     const titleLen = seoTitle.length;
-    const thumb = thumbValue || (images[0] && images[0][2]);
+    const needImages = Math.max(1, Math.floor(length / 800));
+    const needHeadings = Math.max(1, Math.floor(length / 700));
+    const minKw = Math.max(3, Math.round(length / 500));
 
-    const checks = [
-      [!!kw, '포커스 키워드를 정했어요', '이 글로 검색되고 싶은 검색어를 하나 정해주세요'],
-      [!!kw && title.toLowerCase().includes(kw), '제목에 키워드가 있어요', '제목에 키워드를 넣어주세요'],
-      [!!kw && seoTitle.toLowerCase().indexOf(kw) > -1 && seoTitle.toLowerCase().indexOf(kw) <= 10, '검색 제목 앞부분에 키워드가 있어요', '키워드를 검색 제목 앞쪽에 두면 더 좋아요'],
-      [!!kw && desc.toLowerCase().includes(kw), '메타 설명에 키워드가 있어요', '메타 설명에 키워드를 넣어주세요'],
-      [!!kw && firstPara.includes(kw), '첫 문단에 키워드가 있어요', '글 첫 문단에 키워드를 넣어주세요'],
-      [!!kw && headings.includes(kw), '소제목에 키워드가 있어요', '소제목(H) 중 하나에 키워드를 넣어주세요'],
-      [count >= 3, `본문에 키워드 ${count}번`, `키워드를 본문에 3번 이상 자연스럽게 써주세요 (지금 ${count}번)`],
-      [length >= 1000, `본문 ${length.toLocaleString()}자`, `본문을 1,000자 이상 써주세요 (지금 ${length.toLocaleString()}자)`],
-      [titleLen >= 10 && titleLen <= 40, `검색 제목 길이 적당 (${titleLen}자)`, `검색 제목은 10~40자가 좋아요 (지금 ${titleLen}자)`],
-      [desc.length >= 50 && desc.length <= 150, `메타 설명 길이 적당 (${desc.length}자)`, `메타 설명은 50~150자가 좋아요 (지금 ${desc.length}자)`],
-      [headings.length > 0, '소제목으로 글을 나눴어요', '소제목(H)으로 글을 나눠주세요'],
-      [images.length > 0, `사진 ${images.length}장`, '사진을 1장 이상 넣어주세요'],
-      [images.length > 0 && noAlt.length === 0, '모든 사진에 설명(대체 텍스트)이 있어요', `설명 없는 사진 ${noAlt.length}장 — 사진을 클릭해서 설명을 넣어주세요`],
-      [internal.length > 0, '사이트 내부 링크가 있어요', '박람회 일정 버튼이나 다른 글 링크를 넣어주세요'],
-      [!!thumb, '대표 이미지가 있어요', '대표 이미지를 정해주세요'],
-    ];
-    return { checks, seoTitle, desc };
+    // [통과?, 필수(true)/권장(false), 통과 문구, 고칠 점, 그룹]
+    const C = [];
+    const add = (group, ok, critical, good, fix) => C.push({ group, ok: !!ok, critical, good, fix });
+
+    // 키워드
+    add('키워드', kw, true, `포커스 키워드: "${kwRaw}"`, '포커스 키워드를 넣어주세요 — 이 글로 검색되고 싶은 대표 검색어 (예: 서울 웨딩박람회)');
+    if (kw) {
+      add('키워드', norm(title).includes(kw), true, '제목에 키워드가 있어요', `제목에 "${kwRaw}"를 넣어주세요`);
+      add('키워드', norm(seoTitle).indexOf(kw) > -1 && norm(seoTitle).indexOf(kw) <= 8, false, '검색 제목 앞부분에 키워드가 있어요', '키워드를 검색 제목 맨 앞쪽으로 옮겨주세요 (앞에 있을수록 유리)');
+      add('키워드', norm(desc).includes(kw), true, '메타 설명에 키워드가 있어요', `메타 설명에 "${kwRaw}"를 넣어주세요`);
+      add('키워드', norm(first100).includes(kw), true, '첫 문단에 키워드가 있어요', `글 첫 문장(앞 120자 안)에 "${kwRaw}"를 넣어주세요`);
+      add('키워드', headings.some(h => norm(h).includes(kw)), false, '소제목에 키워드가 있어요', `소제목 중 하나에 "${kwRaw}"를 넣어주세요`);
+      add('키워드', images.some(i => norm(i.alt).includes(kw)), false, '사진 설명에 키워드가 있어요', `사진 1장 이상의 설명(대체 텍스트)에 "${kwRaw}"를 넣어주세요`);
+      add('키워드', kwCount >= minKw, true, `본문에 키워드 ${kwCount}번`, `키워드를 본문에 ${minKw}번 이상 써주세요 (지금 ${kwCount}번 · 글 500자당 1번 정도)`);
+      add('키워드', kwCount < 4 || per1000 <= 9, true, `키워드 반복 적당 (1,000자당 ${per1000.toFixed(1)}번)`,
+        `키워드를 너무 많이 썼어요 (1,000자당 ${per1000.toFixed(1)}번) — 같은 말 반복이 심하면 네이버가 광고성 글로 봐요. 1,000자당 9번 이하로 줄이고 비슷한 말로 바꿔주세요`);
+      add('키워드', !sameKw.length, false, '다른 글과 키워드가 겹치지 않아요', `/blog/${sameKw[0] && sameKw[0].slug} 글과 키워드가 같아요 — 내 글끼리 경쟁하니 키워드를 다르게 정해주세요`);
+    }
+
+    // 본문
+    add('본문', length >= 500, true, `본문 ${fmt(length)}자`, `내용이 너무 짧아요 (${fmt(length)}자) — 최소 500자, 1,500자 이상을 추천해요`);
+    if (length >= 500) add('본문', length >= 1500, false, `본문 길이 충분 (${fmt(length)}자)`, `본문을 1,500자 이상으로 늘려주세요 (지금 ${fmt(length)}자 · 네이버는 충분히 긴 글을 선호해요)`);
+    add('본문', headings.length >= needHeadings, headings.length === 0 && length >= 500, `소제목 ${headings.length}개로 글을 나눴어요`,
+      headings.length === 0 ? '소제목이 없어요 — 툴바 H 버튼으로 소제목을 넣어 글을 나눠주세요' : `소제목을 더 넣어주세요 (지금 ${headings.length}개 · 700자당 1개 추천)`);
+    add('본문', longestSection <= 900, false, '소제목 사이 구간 길이 적당', `소제목 없이 ${fmt(longestSection)}자가 이어지는 구간이 있어요 — 중간에 소제목을 넣어주세요`);
+    add('본문', !longParas.length, false, '긴 문단 없음', `너무 긴 문단 ${longParas.length}개 ("${cut(longParas[0] || '')}") — 300자 이하로 나눠주세요 (모바일에서 읽기 힘들어요)`);
+    add('본문', sentences.length < 4 || longSentences.length / sentences.length <= 0.25, false, '문장 길이 적당',
+      `긴 문장이 많아요 (${longSentences.length}/${sentences.length}개가 80자 넘음 · 예: "${cut(longSentences[0] || '')}") — 짧게 끊어주세요`);
+    add('본문', firstPara.length >= 40, false, '도입 문단이 있어요', '글 첫머리에 무슨 내용인지 알려주는 도입 문단(2~3문장)을 넣어주세요');
+
+    // 사진
+    add('사진', images.length >= 1, true, `사진 ${images.length}장`, '사진이 없어요 — 1장 이상 넣어주세요 (툴바 사진 아이콘 또는 무료사진)');
+    if (images.length >= 1) add('사진', images.length >= needImages, false, `글 길이에 맞게 사진이 충분해요`, `사진을 더 넣어주세요 (지금 ${images.length}장 · 800자당 1장 추천 → ${needImages}장)`);
+    if (images.length) add('사진', !badAlt.length, true, '모든 사진에 설명(대체 텍스트)이 있어요', `설명이 없거나 너무 짧은 사진 ${badAlt.length}장 — 사진을 클릭해서 무슨 사진인지 5자 이상 적어주세요`);
+    add('사진', !!thumb, true, '대표 이미지가 있어요', '대표 이미지를 정해주세요 (목록·카톡·검색 미리보기에 쓰여요)');
+
+    // 링크
+    add('링크', internal.length >= 1, true, `사이트 안 링크 ${internal.length}개`, '사이트 안 링크가 없어요 — 버튼 도구로 "박람회 일정 보러가기"를 넣거나 다른 블로그 글을 링크해주세요');
+    add('링크', ctas.length >= 1, false, '버튼(행동 유도)이 있어요', '본문 중간에 빨간 버튼을 1개 이상 넣어주세요 (방문자가 박람회 신청으로 이어지게)');
+    add('링크', external.length >= 1, false, `참고 링크 ${external.length}개`, '믿을 만한 외부 출처(박람회 공식 사이트 등) 링크를 1개 넣으면 신뢰도에 도움돼요');
+
+    // 제목·설명
+    add('제목·설명', title.length > 0, true, '글 제목이 있어요', '글 제목을 입력해주세요');
+    add('제목·설명', titleLen >= 15 && titleLen <= 40, titleLen < 10 || titleLen > 50, `검색 제목 길이 적당 (${titleLen}자)`,
+      titleLen < 15 ? `검색 제목이 짧아요 (${titleLen}자) — 15~40자로 구체적으로 써주세요` : `검색 제목이 길어요 (${titleLen}자) — 40자를 넘으면 검색 결과에서 잘려요`);
+    add('제목·설명', desc.length >= 1, true, '메타 설명이 있어요', '메타 설명을 써주세요 — 검색 결과 제목 아래 보이는 소개 문장이에요');
+    if (desc.length) add('제목·설명', desc.length >= 80 && desc.length <= 150, desc.length < 40, `메타 설명 길이 적당 (${desc.length}자)`,
+      desc.length < 80 ? `메타 설명이 짧아요 (${desc.length}자) — 80~150자로 써주세요` : `메타 설명이 길어요 (${desc.length}자) — 150자를 넘으면 잘려요`);
+    add('제목·설명', /\d/.test(seoTitle), false, '제목에 숫자가 있어요', '제목에 숫자(연도·개수 등)를 넣으면 클릭률이 올라가요 (예: 2026, 5가지)');
+    add('제목·설명', !sameTitle.length, true, '다른 글과 제목이 겹치지 않아요', `/blog/${sameTitle[0] && sameTitle[0].slug} 글과 제목이 똑같아요 — 다르게 바꿔주세요`);
+
+    return { checks: C, seoTitle, desc };
+  }
+
+  function seoScore(checks) {
+    const total = checks.reduce((n, c) => n + (c.critical ? 3 : 1), 0);
+    const got = checks.reduce((n, c) => n + (c.ok ? (c.critical ? 3 : 1) : 0), 0);
+    return total ? Math.round((got / total) * 100) : 0;
   }
 
   function updateSeo() {
     if ($('viewEditor').hidden) return;
     const { checks, seoTitle, desc } = analyze();
-    const passed = checks.filter(c => c[0]).length;
-    const score = Math.round((passed / checks.length) * 100);
+    const score = seoScore(checks);
+    const must = checks.filter(c => !c.ok && c.critical);
+    const should = checks.filter(c => !c.ok && !c.critical);
+    const done = checks.filter(c => c.ok);
     const el = $('seoScore');
     el.textContent = `${score}점`;
-    el.className = `seo-score ${score >= 80 ? 'seo-good' : score >= 50 ? 'seo-ok' : 'seo-bad'}`;
-    $('seoList').innerHTML = checks
-      .sort((a, b) => Number(a[0]) - Number(b[0]))
-      .map(([ok, good, bad]) => `<li><span class="i">${ok ? '✅' : '⚠️'}</span><span>${escapeHtml(ok ? good : bad)}</span></li>`).join('');
+    el.className = `seo-score ${score >= 85 && !must.length ? 'seo-good' : score >= 60 ? 'seo-ok' : 'seo-bad'}`;
+    const item = (c, icon) => `<li class="${c.ok ? 'ok' : c.critical ? 'must' : 'should'}"><span class="i">${icon}</span><span><b>${escapeHtml(c.group)}</b> ${escapeHtml(c.ok ? c.good : c.fix)}</span></li>`;
+    $('seoList').innerHTML =
+      (must.length ? `<li class="seo-head must">꼭 고쳐야 할 것 ${must.length}개</li>${must.map(c => item(c, '❌')).join('')}` : '<li class="seo-head ok">필수 항목 모두 통과 👍</li>') +
+      (should.length ? `<li class="seo-head should">고치면 더 좋은 것 ${should.length}개</li>${should.map(c => item(c, '⚠️')).join('')}` : '') +
+      `<li><details><summary>잘한 것 ${done.length}개</summary><ul class="seo-done">${done.map(c => item(c, '✅')).join('')}</ul></details></li>`;
     const t = `${seoTitle || '제목'} | Wedding&Scoop`;
     $('serpUrl').textContent = `weddingscoop.co.kr › blog › ${originalSlug || '새 글'}`;
     $('serpTitle').textContent = t.length > 45 ? t.slice(0, 44) + '…' : t;
     $('serpDesc').textContent = (desc || '메타 설명을 입력하면 여기에 보여요').slice(0, 150);
-    const tl = $('fSeoTitle').value.trim().length;
-    $('seoTitleCount').textContent = tl ? `${tl}자` : '';
-    $('descCount').textContent = `${$('fDesc').value.length}자`;
-    $('descCount').classList.toggle('warn', $('fDesc').value.length > 150);
+    const tl = ($('fSeoTitle').value.trim() || $('fTitle').value.trim()).length;
+    $('seoTitleCount').textContent = `${tl}자`;
+    $('seoTitleCount').classList.toggle('warn', tl > 40 || (tl > 0 && tl < 15));
+    const dl = $('fDesc').value.length;
+    $('descCount').textContent = `${dl}자`;
+    $('descCount').classList.toggle('warn', dl > 150 || (dl > 0 && dl < 80));
   }
 
   ['fTitle', 'fDesc', 'fDate', 'fDraft', 'fKeyword', 'fSeoTitle'].forEach(id => $(id).addEventListener('input', () => { dirty = true; scheduleSeo(); }));
@@ -1244,6 +1334,10 @@
     if (!body.trim()) return toast('본문을 입력해주세요', true);
     if (!date) return toast('작성일을 선택해주세요', true);
     if (date > todayKst()) return toast('작성일은 오늘 이후로 정할 수 없어요', true);
+    if (!$('fDraft').checked) {
+      const must = analyze().checks.filter(c => !c.ok && c.critical);
+      if (must.length && !confirm(`검색 노출(SEO) 필수 항목 ${must.length}개가 아직 안 됐어요:\n\n${must.map(c => '• ' + c.fix).join('\n')}\n\n그래도 공개 발행할까요? (취소를 누르면 돌아가서 고칠 수 있어요)`)) return;
+    }
 
     $('saveBtn').disabled = true;
     $('saveBtn').textContent = '저장 중…';
