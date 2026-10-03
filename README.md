@@ -78,7 +78,20 @@ weddingscoop/
 
 - 글 삭제: 해당 `.md` 파일 삭제
 - 글을 저장했는데 사이트가 안 바뀌면 Vercel 대시보드 → Deployments 에서 빌드 에러 메시지 확인 (제목/날짜 누락, 파일 이름 오류 등을 한국어로 알려줌)
-- 블로그 글은 `sitemap-blog.xml`로 검색엔진에 자동 등록됨. 네이버 서치어드바이저·구글 서치콘솔에 이 사이트맵도 한 번 제출해 두면 좋습니다.
+
+### 🔎 네이버 검색 노출 (자동)
+
+새 글을 올릴 때마다 따로 할 일은 없습니다. 아래 두 가지가 자동으로 처리됩니다.
+
+1. **RSS (`/rss.xml`)** — 네이버가 주기적으로 확인해서 새 글을 가져감
+2. **IndexNow 자동 알림** — 사이트 배포가 끝나면 GitHub가 네이버·빙에 "새 글이 생겼다"고 바로 알려줌 (최근 7일 안에 쓴 글 대상)
+   - 결과 확인: GitHub 저장소 → `Actions` 탭 → `IndexNow`
+   - 예전 글까지 한 번에 다시 알리고 싶으면: `Actions` → `IndexNow` → `Run workflow` → "모든 블로그 글 전송" 체크 → 실행
+   - 루트의 `97bdbd41f083f6ae694f5b8899af430b.txt` 파일은 인증용이라 지우면 안 됨
+
+**최초 1회만** 네이버 서치어드바이저(searchadvisor.naver.com) → 웹마스터 도구 → weddingscoop.co.kr 에서:
+- `요청 → 사이트맵 제출`: `https://weddingscoop.co.kr/sitemap-blog.xml`
+- `요청 → RSS 제출`: `https://weddingscoop.co.kr/rss.xml`
 
 ---
 
