@@ -15,6 +15,9 @@
       "maxDuration": 60
     }
   },
+  "redirects": [
+    { "source": "/blog/wedding-expo-checklist", "destination": "/blog/1", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/admin/:key", "destination": "/api/admin/page?key=:key" },
     { "source": "/seoul", "destination": "/" },
