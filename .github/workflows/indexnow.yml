@@ -1,0 +1,26 @@
+# Vercel 운영(Production) 배포가 성공하면 새 블로그 글을 네이버·빙에 자동으로 알림 (IndexNow)
+name: IndexNow
+
+on:
+  deployment_status:
+  workflow_dispatch:
+    inputs:
+      all:
+        description: '모든 블로그 글 전송 (체크 안 하면 최근 7일 글만)'
+        type: boolean
+        default: false
+
+jobs:
+  ping:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.deployment_status.state == 'success' &&
+       github.event.deployment.environment == 'Production')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Notify search engines
+        run: node scripts/indexnow.js ${{ inputs.all && '--all' || '' }}

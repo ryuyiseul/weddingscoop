@@ -1,5 +1,5 @@
 // 블로그 빌드 스크립트
-// posts/*.md  →  blog/index.html (목록), blog/<slug>.html (글), sitemap-blog.xml
+// posts/*.md  →  blog/index.html (목록), blog/<slug>.html (글), sitemap-blog.xml, rss.xml
 // Vercel 배포 시 자동 실행됨 (vercel.json의 buildCommand). 로컬: node scripts/build-blog.js
 
 const fs = require('fs');
@@ -117,6 +117,7 @@ function layout({ title, description, url, image, type, jsonLd, body }) {
 <meta property="og:image" content="${escapeHtml(image)}" />
 <meta property="og:locale" content="ko_KR" />
 <meta name="twitter:card" content="summary_large_image" />
+<link rel="alternate" type="application/rss+xml" title="Wedding&amp;Scoop 웨딩 블로그" href="${SITE}/rss.xml" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,900&family=Inter:wght@400;600&display=swap" rel="stylesheet" />
@@ -354,6 +355,27 @@ ${urls.map(u => `  <url>
     <loc>${u.loc}</loc>${u.lastmod ? `\n    <lastmod>${u.lastmod}</lastmod>` : ''}
   </url>`).join('\n')}
 </urlset>
+`);
+
+  // RSS (네이버 서치어드바이저에 한 번 제출해 두면 새 글을 자동으로 수집해 감)
+  const toRfc822 = (d) => new Date(`${d}T09:00:00+09:00`).toUTCString();
+  fs.writeFileSync(path.join(ROOT, 'rss.xml'), `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Wedding&amp;Scoop 웨딩 블로그</title>
+    <link>${SITE}/blog</link>
+    <description>웨딩박람회 활용법부터 결혼준비 꿀팁까지, 예비부부를 위한 웨딩 정보</description>
+    <language>ko</language>
+    <atom:link href="${SITE}/rss.xml" rel="self" type="application/rss+xml" />${posts[0] ? `\n    <lastBuildDate>${toRfc822(posts[0].date)}</lastBuildDate>` : ''}
+${posts.map(p => `    <item>
+      <title>${escapeHtml(p.title)}</title>
+      <link>${SITE}/blog/${p.slug}</link>
+      <guid isPermaLink="true">${SITE}/blog/${p.slug}</guid>
+      <pubDate>${toRfc822(p.date)}</pubDate>
+      <description>${escapeHtml(p.description || p.title)}</description>
+    </item>`).join('\n')}
+  </channel>
+</rss>
 `);
 
   console.log(`[blog] ${posts.length}개 글 빌드 완료 → /blog`);
