@@ -55,7 +55,20 @@ function markdownToHtml(md) {
   let list = null; // { tag, items }
   let quote = [];
 
-  const flushPara = () => { if (para.length) { out.push(`<p>${para.map(inline).join('<br />')}</p>`); para = []; } };
+  const flushPara = () => {
+    if (!para.length) return;
+    // 링크만 단독으로 있는 줄 → 버튼  예) [전국 웨딩박람회 일정 보러가기](/#campaigns)
+    const btn = para.length === 1 && para[0].match(/^\[([^\]]+)\]\(([^)\s]+)\)$/);
+    if (btn) {
+      const label = btn[1].replace(/\s*(>>|»|→|▶)\s*$/, '');
+      const href = escapeHtml(btn[2]);
+      const external = /^https?:\/\//.test(btn[2]) && !btn[2].startsWith(SITE);
+      out.push(`<p class="post-btn-wrap"><a class="post-btn" href="${href}"${external ? ' target="_blank" rel="noopener"' : ''}>${inline(label)}<span class="post-btn-arrow" aria-hidden="true">▶</span></a></p>`);
+    } else {
+      out.push(`<p>${para.map(inline).join('<br />')}</p>`);
+    }
+    para = [];
+  };
   const flushList = () => { if (list) { out.push(`<${list.tag}>${list.items.map(i => `<li>${inline(i)}</li>`).join('')}</${list.tag}>`); list = null; } };
   const flushQuote = () => { if (quote.length) { out.push(`<blockquote><p>${quote.map(inline).join('<br />')}</p></blockquote>`); quote = []; } };
   const flushAll = () => { flushPara(); flushList(); flushQuote(); };
@@ -188,6 +201,19 @@ ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script
   .post-body ul, .post-body ol { padding-left: 1.3em; }
   .post-body li + li { margin-top: 0.4em; }
   .post-body a { color: var(--red); text-underline-offset: 3px; }
+  .post-body .post-btn-wrap { margin-top: 1.6em; margin-bottom: 1.6em; text-align: center; }
+  .post-body a.post-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    min-width: 280px; max-width: 100%; padding: 16px 28px;
+    background: var(--red); color: #fff; text-decoration: none;
+    font-size: 16px; font-weight: 800; letter-spacing: -0.01em; line-height: 1.4;
+    border-radius: 10px;
+    box-shadow: 0 4px 0 var(--red-deep), 0 10px 22px -6px rgba(184, 35, 47, 0.45);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease;
+  }
+  .post-body a.post-btn:hover { background: var(--red-deep); transform: translateY(-2px); }
+  .post-body a.post-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--red-deep); }
+  .post-body .post-btn-arrow { font-size: 12px; }
   .post-body strong { color: var(--ink); }
   .post-body img { max-width: 100%; height: auto; border-radius: 6px; display: block; }
   .post-body blockquote { border-left: 3px solid var(--red); background: var(--paper-soft); padding: 14px 18px; color: var(--muted-dark); }
@@ -219,6 +245,7 @@ ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script
     .post-item h2 { font-size: 17px; }
     .post-item p { font-size: 13.5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     .post-body { font-size: 16px; }
+    .post-body a.post-btn { display: flex; min-width: 0; width: 100%; padding: 15px 18px; font-size: 15px; }
     footer { padding: 24px 16px; }
   }
 </style>

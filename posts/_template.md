@@ -13,6 +13,10 @@ draft: true
 본문은 그냥 쓰면 됩니다. 빈 줄을 넣으면 문단이 나뉩니다.
 **굵게**, *기울임*, [링크 글자](https://weddingscoop.co.kr) 를 쓸 수 있습니다.
 
+링크만 한 줄에 따로 쓰면 빨간 버튼으로 보입니다:
+
+[전국 웨딩박람회 일정 보러가기](https://weddingscoop.co.kr/#campaigns)
+
 ## 작은 소제목
 
 - 점 목록 1
