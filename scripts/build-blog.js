@@ -4,6 +4,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { SLUG_RE, DATE_RE, parsePost, isDraft } = require('../lib/post-format');
 
 const ROOT = path.join(__dirname, '..');
 const POSTS_DIR = path.join(ROOT, 'posts');
@@ -18,89 +19,53 @@ const escapeHtml = (s) => String(s)
   .replace(/>/g, '&gt;')
   .replace(/"/g, '&quot;');
 
+// 한국 날짜 (Vercel 서버는 UTC라서 +9시간)
+const todayKst = () => new Date(Date.now() + 9 * 3600000).toISOString().slice(0, 10);
+
 const formatDate = (d) => {
   const [y, m, day] = d.split('-').map(Number);
   return `${y}년 ${m}월 ${day}일`;
 };
 
-// ═══════ front matter (--- 사이의 key: value) ═══════
-function parseFrontMatter(src, file) {
-  const m = src.match(/^﻿?---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
-  if (!m) throw new Error(`${file}: 맨 위에 --- 로 감싼 title/date 정보가 없습니다`);
-  const meta = {};
-  for (const line of m[1].split(/\r?\n/)) {
-    const kv = line.match(/^\s*([A-Za-z]+)\s*:\s*(.*)$/);
-    if (kv) meta[kv[1]] = kv[2].trim().replace(/^["']|["']$/g, '');
-  }
-  return { meta, body: m[2] };
-}
+// ═══════ 마크다운 → HTML (marked) ═══════
+let marked; // ESM 패키지라 build()에서 import
 
-// ═══════ 간단한 마크다운 변환 ═══════
-function inline(text) {
-  let s = escapeHtml(text);
-  s = s.replace(/!\[([^\]]*)\]\(([^)\s]+)\)/g, '<img src="$2" alt="$1" loading="lazy" />');
-  s = s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (_, label, href) => {
-    const external = /^https?:\/\//.test(href) && !href.startsWith(SITE);
-    return `<a href="${href}"${external ? ' target="_blank" rel="noopener"' : ''}>${label}</a>`;
+function setupMarked(m) {
+  const external = (href) => /^https?:\/\//.test(href) && !href.startsWith(SITE);
+  const linkAttrs = (href) => (external(href) ? ' target="_blank" rel="noopener"' : '');
+  m.use({
+    gfm: true,
+    breaks: true, // 엔터 한 번 = 줄바꿈
+    renderer: {
+      // # → h2 (h1은 글 제목 하나만)
+      heading({ tokens, depth }) {
+        const level = Math.min(depth + 1, 6);
+        return `<h${level}>${this.parser.parseInline(tokens)}</h${level}>\n`;
+      },
+      // 링크만 단독으로 있는 줄 → 버튼  예) [전국 웨딩박람회 일정 보러가기](/#campaigns)
+      paragraph({ tokens }) {
+        const meaningful = tokens.filter(t => !(t.type === 'text' && !t.raw.trim()) && t.type !== 'br');
+        if (meaningful.length === 1 && meaningful[0].type === 'link') {
+          const link = meaningful[0];
+          const label = this.parser.parseInline(link.tokens).replace(/\s*(&gt;&gt;|»|→|▶)\s*$/, '');
+          return `<p class="post-btn-wrap"><a class="post-btn" href="${escapeHtml(link.href)}"${linkAttrs(link.href)}>${label}<span class="post-btn-arrow" aria-hidden="true">▶</span></a></p>\n`;
+        }
+        return `<p>${this.parser.parseInline(tokens)}</p>\n`;
+      },
+      link({ href, title, tokens }) {
+        return `<a href="${escapeHtml(href)}"${title ? ` title="${escapeHtml(title)}"` : ''}${linkAttrs(href)}>${this.parser.parseInline(tokens)}</a>`;
+      },
+      image({ href, title, text }) {
+        return `<img src="${escapeHtml(href)}" alt="${escapeHtml(text)}"${title ? ` title="${escapeHtml(title)}"` : ''} loading="lazy" />`;
+      },
+    },
   });
-  s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-  s = s.replace(/(^|[^*])\*([^*\s][^*]*)\*/g, '$1<em>$2</em>');
-  return s;
 }
 
-function markdownToHtml(md) {
-  const lines = md.replace(/\r\n/g, '\n').split('\n');
-  const out = [];
-  let para = [];
-  let list = null; // { tag, items }
-  let quote = [];
+const markdownToHtml = (md) => marked.parse(md);
 
-  const flushPara = () => {
-    if (!para.length) return;
-    // 링크만 단독으로 있는 줄 → 버튼  예) [전국 웨딩박람회 일정 보러가기](/#campaigns)
-    const btn = para.length === 1 && para[0].match(/^\[([^\]]+)\]\(([^)\s]+)\)$/);
-    if (btn) {
-      const label = btn[1].replace(/\s*(>>|»|→|▶)\s*$/, '');
-      const href = escapeHtml(btn[2]);
-      const external = /^https?:\/\//.test(btn[2]) && !btn[2].startsWith(SITE);
-      out.push(`<p class="post-btn-wrap"><a class="post-btn" href="${href}"${external ? ' target="_blank" rel="noopener"' : ''}>${inline(label)}<span class="post-btn-arrow" aria-hidden="true">▶</span></a></p>`);
-    } else {
-      out.push(`<p>${para.map(inline).join('<br />')}</p>`);
-    }
-    para = [];
-  };
-  const flushList = () => { if (list) { out.push(`<${list.tag}>${list.items.map(i => `<li>${inline(i)}</li>`).join('')}</${list.tag}>`); list = null; } };
-  const flushQuote = () => { if (quote.length) { out.push(`<blockquote><p>${quote.map(inline).join('<br />')}</p></blockquote>`); quote = []; } };
-  const flushAll = () => { flushPara(); flushList(); flushQuote(); };
-
-  for (const raw of lines) {
-    const line = raw.trimEnd();
-    let m;
-    if (!line.trim()) { flushAll(); continue; }
-    if ((m = line.match(/^(#{1,4})\s+(.*)$/))) {
-      flushAll();
-      const level = Math.min(m[1].length + 1, 4); // # → h2 (h1은 글 제목)
-      out.push(`<h${level}>${inline(m[2])}</h${level}>`);
-    } else if (/^(-{3,}|\*{3,})$/.test(line.trim())) {
-      flushAll();
-      out.push('<hr />');
-    } else if ((m = line.match(/^>\s?(.*)$/))) {
-      flushPara(); flushList();
-      quote.push(m[1]);
-    } else if ((m = line.match(/^\s*[-*]\s+(.*)$/)) || (m = line.match(/^\s*\d+[.)]\s+(.*)$/))) {
-      flushPara(); flushQuote();
-      const tag = /^\s*\d/.test(line) ? 'ol' : 'ul';
-      if (list && list.tag !== tag) flushList();
-      if (!list) list = { tag, items: [] };
-      list.items.push(m[1]);
-    } else {
-      flushList(); flushQuote();
-      para.push(line.trim());
-    }
-  }
-  flushAll();
-  return out.join('\n');
-}
+// /images/... 같은 사이트 내부 경로 → https://weddingscoop.co.kr/images/... (카톡·네이버 미리보기용)
+const absUrl = (u) => (u && u.startsWith('/') ? SITE + u : u);
 
 // ═══════ 공통 레이아웃 ═══════
 function layout({ title, description, url, image, type, jsonLd, body }) {
@@ -218,6 +183,13 @@ ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script
   .post-body img { max-width: 100%; height: auto; border-radius: 6px; display: block; }
   .post-body blockquote { border-left: 3px solid var(--red); background: var(--paper-soft); padding: 14px 18px; color: var(--muted-dark); }
   .post-body hr { border: none; border-top: 1px solid var(--line); margin: 2.2em 0; }
+  .post-body table { width: 100%; border-collapse: collapse; font-size: 15px; display: block; overflow-x: auto; }
+  .post-body th, .post-body td { border: 1px solid var(--line); padding: 10px 12px; text-align: left; vertical-align: top; }
+  .post-body th { background: var(--paper-soft); color: var(--ink); font-weight: 700; }
+  .post-body del { color: var(--muted); }
+  .post-body code { background: var(--paper-soft); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+  .post-body pre { background: var(--paper-soft); padding: 14px 16px; border-radius: 8px; overflow-x: auto; }
+  .post-body pre code { background: none; padding: 0; }
 
   .cta {
     margin-top: 56px; padding: 32px 24px; text-align: center; background: var(--ink); color: var(--paper); border-radius: 10px;
@@ -280,22 +252,23 @@ const ctaBlock = `
 // ═══════ 빌드 ═══════
 function loadPosts() {
   if (!fs.existsSync(POSTS_DIR)) return [];
-  const today = new Date().toISOString().slice(0, 10);
+  const today = todayKst();
   return fs.readdirSync(POSTS_DIR)
     .filter(f => f.endsWith('.md') && !f.startsWith('_'))
     .map(file => {
       const slug = file.replace(/\.md$/, '');
-      if (!/^[a-z0-9-]+$/.test(slug)) throw new Error(`${file}: 파일 이름은 영어 소문자/숫자/하이픈(-)만 쓸 수 있습니다`);
-      const { meta, body } = parseFrontMatter(fs.readFileSync(path.join(POSTS_DIR, file), 'utf8'), file);
+      if (!SLUG_RE.test(slug)) throw new Error(`${file}: 파일 이름은 영어 소문자/숫자/하이픈(-)만 쓸 수 있습니다`);
+      const { meta, body } = parsePost(fs.readFileSync(path.join(POSTS_DIR, file), 'utf8'), file);
       if (!meta.title) throw new Error(`${file}: title이 없습니다`);
-      if (!/^\d{4}-\d{2}-\d{2}$/.test(meta.date || '')) throw new Error(`${file}: date를 2026-10-03 형식으로 적어주세요`);
+      if (!DATE_RE.test(meta.date || '')) throw new Error(`${file}: date를 2026-10-03 형식으로 적어주세요`);
       return {
         slug,
         title: meta.title,
         date: meta.date,
         description: meta.description || '',
         thumbnail: meta.thumbnail || '',
-        draft: /^(true|yes)$/i.test(meta.draft || ''),
+        draft: isDraft(meta),
+        body,
         html: markdownToHtml(body),
       };
     })
@@ -304,7 +277,10 @@ function loadPosts() {
     .sort((a, b) => b.date.localeCompare(a.date) || a.slug.localeCompare(b.slug));
 }
 
-function build() {
+async function build() {
+  marked = (await import('marked')).marked;
+  setupMarked(marked);
+
   const posts = loadPosts();
   fs.rmSync(OUT_DIR, { recursive: true, force: true });
   fs.mkdirSync(OUT_DIR, { recursive: true });
@@ -318,7 +294,7 @@ function build() {
     <h1>${escapeHtml(p.title)}</h1>
     <div class="post-meta"><time datetime="${p.date}">${formatDate(p.date)}</time></div>
   </header>
-  ${p.thumbnail ? `<img class="post-cover" src="${escapeHtml(p.thumbnail)}" alt="${escapeHtml(p.title)}" />` : ''}
+  ${p.thumbnail && !p.body.includes(p.thumbnail) ? `<img class="post-cover" src="${escapeHtml(p.thumbnail)}" alt="${escapeHtml(p.title)}" />` : ''}
   <div class="post-body">
 ${p.html}
   </div>
@@ -328,7 +304,7 @@ ${ctaBlock}`;
       title: `${p.title} | Wedding&Scoop`,
       description: p.description || p.title,
       url,
-      image: p.thumbnail || DEFAULT_IMAGE,
+      image: absUrl(p.thumbnail) || DEFAULT_IMAGE,
       type: 'article',
       jsonLd: {
         '@context': 'https://schema.org',
@@ -336,7 +312,7 @@ ${ctaBlock}`;
         headline: p.title,
         description: p.description || p.title,
         datePublished: p.date,
-        image: p.thumbnail || DEFAULT_IMAGE,
+        image: absUrl(p.thumbnail) || DEFAULT_IMAGE,
         url,
         mainEntityOfPage: url,
         publisher: { '@type': 'Organization', name: 'Wedding&Scoop', url: SITE },
@@ -408,4 +384,4 @@ ${posts.map(p => `    <item>
   console.log(`[blog] ${posts.length}개 글 빌드 완료 → /blog`);
 }
 
-build();
+build().catch((e) => { console.error(`[blog] 빌드 실패: ${e.message}`); process.exit(1); });

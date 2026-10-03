@@ -7,9 +7,16 @@
   "functions": {
     "api/expos.js": {
       "maxDuration": 30
+    },
+    "api/admin/page.js": {
+      "includeFiles": "api/_lib/admin-page.html"
+    },
+    "api/admin/posts.js": {
+      "maxDuration": 60
     }
   },
   "rewrites": [
+    { "source": "/admin/:key", "destination": "/api/admin/page?key=:key" },
     { "source": "/seoul", "destination": "/" },
     { "source": "/gyeonggi", "destination": "/" },
     { "source": "/incheon", "destination": "/" },

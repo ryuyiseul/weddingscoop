@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="referrer" content="no-referrer" />
+<title>블로그 관리 | Wedding&amp;Scoop</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0a0a'/%3E%3Ctext x='16' y='23' font-family='Georgia, serif' font-size='22' font-weight='900' text-anchor='middle' fill='%23fefdfa'%3EW%3C/text%3E%3Ccircle cx='24' cy='9' r='3' fill='%23b8232f'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,900&family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<link rel="stylesheet" href="/admin-assets/toastui-editor-3.2.2.css" />
+<style>
+  :root {
+    --paper: #fefdfa; --paper-soft: #faf7f0; --ink: #0a0a0a; --ink-soft: #2a2a2a;
+    --red: #b8232f; --red-deep: #8a1a24; --line: #ece9e0; --muted: #8a8680; --muted-dark: #5a5752;
+    --green: #1f7a4d; --amber: #9a6200;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: var(--paper-soft); }
+  body {
+    color: var(--ink); min-height: 100vh;
+    font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased; word-break: keep-all;
+  }
+  button, input, textarea, select { font: inherit; color: inherit; }
+  a { color: inherit; }
+  [hidden] { display: none !important; }
+
+  /* 상단 바 */
+  .bar {
+    position: sticky; top: 0; z-index: 30;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 12px 24px; background: var(--ink); color: var(--paper);
+  }
+  .bar-brand { font-family: 'Fraunces', serif; font-weight: 900; font-size: 20px; letter-spacing: -0.04em; }
+  .bar-brand .amp { font-style: italic; font-weight: 300; color: var(--red); }
+  .bar-brand small {
+    margin-left: 10px; font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 600;
+    letter-spacing: 0.25em; text-transform: uppercase; color: var(--red); vertical-align: middle;
+  }
+  .bar-actions { display: flex; align-items: center; gap: 8px; }
+  .bar-link {
+    padding: 7px 12px; border: 1px solid rgba(255,255,255,0.3); border-radius: 6px; background: transparent;
+    color: var(--paper); font-size: 13px; text-decoration: none; cursor: pointer;
+  }
+  .bar-link:hover { border-color: var(--paper); }
+
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 32px 24px 80px; }
+
+  /* 버튼 */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 11px 18px; border-radius: 8px; border: 1.5px solid var(--ink);
+    background: var(--paper); font-weight: 700; font-size: 14px; cursor: pointer; text-decoration: none;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .btn:hover { border-color: var(--red); color: var(--red); }
+  .btn-primary { background: var(--red); border-color: var(--red); color: #fff; }
+  .btn-primary:hover { background: var(--red-deep); border-color: var(--red-deep); color: #fff; }
+  .btn-dark { background: var(--ink); color: var(--paper); }
+  .btn-dark:hover { background: var(--ink-soft); color: #fff; border-color: var(--ink); }
+  .btn-small { padding: 7px 12px; font-size: 13px; border-width: 1px; }
+  .btn-danger { border-color: var(--line); color: var(--muted-dark); }
+  .btn-danger:hover { border-color: var(--red); color: var(--red); }
+  .btn:disabled { opacity: 0.5; cursor: wait; }
+
+  /* 로그인 / 안내 카드 */
+  .center-card {
+    max-width: 400px; margin: 12vh auto 0; padding: 40px 32px; background: var(--paper);
+    border: 1px solid var(--line); border-radius: 14px; text-align: center;
+    box-shadow: 0 20px 50px -30px rgba(0,0,0,0.25);
+  }
+  .center-card .brand { font-family: 'Fraunces', serif; font-weight: 900; font-size: 32px; letter-spacing: -0.045em; }
+  .center-card .brand .amp { font-style: italic; font-weight: 300; color: var(--red); }
+  .center-card p { margin-top: 8px; color: var(--muted-dark); font-size: 14px; line-height: 1.6; }
+  .center-card form { margin-top: 28px; display: grid; gap: 12px; }
+  .center-card.wide { max-width: 560px; text-align: left; }
+  .center-card code { background: var(--paper-soft); padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+
+  .input {
+    width: 100%; padding: 12px 14px; border: 1.5px solid var(--line); border-radius: 8px; background: #fff;
+    font-size: 15px; outline: none; transition: border-color 0.15s;
+  }
+  .input:focus { border-color: var(--ink); }
+  .error { color: var(--red); font-size: 13px; min-height: 18px; }
+
+  /* 목록 */
+  .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .page-head h1 { font-size: 26px; font-weight: 800; letter-spacing: -0.03em; }
+  .page-head p { margin-top: 6px; color: var(--muted-dark); font-size: 14px; }
+  .post-list { margin-top: 24px; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .post-row {
+    display: grid; grid-template-columns: 72px 1fr auto; gap: 16px; align-items: center;
+    padding: 16px 20px; border-top: 1px solid var(--line);
+  }
+  .post-row:first-child { border-top: none; }
+  .post-thumb { width: 72px; height: 54px; border-radius: 6px; background: var(--paper-soft) center / cover no-repeat; border: 1px solid var(--line); }
+  .post-row h2 { font-size: 16px; font-weight: 700; line-height: 1.4; letter-spacing: -0.02em; }
+  .post-row h2 button { background: none; border: none; text-align: left; cursor: pointer; font-weight: inherit; }
+  .post-row h2 button:hover { color: var(--red); }
+  .post-sub { margin-top: 4px; display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--muted); flex-wrap: wrap; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
+  .badge-live { background: #e6f4ec; color: var(--green); }
+  .badge-draft { background: #f1efe9; color: var(--muted-dark); }
+  .badge-scheduled { background: #fdf3e1; color: var(--amber); }
+  .post-actions { display: flex; gap: 6px; }
+  .empty { padding: 60px 20px; text-align: center; color: var(--muted); }
+
+  /* 에디터 */
+  .editor-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .editor-grid { margin-top: 20px; display: grid; grid-template-columns: 1fr 300px; gap: 20px; align-items: start; }
+  .editor-grid > * { min-width: 0; }
+  #viewEditor.wrap { max-width: 1240px; }
+  .title-input {
+    width: 100%; padding: 14px 4px; border: none; border-bottom: 2px solid var(--ink); background: transparent;
+    font-size: 28px; font-weight: 800; letter-spacing: -0.03em; outline: none;
+  }
+  .title-input::placeholder { color: #c9c5bb; }
+  #editor { margin-top: 16px; background: #fff; }
+  .editor-tip { margin-top: 8px; font-size: 12.5px; color: var(--muted); line-height: 1.6; }
+  .panel { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 20px; position: sticky; top: 76px; }
+  .field + .field { margin-top: 18px; }
+  .field label.lbl { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+  .field .help { margin-top: 5px; font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .field textarea.input { resize: vertical; min-height: 84px; line-height: 1.5; font-size: 14px; }
+  .field .input { font-size: 14px; padding: 10px 12px; }
+  .slug-box { display: flex; align-items: center; border: 1.5px solid var(--line); border-radius: 8px; background: #fff; overflow: hidden; }
+  .slug-box:focus-within { border-color: var(--ink); }
+  .slug-box span { padding: 10px 0 10px 10px; font-size: 12.5px; color: var(--muted); white-space: nowrap; }
+  .slug-box input { flex: 1; min-width: 0; border: none; outline: none; padding: 10px 10px 10px 2px; font-size: 14px; background: transparent; }
+  .thumb-preview {
+    margin-top: 8px; aspect-ratio: 1200 / 630; border-radius: 8px; border: 1px dashed #d8d4ca;
+    background: var(--paper-soft) center / cover no-repeat; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; color: var(--muted); text-align: center; padding: 8px;
+  }
+  .thumb-preview.has-image { border-style: solid; color: transparent; }
+  .thumb-actions { margin-top: 8px; display: flex; gap: 6px; }
+  .check { display: flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; }
+  .check input { width: 18px; height: 18px; accent-color: var(--red); }
+  .panel-actions { margin-top: 22px; display: grid; gap: 8px; }
+  .counter { float: right; font-weight: 400; color: var(--muted); font-size: 12px; }
+
+  /* 알림 */
+  .toast {
+    position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%) translateY(20px); z-index: 100;
+    max-width: calc(100% - 32px); padding: 14px 20px; border-radius: 10px; background: var(--ink); color: #fff;
+    font-size: 14px; line-height: 1.5; box-shadow: 0 12px 30px -10px rgba(0,0,0,0.4);
+    opacity: 0; pointer-events: none; transition: opacity 0.2s, transform 0.2s;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+  .toast.error { background: var(--red); }
+
+  /* 모달 */
+  .modal { position: fixed; inset: 0; z-index: 90; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(10,10,10,0.45); }
+  .modal-box { width: 100%; max-width: 440px; background: var(--paper); border-radius: 14px; padding: 24px; }
+  .modal-box h3 { font-size: 18px; font-weight: 800; }
+  .modal-box p { margin-top: 6px; font-size: 13px; color: var(--muted-dark); line-height: 1.6; }
+  .modal-box .field { margin-top: 16px; }
+  .modal-actions { margin-top: 20px; display: flex; justify-content: flex-end; gap: 8px; }
+
+  /* 에디터 안 '버튼' 툴바 아이콘 */
+  .toastui-editor-toolbar-icons.cta-tool {
+    background: none; width: auto; padding: 0 8px; margin: 7px 4px; font-size: 12px; font-weight: 800;
+    color: #fff; background: var(--red); border-radius: 4px; height: 22px; line-height: 22px;
+  }
+  .toastui-editor-toolbar-icons.cta-tool:not(:disabled):hover { background: var(--red-deep); }
+  .toastui-editor-contents { font-family: 'Pretendard Variable', 'Pretendard', sans-serif; font-size: 16px; }
+  .toastui-editor-contents img { max-width: 100%; }
+
+  @media (max-width: 860px) {
+    .editor-grid { grid-template-columns: 1fr; }
+    .panel { position: static; }
+  }
+  @media (max-width: 600px) {
+    .bar { padding: 10px 14px; }
+    .bar-brand small { display: none; }
+    .wrap { padding: 20px 14px 60px; }
+    .post-row { grid-template-columns: 56px 1fr; padding: 14px; }
+    .post-thumb { width: 56px; height: 44px; }
+    .post-actions { grid-column: 1 / -1; justify-content: flex-end; }
+    .title-input { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="bar" id="bar" hidden>
+  <div class="bar-brand">Wedding<span class="amp">&amp;</span>Scoop<small>Admin</small></div>
+  <div class="bar-actions">
+    <a class="bar-link" href="/blog" target="_blank" rel="noopener">블로그 보기</a>
+    <button class="bar-link" type="button" id="logoutBtn">로그아웃</button>
+  </div>
+</header>
+
+<!-- 불러오는 중 -->
+<div class="center-card" id="viewLoading"><p>불러오는 중…</p></div>
+
+<!-- 환경변수 미설정 안내 -->
+<div class="center-card wide" id="viewSetup" hidden>
+  <div class="brand">Wedding<span class="amp">&amp;</span>Scoop</div>
+  <p style="margin-top:16px"><strong>어드민 설정이 아직 끝나지 않았습니다.</strong><br />
+  Vercel → 프로젝트 → Settings → Environment Variables 에 아래 값을 추가한 뒤 다시 배포(Redeploy)해주세요.</p>
+  <p id="setupMissing" style="margin-top:12px"></p>
+</div>
+
+<!-- 로그인 -->
+<div class="center-card" id="viewLogin" hidden>
+  <div class="brand">Wedding<span class="amp">&amp;</span>Scoop</div>
+  <p>블로그 관리자 로그인</p>
+  <form id="loginForm">
+    <input class="input" type="password" id="password" placeholder="비밀번호" autocomplete="current-password" required />
+    <button class="btn btn-dark" type="submit" id="loginBtn">로그인</button>
+    <div class="error" id="loginError"></div>
+  </form>
+</div>
+
+<!-- 글 목록 -->
+<main class="wrap" id="viewList" hidden>
+  <div class="page-head">
+    <div>
+      <h1>블로그 글 관리</h1>
+      <p>저장하면 1~2분 뒤 사이트에 반영되고, 네이버에도 자동으로 알려집니다.</p>
+    </div>
+    <button class="btn btn-primary" type="button" id="newPostBtn">＋ 새 글 쓰기</button>
+  </div>
+  <div class="post-list" id="postList"><div class="empty">불러오는 중…</div></div>
+</main>
+
+<!-- 글쓰기 -->
+<main class="wrap" id="viewEditor" hidden>
+  <div class="editor-head">
+    <button class="btn btn-small" type="button" id="backBtn">← 글 목록</button>
+    <span id="editorStatus" style="font-size:13px;color:var(--muted)"></span>
+  </div>
+  <div class="editor-grid">
+    <section>
+      <input class="title-input" id="fTitle" placeholder="제목을 입력하세요" maxlength="120" />
+      <div id="editor"></div>
+      <p class="editor-tip">
+        💡 사진은 툴바의 사진 아이콘을 누르거나, 끌어다 놓거나, 복사해서 붙여넣으면 됩니다.<br />
+        💡 빨간 <strong>버튼</strong> 아이콘을 누르면 "전국 웨딩박람회 일정 보러가기" 같은 버튼을 넣을 수 있어요. (편집 화면에선 링크로 보이지만, 사이트에선 빨간 버튼으로 나와요)
+      </p>
+    </section>
+    <aside class="panel">
+      <div class="field">
+        <label class="lbl" for="fSlug">글 주소</label>
+        <div class="slug-box"><span>/blog/</span><input id="fSlug" maxlength="80" spellcheck="false" autocapitalize="off" /></div>
+        <p class="help">영어 소문자·숫자·하이픈(-)만 가능. 예: seoul-wedding-expo-tips</p>
+      </div>
+      <div class="field">
+        <label class="lbl" for="fDesc">요약 <span class="counter" id="descCount">0자</span></label>
+        <textarea class="input" id="fDesc" maxlength="200" placeholder="검색 결과·카톡 공유에 보이는 한두 문장 (80자 안팎 추천)"></textarea>
+      </div>
+      <div class="field">
+        <label class="lbl">대표 이미지</label>
+        <div class="thumb-preview" id="thumbPreview">비워두면 본문 첫 번째 사진이<br />대표 이미지가 됩니다</div>
+        <div class="thumb-actions">
+          <button class="btn btn-small" type="button" id="thumbPick">사진 선택</button>
+          <button class="btn btn-small btn-danger" type="button" id="thumbClear" hidden>지우기</button>
+        </div>
+        <input type="file" id="thumbFile" accept="image/*" hidden />
+      </div>
+      <div class="field">
+        <label class="lbl" for="fDate">작성일</label>
+        <input class="input" type="date" id="fDate" />
+      </div>
+      <div class="field">
+        <label class="check"><input type="checkbox" id="fDraft" /> 임시저장 (사이트에 공개 안 함)</label>
+      </div>
+      <div class="panel-actions">
+        <button class="btn btn-primary" type="button" id="saveBtn">저장하기</button>
+        <a class="btn btn-small" id="viewLiveBtn" target="_blank" rel="noopener" hidden>사이트에서 보기 ↗</a>
+        <button class="btn btn-small btn-danger" type="button" id="deleteBtn" hidden>이 글 삭제</button>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<!-- 버튼 넣기 모달 -->
+<div class="modal" id="ctaModal" hidden>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="ctaTitle">
+    <h3 id="ctaTitle">버튼 넣기</h3>
+    <p>본문 중간에 빨간 버튼이 들어갑니다.</p>
+    <div class="field">
+      <label class="lbl" for="ctaLabel">버튼 글자</label>
+      <input class="input" id="ctaLabel" value="전국 웨딩박람회 일정 보러가기" />
+    </div>
+    <div class="field">
+      <label class="lbl" for="ctaUrl">이동할 주소</label>
+      <input class="input" id="ctaUrl" value="https://weddingscoop.co.kr/#campaigns" />
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-small" type="button" id="ctaCancel">취소</button>
+      <button class="btn btn-small btn-primary" type="button" id="ctaInsert">넣기</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- TOAST UI Editor 3.2.2 (MIT, NHN Cloud) + 한국어 — 사이트에 직접 올린 파일 -->
+<script src="/admin-assets/toastui-editor-3.2.2.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const SITE = location.origin;
+  const SLUG_RE = /^[a-z0-9-]+$/;
+  const MAX_SIDE = 1600;          // 사진 긴 변 최대 px
+  const MAX_BATCH_BYTES = 3.2e6;  // 한 번에 보내는 사진 용량 (Vercel 요청 한도 4.5MB)
+
+  const views = ['viewLoading', 'viewSetup', 'viewLogin', 'viewList', 'viewEditor'];
+  function show(view) {
+    views.forEach(v => { $(v).hidden = v !== view; });
+    $('bar').hidden = !(view === 'viewList' || view === 'viewEditor');
+    window.scrollTo(0, 0);
+  }
+
+  let toastTimer;
+  function toast(msg, isError = false, ms = 3500) {
+    const el = $('toast');
+    el.textContent = msg;
+    el.classList.toggle('error', isError);
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), ms);
+  }
+
+  async function api(path, { method = 'GET', body } = {}) {
+    const res = await fetch(path, {
+      method,
+      headers: { 'X-Admin-Request': '1', ...(body ? { 'Content-Type': 'application/json' } : {}) },
+      body: body ? JSON.stringify(body) : undefined,
+      credentials: 'same-origin',
+    });
+    let data = {};
+    try { data = await res.json(); } catch (e) { /* 빈 응답 */ }
+    if (res.status === 401 && path !== '/api/admin/session') {
+      show('viewLogin');
+      throw new Error('로그인이 만료됐습니다. 다시 로그인해주세요');
+    }
+    if (res.status === 413) throw new Error('사진 용량이 너무 큽니다');
+    if (!res.ok) throw new Error(data.error || `오류가 발생했습니다 (${res.status})`);
+    return data;
+  }
+
+  const todayKst = () => new Date(Date.now() + 9 * 3600000).toISOString().slice(0, 10);
+  const escapeHtml = (s) => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const formatDate = (d) => { if (!d) return ''; const [y, m, day] = d.split('-').map(Number); return `${y}.${m}.${day}`; };
+  const randomId = () => Math.random().toString(36).slice(2, 8);
+  const absUrl = (u) => (u && u.startsWith('/') ? SITE + u : u);
+
+  // ═══════ 로그인 ═══════
+  async function boot() {
+    try {
+      const s = await api('/api/admin/session');
+      if (s.missing && s.missing.length) {
+        $('setupMissing').innerHTML = s.missing.map(m => `<code>${escapeHtml(m)}</code>`).join(' ');
+        return show('viewSetup');
+      }
+      if (!s.loggedIn) return show('viewLogin');
+      openList();
+    } catch (e) {
+      toast(e.message, true);
+      show('viewLogin');
+    }
+  }
+
+  $('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    $('loginBtn').disabled = true;
+    $('loginError').textContent = '';
+    try {
+      await api('/api/admin/session', { method: 'POST', body: { password: $('password').value } });
+      $('password').value = '';
+      openList();
+    } catch (err) {
+      $('loginError').textContent = err.message;
+    } finally {
+      $('loginBtn').disabled = false;
+    }
+  });
+
+  $('logoutBtn').addEventListener('click', async () => {
+    if (dirty && !confirm('저장하지 않은 내용이 있습니다. 로그아웃할까요?')) return;
+    dirty = false;
+    await api('/api/admin/session', { method: 'DELETE' }).catch(() => {});
+    show('viewLogin');
+  });
+
+  // ═══════ 글 목록 ═══════
+  async function openList() {
+    show('viewList');
+    const list = $('postList');
+    list.innerHTML = '<div class="empty">불러오는 중…</div>';
+    try {
+      const { posts } = await api('/api/admin/posts');
+      if (!posts.length) {
+        list.innerHTML = '<div class="empty">아직 쓴 글이 없습니다. 첫 글을 써보세요!</div>';
+        return;
+      }
+      const today = todayKst();
+      list.innerHTML = posts.map(p => {
+        const badge = p.draft ? '<span class="badge badge-draft">임시저장</span>'
+          : p.date > today ? '<span class="badge badge-scheduled">예약</span>'
+          : '<span class="badge badge-live">공개</span>';
+        const thumb = p.thumbnail ? ` style="background-image:url('${escapeHtml(absUrl(p.thumbnail))}')"` : '';
+        return `<div class="post-row">
+          <div class="post-thumb"${thumb}></div>
+          <div>
+            <h2><button type="button" data-edit="${p.slug}">${escapeHtml(p.title)}</button></h2>
+            <div class="post-sub">${badge}<span>${formatDate(p.date)}</span><span>/blog/${p.slug}</span></div>
+          </div>
+          <div class="post-actions">
+            ${!p.draft ? `<a class="btn btn-small" href="/blog/${p.slug}" target="_blank" rel="noopener">보기</a>` : ''}
+            <button class="btn btn-small" type="button" data-edit="${p.slug}">수정</button>
+          </div>
+        </div>`;
+      }).join('');
+    } catch (e) {
+      list.innerHTML = `<div class="empty">${escapeHtml(e.message)}</div>`;
+    }
+  }
+
+  $('postList').addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-edit]');
+    if (btn) openEditor(btn.dataset.edit);
+  });
+  $('newPostBtn').addEventListener('click', () => openEditor(null));
+  $('backBtn').addEventListener('click', () => {
+    if (dirty && !confirm('저장하지 않은 내용이 있습니다. 나갈까요?')) return;
+    dirty = false;
+    openList();
+  });
+
+  // ═══════ 에디터 ═══════
+  let editor = null;
+  let originalSlug = '';
+  let dirty = false;
+  let pending = new Map();   // blob:URL → { blob, ext }  (저장 전 사진)
+  let thumbValue = '';       // 저장된 대표이미지 경로 또는 blob:URL
+
+  window.addEventListener('beforeunload', (e) => {
+    if (dirty) { e.preventDefault(); e.returnValue = ''; }
+  });
+
+  // 사진 줄이기 (긴 변 1600px, webp → 안 되면 jpg)
+  async function shrinkImage(file) {
+    if (file.type === 'image/gif') return { blob: file, ext: 'gif' };
+    let bitmap;
+    try {
+      bitmap = await createImageBitmap(file);
+    } catch (e) {
+      throw new Error('이 사진 형식은 열 수 없어요. JPG나 PNG로 바꿔서 올려주세요');
+    }
+    const scale = Math.min(1, MAX_SIDE / Math.max(bitmap.width, bitmap.height));
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(bitmap.width * scale);
+    canvas.height = Math.round(bitmap.height * scale);
+    canvas.getContext('2d').drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    const toBlob = (type, q) => new Promise(r => canvas.toBlob(r, type, q));
+    let blob = await toBlob('image/webp', 0.82);
+    if (blob && blob.type === 'image/webp') return { blob, ext: 'webp' };
+    blob = await toBlob('image/jpeg', 0.85);
+    return { blob, ext: 'jpg' };
+  }
+
+  async function addPendingImage(file) {
+    const img = await shrinkImage(file);
+    const url = URL.createObjectURL(img.blob);
+    pending.set(url, img);
+    return url;
+  }
+
+  function createEditor() {
+    const ctaBtn = document.createElement('button');
+    ctaBtn.type = 'button';
+    ctaBtn.className = 'toastui-editor-toolbar-icons cta-tool';
+    ctaBtn.textContent = '버튼';
+    ctaBtn.addEventListener('click', openCtaModal);
+
+    editor = new toastui.Editor({
+      el: $('editor'),
+      height: 'calc(100vh - 260px)',
+      minHeight: '420px',
+      initialEditType: 'wysiwyg',
+      previewStyle: window.innerWidth > 900 ? 'vertical' : 'tab',
+      language: 'ko-KR',
+      usageStatistics: false,
+      placeholder: '내용을 입력하세요',
+      hideModeSwitch: true,
+      toolbarItems: [
+        ['heading', 'bold', 'italic', 'strike'],
+        ['hr', 'quote'],
+        ['ul', 'ol'],
+        ['table', 'image', 'link'],
+        [{ name: 'cta', tooltip: '버튼 넣기', el: ctaBtn }],
+      ],
+      hooks: {
+        addImageBlobHook: async (blob, callback) => {
+          try {
+            const url = await addPendingImage(blob);
+            callback(url, (blob.name || '').replace(/\.[^.]+$/, '') || '사진');
+          } catch (e) {
+            toast(e.message, true);
+          }
+        },
+      },
+      events: { change: () => { dirty = true; } },
+    });
+  }
+
+  // 버튼 넣기
+  function openCtaModal() {
+    $('ctaModal').hidden = false;
+    $('ctaLabel').focus();
+    $('ctaLabel').select();
+  }
+  const closeCtaModal = () => { $('ctaModal').hidden = true; editor.focus(); };
+  $('ctaCancel').addEventListener('click', closeCtaModal);
+  $('ctaModal').addEventListener('click', (e) => { if (e.target === $('ctaModal')) closeCtaModal(); });
+  $('ctaInsert').addEventListener('click', () => {
+    const label = $('ctaLabel').value.trim().replace(/[\[\]]/g, '');
+    let url = $('ctaUrl').value.trim();
+    if (!label || !url) return toast('버튼 글자와 주소를 입력해주세요', true);
+    if (!/^(https?:\/\/|\/)/.test(url)) url = 'https://' + url;
+    url = url.replace(/[()\s]/g, encodeURIComponent);
+    $('ctaModal').hidden = true;
+    // 링크만 있는 한 줄 = 사이트에서 버튼
+    const wasWysiwyg = editor.isWysiwygMode();
+    if (wasWysiwyg) editor.changeMode('markdown', true);
+    editor.insertText(`\n\n[${label}](${url})\n\n`);
+    if (wasWysiwyg) editor.changeMode('wysiwyg', true);
+    dirty = true;
+    editor.focus();
+    toast('버튼을 넣었어요. 사이트에서는 빨간 버튼으로 보입니다');
+  });
+
+  // 대표 이미지
+  function renderThumb() {
+    const box = $('thumbPreview');
+    const url = thumbValue && (thumbValue.startsWith('blob:') ? thumbValue : absUrl(thumbValue));
+    box.style.backgroundImage = url ? `url("${url}")` : '';
+    box.classList.toggle('has-image', !!url);
+    $('thumbClear').hidden = !url;
+  }
+  $('thumbPick').addEventListener('click', () => $('thumbFile').click());
+  $('thumbFile').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    e.target.value = '';
+    if (!file) return;
+    try {
+      thumbValue = await addPendingImage(file);
+      dirty = true;
+      renderThumb();
+    } catch (err) {
+      toast(err.message, true);
+    }
+  });
+  $('thumbClear').addEventListener('click', () => { thumbValue = ''; dirty = true; renderThumb(); });
+
+  $('fDesc').addEventListener('input', () => { $('descCount').textContent = `${$('fDesc').value.length}자`; });
+  ['fTitle', 'fSlug', 'fDesc', 'fDate', 'fDraft'].forEach(id => $(id).addEventListener('input', () => { dirty = true; }));
+  $('fSlug').addEventListener('input', () => {
+    const el = $('fSlug');
+    const cleaned = el.value.toLowerCase().replace(/[\s_]+/g, '-').replace(/[^a-z0-9-]/g, '');
+    if (cleaned !== el.value) el.value = cleaned;
+  });
+
+  async function openEditor(slug) {
+    if (!editor) createEditor();
+    pending.forEach((_, url) => URL.revokeObjectURL(url));
+    pending = new Map();
+    show('viewEditor');
+    $('saveBtn').disabled = true;
+    $('editorStatus').textContent = slug ? '불러오는 중…' : '새 글';
+    try {
+      let post = { slug: '', meta: { title: '', date: todayKst(), description: '', thumbnail: '', draft: false }, body: '' };
+      if (slug) post = await api(`/api/admin/posts?slug=${encodeURIComponent(slug)}`);
+      originalSlug = post.slug;
+      $('fTitle').value = post.meta.title;
+      $('fSlug').value = post.slug || `post-${todayKst().replace(/-/g, '')}-${randomId()}`;
+      $('fDesc').value = post.meta.description;
+      $('descCount').textContent = `${post.meta.description.length}자`;
+      $('fDate').value = post.meta.date || todayKst();
+      $('fDate').max = todayKst();
+      $('fDraft').checked = !!post.meta.draft;
+      thumbValue = post.meta.thumbnail || '';
+      renderThumb();
+      editor.setMarkdown(post.body || '', false);
+      $('deleteBtn').hidden = !slug;
+      $('viewLiveBtn').hidden = !slug || post.meta.draft;
+      $('viewLiveBtn').href = `/blog/${post.slug}`;
+      $('editorStatus').textContent = slug ? `/blog/${slug}` : '새 글';
+      dirty = false;
+      if (!slug) $('fTitle').focus();
+    } catch (e) {
+      toast(e.message, true);
+      openList();
+    } finally {
+      $('saveBtn').disabled = false;
+    }
+  }
+
+  const blobToBase64 = (blob) => new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(String(r.result).split(',')[1]);
+    r.onerror = reject;
+    r.readAsDataURL(blob);
+  });
+
+  $('saveBtn').addEventListener('click', async () => {
+    const title = $('fTitle').value.trim();
+    const slug = $('fSlug').value.trim();
+    const date = $('fDate').value;
+    let body = editor.getMarkdown();
+    if (!title) return toast('제목을 입력해주세요', true);
+    if (!body.trim()) return toast('본문을 입력해주세요', true);
+    if (!SLUG_RE.test(slug)) return toast('글 주소는 영어 소문자, 숫자, 하이픈(-)만 쓸 수 있어요', true);
+    if (!date) return toast('작성일을 선택해주세요', true);
+    if (date > todayKst()) return toast('작성일은 오늘 이후로 정할 수 없어요', true);
+
+    $('saveBtn').disabled = true;
+    $('saveBtn').textContent = '저장 중…';
+    try {
+      // 저장 전 사진 → images/blog/<글주소>/... 로 바꾸기
+      const images = [];
+      let thumbnail = thumbValue;
+      let n = 0;
+      for (const [url, img] of pending) {
+        const inBody = body.includes(url);
+        const isThumb = thumbnail === url;
+        if (!inBody && !isThumb) continue;
+        const path = `images/blog/${slug}/${Date.now().toString(36)}-${n++}.${img.ext}`;
+        images.push({ path, blob: img.blob });
+        if (inBody) body = body.split(url).join('/' + path);
+        if (isThumb) thumbnail = '/' + path;
+      }
+      if (!thumbnail) {
+        const first = body.match(/!\[[^\]]*\]\(([^)\s]+)/);
+        if (first) thumbnail = first[1];
+      }
+
+      // 사진이 많으면 나눠서 먼저 올리기
+      const encoded = [];
+      for (const img of images) encoded.push({ path: img.path, base64: await blobToBase64(img.blob) });
+      let batch = [];
+      let size = 0;
+      const batches = [];
+      for (const img of encoded) {
+        if (batch.length && size + img.base64.length > MAX_BATCH_BYTES) { batches.push(batch); batch = []; size = 0; }
+        batch.push(img);
+        size += img.base64.length;
+      }
+      for (const b of batches) {
+        $('saveBtn').textContent = '사진 올리는 중…';
+        await api('/api/admin/posts', { method: 'POST', body: { slug, imagesOnly: true, images: b } });
+      }
+
+      $('saveBtn').textContent = '저장 중…';
+      const meta = { title, date, description: $('fDesc').value.trim(), thumbnail, draft: $('fDraft').checked };
+      await api('/api/admin/posts', { method: 'POST', body: { originalSlug, slug, meta, body, images: batch } });
+
+      // 저장 완료: 화면도 실제 경로로 교체
+      pending.forEach((_, url) => URL.revokeObjectURL(url));
+      pending = new Map();
+      thumbValue = thumbnail;
+      renderThumb();
+      if (images.length) editor.setMarkdown(body, false);
+      originalSlug = slug;
+      dirty = false;
+      $('deleteBtn').hidden = false;
+      $('viewLiveBtn').hidden = meta.draft;
+      $('viewLiveBtn').href = `/blog/${slug}`;
+      $('editorStatus').textContent = `/blog/${slug}`;
+      toast(meta.draft
+        ? '임시저장했습니다 (사이트에는 공개되지 않아요)'
+        : '저장했습니다! 1~2분 뒤 사이트에 반영되고 네이버에도 자동으로 알려집니다', false, 6000);
+    } catch (e) {
+      toast(e.message, true, 6000);
+    } finally {
+      $('saveBtn').disabled = false;
+      $('saveBtn').textContent = '저장하기';
+    }
+  });
+
+  $('deleteBtn').addEventListener('click', async () => {
+    if (!originalSlug) return;
+    if (!confirm(`"${$('fTitle').value}" 글을 삭제할까요?\n삭제하면 되돌릴 수 없습니다.`)) return;
+    $('deleteBtn').disabled = true;
+    try {
+      await api(`/api/admin/posts?slug=${encodeURIComponent(originalSlug)}`, { method: 'DELETE' });
+      dirty = false;
+      toast('삭제했습니다. 1~2분 뒤 사이트에서도 사라집니다');
+      openList();
+    } catch (e) {
+      toast(e.message, true);
+    } finally {
+      $('deleteBtn').disabled = false;
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 's' && !$('viewEditor').hidden) {
+      e.preventDefault();
+      $('saveBtn').click();
+    }
+    if (e.key === 'Escape' && !$('ctaModal').hidden) closeCtaModal();
+  });
+
+  boot();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+{
+  "name": "weddingscoop",
+  "private": true,
+  "dependencies": {
+    "marked": "18.0.14"
+  }
+}

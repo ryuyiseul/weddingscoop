@@ -6,7 +6,8 @@
 weddingscoop/
 ├── index.html      ← 메인 페이지 (건드릴 일 없음)
 ├── expos.json      ← 박람회 데이터 (이것만 수정)
-├── posts/          ← 블로그 글 (.md 파일)
+├── posts/          ← 블로그 글 (.md 파일) — 어드민에서 쓰면 자동 저장
+├── images/blog/    ← 어드민에서 올린 사진 (자동)
 ├── scripts/        ← 블로그 페이지 만드는 스크립트 (건드릴 일 없음)
 └── vercel.json     ← Vercel 설정 (건드릴 일 없음)
 ```
@@ -50,6 +51,30 @@ weddingscoop/
 - JSON 파일은 쉼표 위치가 민감합니다. 마지막 항목 뒤에는 쉼표를 붙이지 않습니다.
 - 한 박람회를 삭제/수정할 때는 해당 덩어리 전체를 지우거나 수정하세요.
 - `region` 값이 새로 추가되면 필터 버튼이 자동으로 만들어집니다.
+
+---
+
+## 🔐 어드민(관리자) 페이지
+
+주소: `weddingscoop.co.kr/admin/<ADMIN_URL_KEY 값>` — 사이트 어디에도 링크가 없고, 열쇠 값이 틀리면 404가 뜹니다.
+
+글쓰기 화면에서 제목·본문을 쓰고, 사진을 끌어다 놓고, `버튼` 도구로 빨간 버튼을 넣은 뒤 **저장하기**를 누르면 끝입니다.
+저장하면 GitHub에 자동 저장 → 1~2분 뒤 사이트 반영 → 네이버 자동 알림까지 이어집니다.
+
+### 최초 1회 설정 (Vercel 환경변수 3개)
+
+Vercel → 프로젝트 → `Settings` → `Environment Variables` 에 추가 후, `Deployments` → 최신 배포 `⋯` → `Redeploy`
+
+| 이름 | 값 |
+|------|------|
+| `ADMIN_PASSWORD` | 어드민 로그인 비밀번호 (12자 이상 추천) |
+| `ADMIN_URL_KEY` | 어드민 주소 열쇠 (아무도 못 맞힐 긴 영문+숫자) |
+| `GITHUB_TOKEN` | 아래에서 만든 GitHub 토큰 |
+
+**GitHub 토큰 만들기**: github.com → 오른쪽 위 프로필 → `Settings` → 맨 아래 `Developer settings` → `Personal access tokens` → `Fine-grained tokens` → `Generate new token`
+- Repository access: `Only select repositories` → `weddingscoop`
+- Permissions → Repository permissions → `Contents`: **Read and write**
+- 만료일이 지나면 저장이 안 되니, 만료 전에 새 토큰으로 바꿔주세요
 
 ---
 
