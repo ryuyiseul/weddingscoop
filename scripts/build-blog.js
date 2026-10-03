@@ -33,24 +33,52 @@ let marked; // ESM 패키지라 build()에서 import
 function setupMarked(m) {
   const external = (href) => /^https?:\/\//.test(href) && !href.startsWith(SITE);
   const linkAttrs = (href) => (external(href) ? ' target="_blank" rel="noopener"' : '');
+  // 한 줄 렌더링: 버튼 / 캡션 / 일반 문단
+  function renderLine(parser, line) {
+    const meaningful = line.filter(t => !(t.type === 'text' && !t.raw.trim()));
+    if (meaningful.length === 1 && meaningful[0].type === 'link') {
+      const link = meaningful[0];
+      const label = parser.parseInline(link.tokens).replace(/\s*(&gt;&gt;|»|→|▶)\s*$/, '');
+      return `<p class="post-btn-wrap"><a class="post-btn" href="${escapeHtml(link.href)}"${linkAttrs(link.href)}>${label}<span class="post-btn-arrow" aria-hidden="true">▶</span></a></p>\n`;
+    }
+    const html = parser.parseInline(line).trim();
+    if (/^▲/.test(line.map(t => t.raw).join('').trim())) return `<p class="img-caption">${html}</p>\n`;
+    return `<p>${html}</p>\n`;
+  }
+
   m.use({
     gfm: true,
     breaks: true, // 엔터 한 번 = 줄바꿈
     renderer: {
+      // 콜아웃: 인용(>) 첫 글자가 💡 ⚠️ ✅ 📌 이면 노션 같은 박스
+      blockquote({ tokens }) {
+        const inner = this.parser.parse(tokens);
+        const m = inner.match(/^<p>(💡|⚠️|✅|📌)\s*/);
+        if (m) {
+          const kind = CALLOUTS[m[1]];
+          return `<div class="callout callout-${kind}"><span class="callout-icon" aria-hidden="true">${m[1]}</span><div class="callout-body">${inner.replace(m[0], '<p>')}</div></div>\n`;
+        }
+        return `<blockquote>\n${inner}</blockquote>\n`;
+      },
       // # → h2 (h1은 글 제목 하나만)
       heading({ tokens, depth }) {
         const level = Math.min(depth + 1, 6);
         return `<h${level}>${this.parser.parseInline(tokens)}</h${level}>\n`;
       },
       // 링크만 단독으로 있는 줄 → 버튼  예) [전국 웨딩박람회 일정 보러가기](/#campaigns)
+      // 편집기에서 엔터 한 번 = 한 줄 = 문단 하나. 줄마다 따로 처리
+      //  - 링크만 있는 줄 → 버튼   예) [전국 웨딩박람회 일정 보러가기](/#campaigns)
+      //  - ▲ 로 시작하는 줄 → 사진 캡션
       paragraph({ tokens }) {
-        const meaningful = tokens.filter(t => !(t.type === 'text' && !t.raw.trim()) && t.type !== 'br');
-        if (meaningful.length === 1 && meaningful[0].type === 'link') {
-          const link = meaningful[0];
-          const label = this.parser.parseInline(link.tokens).replace(/\s*(&gt;&gt;|»|→|▶)\s*$/, '');
-          return `<p class="post-btn-wrap"><a class="post-btn" href="${escapeHtml(link.href)}"${linkAttrs(link.href)}>${label}<span class="post-btn-arrow" aria-hidden="true">▶</span></a></p>\n`;
+        const lines = [[]];
+        for (const t of tokens) {
+          if (t.type === 'br' || (t.type === 'html' && /^<br\s*\/?>$/i.test(t.raw.trim()))) lines.push([]);
+          else lines[lines.length - 1].push(t);
         }
-        return `<p>${this.parser.parseInline(tokens)}</p>\n`;
+        return lines
+          .filter(line => line.some(t => !(t.type === 'text' && !t.raw.trim())))
+          .map(line => renderLine(this.parser, line))
+          .join('');
       },
       link({ href, title, tokens }) {
         return `<a href="${escapeHtml(href)}"${title ? ` title="${escapeHtml(title)}"` : ''}${linkAttrs(href)}>${this.parser.parseInline(tokens)}</a>`;
@@ -62,13 +90,15 @@ function setupMarked(m) {
   });
 }
 
+const CALLOUTS = { '💡': 'tip', '⚠️': 'warn', '✅': 'check', '📌': 'info' };
+
 const markdownToHtml = (md) => marked.parse(md);
 
 // /images/... 같은 사이트 내부 경로 → https://weddingscoop.co.kr/images/... (카톡·네이버 미리보기용)
 const absUrl = (u) => (u && u.startsWith('/') ? SITE + u : u);
 
 // ═══════ 공통 레이아웃 ═══════
-function layout({ title, description, url, image, type, jsonLd, body }) {
+function layout({ title, description, url, image, type, jsonLd, body, keywords }) {
   return `<!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -83,7 +113,7 @@ function layout({ title, description, url, image, type, jsonLd, body }) {
   gtag('config', 'G-S1VEDRPBH2', { 'send_page_view': true, 'anonymize_ip': true });
 </script>
 <title>${escapeHtml(title)}</title>
-<meta name="description" content="${escapeHtml(description)}" />
+<meta name="description" content="${escapeHtml(description)}" />${keywords ? `\n<meta name="keywords" content="${escapeHtml(keywords)}" />` : ''}
 <meta name="robots" content="index, follow, max-image-preview:large" />
 <link rel="canonical" href="${url}" />
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0a0a'/%3E%3Ctext x='16' y='23' font-family='Georgia, serif' font-size='22' font-weight='900' text-anchor='middle' fill='%23fefdfa'%3EW%3C/text%3E%3Ccircle cx='24' cy='9' r='3' fill='%23b8232f'/%3E%3C/svg%3E" />
@@ -182,8 +212,19 @@ ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script
   .post-body strong { color: var(--ink); }
   .post-body img { max-width: 100%; height: auto; border-radius: 6px; display: block; }
   .post-body blockquote { border-left: 3px solid var(--red); background: var(--paper-soft); padding: 14px 18px; color: var(--muted-dark); }
+  .post-body .img-caption { margin-top: 0.5em; text-align: center; font-size: 13.5px; line-height: 1.6; color: var(--muted); }
+  .post-body .img-caption a { color: inherit; }
+  .post-body p:has(> img:only-child) + .img-caption { margin-top: 0.5em; }
+  .callout { display: flex; gap: 12px; padding: 16px 18px; border-radius: 10px; border: 1px solid transparent; }
+  .callout-icon { font-size: 20px; line-height: 1.6; flex-shrink: 0; }
+  .callout-body { flex: 1; min-width: 0; }
+  .callout-body > * + * { margin-top: 0.6em; }
+  .callout-tip { background: #fdf6e3; border-color: #f3e3b5; }
+  .callout-warn { background: #fdecec; border-color: #f5c9cc; }
+  .callout-check { background: #e9f6ee; border-color: #c4e6d1; }
+  .callout-info { background: #eef3fb; border-color: #cddcf2; }
   .post-body hr { border: none; border-top: 1px solid var(--line); margin: 2.2em 0; }
-  .post-body table { width: 100%; border-collapse: collapse; font-size: 15px; display: block; overflow-x: auto; }
+  .post-body table { width: 100%; border-collapse: collapse; font-size: 15px; }
   .post-body th, .post-body td { border: 1px solid var(--line); padding: 10px 12px; text-align: left; vertical-align: top; }
   .post-body th { background: var(--paper-soft); color: var(--ink); font-weight: 700; }
   .post-body del { color: var(--muted); }
@@ -201,6 +242,16 @@ ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script
     font-weight: 700; font-size: 15px; border-radius: 8px; text-decoration: none;
   }
   .cta a:hover { background: var(--red-deep); }
+  /* 심장 뛰는 효과 (두 번 쿵쿵 → 쉬기) */
+  .cta a { animation: heartbeat 1.6s ease-in-out infinite; transform-origin: center; will-change: transform; }
+  .cta a:hover { animation-play-state: paused; }
+  @keyframes heartbeat {
+    0%, 40%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(184, 35, 47, 0.55); }
+    10% { transform: scale(1.08); }
+    20% { transform: scale(1); }
+    30% { transform: scale(1.08); box-shadow: 0 0 0 10px rgba(184, 35, 47, 0); }
+  }
+  @media (prefers-reduced-motion: reduce) { .cta a { animation: none; } }
 
   footer {
     background: var(--ink); color: rgba(255,255,255,0.55); padding: 28px 40px; font-family: 'Inter', sans-serif;
@@ -217,6 +268,7 @@ ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script
     .post-item h2 { font-size: 17px; }
     .post-item p { font-size: 13.5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     .post-body { font-size: 16px; }
+    .post-body table { display: block; overflow-x: auto; font-size: 14px; }
     .post-body a.post-btn { display: flex; min-width: 0; width: 100%; padding: 15px 18px; font-size: 15px; }
     footer { padding: 24px 16px; }
   }
@@ -264,6 +316,8 @@ function loadPosts() {
       return {
         slug,
         title: meta.title,
+        seoTitle: meta.seoTitle || '',
+        keyword: meta.keyword || '',
         date: meta.date,
         description: meta.description || '',
         thumbnail: meta.thumbnail || '',
@@ -301,7 +355,8 @@ ${p.html}
 </article>
 ${ctaBlock}`;
     fs.writeFileSync(path.join(OUT_DIR, `${p.slug}.html`), layout({
-      title: `${p.title} | Wedding&Scoop`,
+      title: `${p.seoTitle || p.title} | Wedding&Scoop`,
+      keywords: p.keyword,
       description: p.description || p.title,
       url,
       image: absUrl(p.thumbnail) || DEFAULT_IMAGE,
@@ -310,6 +365,7 @@ ${ctaBlock}`;
         '@context': 'https://schema.org',
         '@type': 'BlogPosting',
         headline: p.title,
+        ...(p.keyword ? { keywords: p.keyword } : {}),
         description: p.description || p.title,
         datePublished: p.date,
         image: absUrl(p.thumbnail) || DEFAULT_IMAGE,

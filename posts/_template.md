@@ -17,6 +17,8 @@ draft: true
 
 [전국 웨딩박람회 일정 보러가기](https://weddingscoop.co.kr/#campaigns)
 
+> 💡 이렇게 쓰면 색깔 강조 박스(콜아웃)가 됩니다
+
 ## 작은 소제목
 
 - 점 목록 1

@@ -18,14 +18,16 @@
     --red: #b8232f; --red-deep: #8a1a24; --line: #ece9e0; --muted: #8a8680; --muted-dark: #5a5752;
     --green: #1f7a4d; --amber: #9a6200;
   }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  *, *::before, *::after { box-sizing: border-box; }
+  /* 기본 여백 초기화 — 편집기 안쪽은 건드리지 않음 */
+  :where(body, h1, h2, h3, h4, p, form, ul, ol, figure):not(.toastui-editor-defaultUI *) { margin: 0; padding: 0; }
   html, body { background: var(--paper-soft); }
   body {
     color: var(--ink); min-height: 100vh;
     font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
     -webkit-font-smoothing: antialiased; word-break: keep-all;
   }
-  button, input, textarea, select { font: inherit; color: inherit; }
+  :where(button, input, textarea, select):not(.toastui-editor-defaultUI *) { font: inherit; color: inherit; }
   a { color: inherit; }
   [hidden] { display: none !important; }
 
@@ -49,6 +51,7 @@
   .bar-link:hover { border-color: var(--paper); }
 
   .wrap { max-width: 1040px; margin: 0 auto; padding: 32px 24px 80px; }
+  #viewEditor.wrap { max-width: 1280px; }
 
   /* 버튼 */
   .btn {
@@ -78,7 +81,7 @@
   .center-card p { margin-top: 8px; color: var(--muted-dark); font-size: 14px; line-height: 1.6; }
   .center-card form { margin-top: 28px; display: grid; gap: 12px; }
   .center-card.wide { max-width: 560px; text-align: left; }
-  .center-card code { background: var(--paper-soft); padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+  code { background: var(--paper-soft); padding: 2px 6px; border-radius: 4px; font-size: 13px; }
 
   .input {
     width: 100%; padding: 12px 14px; border: 1.5px solid var(--line); border-radius: 8px; background: #fff;
@@ -99,53 +102,86 @@
   .post-row:first-child { border-top: none; }
   .post-thumb { width: 72px; height: 54px; border-radius: 6px; background: var(--paper-soft) center / cover no-repeat; border: 1px solid var(--line); }
   .post-row h2 { font-size: 16px; font-weight: 700; line-height: 1.4; letter-spacing: -0.02em; }
-  .post-row h2 button { background: none; border: none; text-align: left; cursor: pointer; font-weight: inherit; }
+  .post-row h2 button { background: none; border: none; padding: 0; text-align: left; cursor: pointer; font-weight: inherit; }
   .post-row h2 button:hover { color: var(--red); }
   .post-sub { margin-top: 4px; display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--muted); flex-wrap: wrap; }
   .badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
   .badge-live { background: #e6f4ec; color: var(--green); }
   .badge-draft { background: #f1efe9; color: var(--muted-dark); }
   .badge-scheduled { background: #fdf3e1; color: var(--amber); }
+  .seo-dot { display: inline-flex; align-items: center; gap: 4px; }
+  .seo-dot::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
   .post-actions { display: flex; gap: 6px; }
   .empty { padding: 60px 20px; text-align: center; color: var(--muted); }
 
   /* 에디터 */
   .editor-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-  .editor-grid { margin-top: 20px; display: grid; grid-template-columns: 1fr 300px; gap: 20px; align-items: start; }
+  .editor-grid { margin-top: 20px; display: grid; grid-template-columns: 1fr 330px; gap: 20px; align-items: start; }
   .editor-grid > * { min-width: 0; }
-  #viewEditor.wrap { max-width: 1240px; }
   .title-input {
     width: 100%; padding: 14px 4px; border: none; border-bottom: 2px solid var(--ink); background: transparent;
     font-size: 28px; font-weight: 800; letter-spacing: -0.03em; outline: none;
   }
   .title-input::placeholder { color: #c9c5bb; }
-  #editor { margin-top: 16px; background: #fff; }
-  .editor-tip { margin-top: 8px; font-size: 12.5px; color: var(--muted); line-height: 1.6; }
-  .panel { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 20px; position: sticky; top: 76px; }
-  .field + .field { margin-top: 18px; }
-  .field label.lbl { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+  .editor-box { position: relative; margin-top: 16px; }
+  #editor { background: #fff; }
+  .editor-tip { margin-top: 8px; font-size: 12.5px; color: var(--muted); line-height: 1.7; }
+
+  /* 표 편집 바 (표 안에 커서가 있을 때) */
+  .table-bar {
+    position: sticky; top: 64px; z-index: 20; display: flex; flex-wrap: wrap; align-items: center; gap: 4px;
+    padding: 8px 10px; margin-bottom: 6px; background: var(--ink); color: #fff; border-radius: 8px;
+    box-shadow: 0 8px 20px -10px rgba(0,0,0,0.5);
+  }
+  .table-bar span { font-size: 12px; font-weight: 700; margin-right: 6px; opacity: 0.8; }
+  .table-bar button {
+    padding: 5px 9px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.25); background: transparent;
+    color: #fff; font-size: 12.5px; cursor: pointer;
+  }
+  .table-bar button:hover { border-color: #fff; }
+  .table-bar button.danger { border-color: var(--red); background: var(--red); }
+
+  /* 오른쪽 패널 */
+  .side { display: grid; gap: 14px; position: sticky; top: 76px; max-height: calc(100vh - 92px); overflow-y: auto; padding-bottom: 4px; }
+  .panel { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 18px; }
+  .panel-title { font-size: 13px; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+  .field + .field { margin-top: 14px; }
+  .field label.lbl { display: block; font-size: 12.5px; font-weight: 700; margin-bottom: 6px; }
   .field .help { margin-top: 5px; font-size: 12px; color: var(--muted); line-height: 1.5; }
-  .field textarea.input { resize: vertical; min-height: 84px; line-height: 1.5; font-size: 14px; }
-  .field .input { font-size: 14px; padding: 10px 12px; }
-  .slug-box { display: flex; align-items: center; border: 1.5px solid var(--line); border-radius: 8px; background: #fff; overflow: hidden; }
-  .slug-box:focus-within { border-color: var(--ink); }
-  .slug-box span { padding: 10px 0 10px 10px; font-size: 12.5px; color: var(--muted); white-space: nowrap; }
-  .slug-box input { flex: 1; min-width: 0; border: none; outline: none; padding: 10px 10px 10px 2px; font-size: 14px; background: transparent; }
+  .field textarea.input { resize: vertical; min-height: 76px; line-height: 1.5; font-size: 14px; }
+  .field .input { font-size: 14px; padding: 9px 11px; }
+  .addr { font-size: 14px; font-weight: 700; word-break: break-all; }
+  .addr small { display: block; margin-top: 3px; font-size: 12px; font-weight: 400; color: var(--muted); }
   .thumb-preview {
-    margin-top: 8px; aspect-ratio: 1200 / 630; border-radius: 8px; border: 1px dashed #d8d4ca;
+    aspect-ratio: 1200 / 630; border-radius: 8px; border: 1px dashed #d8d4ca;
     background: var(--paper-soft) center / cover no-repeat; display: flex; align-items: center; justify-content: center;
     font-size: 12px; color: var(--muted); text-align: center; padding: 8px;
   }
   .thumb-preview.has-image { border-style: solid; color: transparent; }
-  .thumb-actions { margin-top: 8px; display: flex; gap: 6px; }
+  .row-actions { margin-top: 8px; display: flex; gap: 6px; flex-wrap: wrap; }
   .check { display: flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; }
   .check input { width: 18px; height: 18px; accent-color: var(--red); }
-  .panel-actions { margin-top: 22px; display: grid; gap: 8px; }
+  .panel-actions { margin-top: 16px; display: grid; gap: 8px; }
   .counter { float: right; font-weight: 400; color: var(--muted); font-size: 12px; }
+  .counter.warn { color: var(--amber); }
+
+  /* SEO */
+  .seo-score { font-size: 12px; font-weight: 800; padding: 3px 9px; border-radius: 999px; }
+  .seo-good { background: #e6f4ec; color: var(--green); }
+  .seo-ok { background: #fdf3e1; color: var(--amber); }
+  .seo-bad { background: #fdecec; color: var(--red); }
+  .serp { margin-top: 4px; padding: 12px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+  .serp-url { font-size: 12px; color: #1a7f37; }
+  .serp-title { margin-top: 2px; font-size: 16px; color: #1a0dab; line-height: 1.35; font-weight: 600; word-break: break-all; }
+  .serp-desc { margin-top: 4px; font-size: 12.5px; color: #4d5156; line-height: 1.5; }
+  .seo-list { list-style: none; margin-top: 12px; display: grid; gap: 7px; }
+  .seo-list li { display: grid; grid-template-columns: 18px 1fr; gap: 6px; font-size: 12.5px; line-height: 1.45; color: var(--ink-soft); }
+  .seo-list li small { display: block; color: var(--muted); }
+  .seo-list .i { font-size: 13px; }
 
   /* 알림 */
   .toast {
-    position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%) translateY(20px); z-index: 100;
+    position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%) translateY(20px); z-index: 200;
     max-width: calc(100% - 32px); padding: 14px 20px; border-radius: 10px; background: var(--ink); color: #fff;
     font-size: 14px; line-height: 1.5; box-shadow: 0 12px 30px -10px rgba(0,0,0,0.4);
     opacity: 0; pointer-events: none; transition: opacity 0.2s, transform 0.2s;
@@ -155,24 +191,57 @@
 
   /* 모달 */
   .modal { position: fixed; inset: 0; z-index: 90; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(10,10,10,0.45); }
-  .modal-box { width: 100%; max-width: 440px; background: var(--paper); border-radius: 14px; padding: 24px; }
+  .modal-box { width: 100%; max-width: 460px; max-height: calc(100vh - 32px); overflow-y: auto; background: var(--paper); border-radius: 14px; padding: 24px; }
+  .modal-box.wide { max-width: 920px; }
   .modal-box h3 { font-size: 18px; font-weight: 800; }
-  .modal-box p { margin-top: 6px; font-size: 13px; color: var(--muted-dark); line-height: 1.6; }
-  .modal-box .field { margin-top: 16px; }
-  .modal-actions { margin-top: 20px; display: flex; justify-content: flex-end; gap: 8px; }
+  .modal-box > p { margin-top: 6px; font-size: 13px; color: var(--muted-dark); line-height: 1.6; }
+  .modal-box .field { margin-top: 14px; }
+  .modal-actions { margin-top: 20px; display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
+  .img-preview { margin-top: 14px; max-height: 220px; border-radius: 8px; background: var(--paper-soft) center / contain no-repeat; aspect-ratio: 16 / 9; border: 1px solid var(--line); }
 
-  /* 에디터 안 '버튼' 툴바 아이콘 */
-  .toastui-editor-toolbar-icons.cta-tool {
-    background: none; width: auto; padding: 0 8px; margin: 7px 4px; font-size: 12px; font-weight: 800;
-    color: #fff; background: var(--red); border-radius: 4px; height: 22px; line-height: 22px;
+  .callout-types { margin-top: 14px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .callout-types button {
+    padding: 10px 4px; border-radius: 8px; border: 1.5px solid var(--line); background: #fff; cursor: pointer;
+    font-size: 13px; font-weight: 700; display: grid; gap: 2px; justify-items: center;
   }
-  .toastui-editor-toolbar-icons.cta-tool:not(:disabled):hover { background: var(--red-deep); }
-  .toastui-editor-contents { font-family: 'Pretendard Variable', 'Pretendard', sans-serif; font-size: 16px; }
-  .toastui-editor-contents img { max-width: 100%; }
+  .callout-types button span { font-size: 20px; }
+  .callout-types button[aria-pressed="true"] { border-color: var(--ink); background: var(--paper-soft); }
 
-  @media (max-width: 860px) {
+  /* 무료 사진 검색 */
+  .us-search { margin-top: 14px; display: flex; gap: 8px; }
+  .us-tags { margin-top: 8px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .us-tags button { padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); background: #fff; font-size: 12.5px; cursor: pointer; }
+  .us-tags button:hover { border-color: var(--ink); }
+  .us-grid { margin-top: 14px; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+  .us-item { position: relative; aspect-ratio: 4 / 3; border-radius: 8px; overflow: hidden; border: 2px solid transparent; cursor: pointer; padding: 0; background: var(--paper-soft); }
+  .us-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .us-item span { position: absolute; left: 0; right: 0; bottom: 0; padding: 14px 6px 4px; font-size: 10.5px; color: #fff; background: linear-gradient(transparent, rgba(0,0,0,0.6)); text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .us-item[aria-pressed="true"] { border-color: var(--red); }
+  .us-status { margin-top: 14px; font-size: 13px; color: var(--muted-dark); text-align: center; }
+  .us-pick { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line); display: grid; grid-template-columns: 200px 1fr; gap: 16px; }
+  .us-pick img { width: 100%; border-radius: 8px; display: block; }
+  .us-credit { font-size: 12px; color: var(--muted); margin-top: 6px; }
+
+  /* 편집기 안 커스텀 */
+  .toastui-editor-toolbar-icons.txt-tool {
+    background: none; width: auto; padding: 0 8px; margin: 7px 3px; font-size: 12px; font-weight: 800;
+    border-radius: 4px; height: 22px; line-height: 22px; color: var(--ink); border: 1px solid #d9d6cf;
+  }
+  .toastui-editor-toolbar-icons.txt-tool:not(:disabled):hover { background: var(--paper-soft); border-color: var(--ink); }
+  .toastui-editor-toolbar-icons.txt-tool.cta-tool { color: #fff; background: var(--red); border-color: var(--red); }
+  .toastui-editor-toolbar-icons.txt-tool.cta-tool:not(:disabled):hover { background: var(--red-deep); }
+  .toastui-editor-contents { font-family: 'Pretendard Variable', 'Pretendard', sans-serif; font-size: 16px; }
+  .toastui-editor-contents img { max-width: 100%; cursor: pointer; }
+  .toastui-editor-contents img:hover { outline: 3px solid rgba(184, 35, 47, 0.35); }
+  .toastui-editor-contents table { width: 100%; table-layout: fixed; }
+  .toastui-editor-contents table th, .toastui-editor-contents table th p { background: var(--paper-soft); color: var(--ink) !important; font-weight: 700; }
+  .toastui-editor-contents table td, .toastui-editor-contents table th { min-width: 60px; height: 34px; }
+  .toastui-editor-contents blockquote { background: var(--paper-soft); border-left-color: var(--red); padding: 10px 16px; border-radius: 0 8px 8px 0; }
+  .toastui-editor-contents blockquote p { color: var(--ink-soft); }
+
+  @media (max-width: 960px) {
     .editor-grid { grid-template-columns: 1fr; }
-    .panel { position: static; }
+    .side { position: static; max-height: none; overflow: visible; }
   }
   @media (max-width: 600px) {
     .bar { padding: 10px 14px; }
@@ -182,6 +251,9 @@
     .post-thumb { width: 56px; height: 44px; }
     .post-actions { grid-column: 1 / -1; justify-content: flex-end; }
     .title-input { font-size: 22px; }
+    .table-bar { top: 56px; }
+    .us-pick { grid-template-columns: 1fr; }
+    .callout-types { grid-template-columns: repeat(2, 1fr); }
   }
 </style>
 </head>
@@ -238,52 +310,136 @@
   <div class="editor-grid">
     <section>
       <input class="title-input" id="fTitle" placeholder="제목을 입력하세요" maxlength="120" />
-      <div id="editor"></div>
+      <div class="editor-box">
+        <div class="table-bar" id="tableBar" hidden>
+          <span>표 편집</span>
+          <button type="button" data-cmd="addRowToUp">위에 줄 추가</button>
+          <button type="button" data-cmd="addRowToDown">아래에 줄 추가</button>
+          <button type="button" data-cmd="addColumnToLeft">왼쪽에 칸 추가</button>
+          <button type="button" data-cmd="addColumnToRight">오른쪽에 칸 추가</button>
+          <button type="button" data-cmd="removeRow">줄 삭제</button>
+          <button type="button" data-cmd="removeColumn">칸 삭제</button>
+          <button type="button" data-cmd="removeTable" class="danger">표 전체 삭제</button>
+        </div>
+        <div id="editor"></div>
+      </div>
       <p class="editor-tip">
-        💡 사진은 툴바의 사진 아이콘을 누르거나, 끌어다 놓거나, 복사해서 붙여넣으면 됩니다.<br />
-        💡 빨간 <strong>버튼</strong> 아이콘을 누르면 "전국 웨딩박람회 일정 보러가기" 같은 버튼을 넣을 수 있어요. (편집 화면에선 링크로 보이지만, 사이트에선 빨간 버튼으로 나와요)
+        💡 <strong>사진</strong>: 사진 아이콘, 끌어다 놓기, 붙여넣기 모두 가능 · 넣은 사진을 클릭하면 설명(대체 텍스트)·캡션을 고칠 수 있어요<br />
+        💡 <strong>무료사진</strong>: 언스플래시에서 검색해서 바로 넣기 · <strong>콜아웃</strong>: 💡⚠️✅📌 강조 박스 · <strong>버튼</strong>: 빨간 버튼<br />
+        💡 <strong>표</strong>: 표 안을 누르면 위에 표 편집 메뉴가 나와요 (칸 이동은 Tab 키)
       </p>
     </section>
-    <aside class="panel">
-      <div class="field">
-        <label class="lbl" for="fSlug">글 주소</label>
-        <div class="slug-box"><span>/blog/</span><input id="fSlug" maxlength="80" spellcheck="false" autocapitalize="off" /></div>
-        <p class="help">영어 소문자·숫자·하이픈(-)만 가능. 예: seoul-wedding-expo-tips</p>
+    <aside class="side">
+      <div class="panel">
+        <div class="panel-title">발행</div>
+        <div class="field">
+          <label class="lbl">글 주소</label>
+          <div class="addr" id="addrText"></div>
+        </div>
+        <div class="field">
+          <label class="lbl" for="fDate">작성일</label>
+          <input class="input" type="date" id="fDate" />
+        </div>
+        <div class="field">
+          <label class="check"><input type="checkbox" id="fDraft" /> 임시저장 (사이트에 공개 안 함)</label>
+        </div>
+        <div class="panel-actions">
+          <button class="btn btn-primary" type="button" id="saveBtn">저장하기</button>
+          <a class="btn btn-small" id="viewLiveBtn" target="_blank" rel="noopener" hidden>사이트에서 보기 ↗</a>
+          <button class="btn btn-small btn-danger" type="button" id="deleteBtn" hidden>이 글 삭제</button>
+        </div>
       </div>
-      <div class="field">
-        <label class="lbl" for="fDesc">요약 <span class="counter" id="descCount">0자</span></label>
-        <textarea class="input" id="fDesc" maxlength="200" placeholder="검색 결과·카톡 공유에 보이는 한두 문장 (80자 안팎 추천)"></textarea>
-      </div>
-      <div class="field">
-        <label class="lbl">대표 이미지</label>
+
+      <div class="panel">
+        <div class="panel-title">대표 이미지 <small style="font-weight:400;color:var(--muted)">목록·카톡 공유 미리보기</small></div>
         <div class="thumb-preview" id="thumbPreview">비워두면 본문 첫 번째 사진이<br />대표 이미지가 됩니다</div>
-        <div class="thumb-actions">
-          <button class="btn btn-small" type="button" id="thumbPick">사진 선택</button>
+        <div class="row-actions">
+          <button class="btn btn-small" type="button" id="thumbPick">내 사진</button>
+          <button class="btn btn-small" type="button" id="thumbUnsplash">무료사진 검색</button>
           <button class="btn btn-small btn-danger" type="button" id="thumbClear" hidden>지우기</button>
         </div>
         <input type="file" id="thumbFile" accept="image/*" hidden />
       </div>
-      <div class="field">
-        <label class="lbl" for="fDate">작성일</label>
-        <input class="input" type="date" id="fDate" />
-      </div>
-      <div class="field">
-        <label class="check"><input type="checkbox" id="fDraft" /> 임시저장 (사이트에 공개 안 함)</label>
-      </div>
-      <div class="panel-actions">
-        <button class="btn btn-primary" type="button" id="saveBtn">저장하기</button>
-        <a class="btn btn-small" id="viewLiveBtn" target="_blank" rel="noopener" hidden>사이트에서 보기 ↗</a>
-        <button class="btn btn-small btn-danger" type="button" id="deleteBtn" hidden>이 글 삭제</button>
+
+      <div class="panel">
+        <div class="panel-title">검색 노출 (SEO) <span class="seo-score" id="seoScore"></span></div>
+        <div class="field">
+          <label class="lbl" for="fKeyword">포커스 키워드</label>
+          <input class="input" id="fKeyword" maxlength="40" placeholder="예: 서울 웨딩박람회" />
+          <p class="help">이 글로 검색되고 싶은 대표 검색어 하나</p>
+        </div>
+        <div class="field">
+          <label class="lbl" for="fSeoTitle">검색 결과 제목 <span class="counter" id="seoTitleCount"></span></label>
+          <input class="input" id="fSeoTitle" maxlength="80" placeholder="비우면 글 제목을 사용" />
+        </div>
+        <div class="field">
+          <label class="lbl" for="fDesc">메타 설명 <span class="counter" id="descCount">0자</span></label>
+          <textarea class="input" id="fDesc" maxlength="200" placeholder="검색 결과·카톡 공유에 보이는 한두 문장 (80~150자 추천)"></textarea>
+        </div>
+        <div class="field">
+          <label class="lbl">검색 결과 미리보기</label>
+          <div class="serp">
+            <div class="serp-url" id="serpUrl"></div>
+            <div class="serp-title" id="serpTitle"></div>
+            <div class="serp-desc" id="serpDesc"></div>
+          </div>
+        </div>
+        <ul class="seo-list" id="seoList"></ul>
       </div>
     </aside>
   </div>
 </main>
 
+<!-- 사진 정보 모달 -->
+<div class="modal" id="imgModal" hidden>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="imgTitle">
+    <h3 id="imgTitle">사진 정보</h3>
+    <p>대체 텍스트는 화면에 안 보이지만 네이버·구글이 사진 내용을 이해하는 데 쓰여요.</p>
+    <div class="img-preview" id="imgPreview"></div>
+    <div class="field">
+      <label class="lbl" for="imgAlt">대체 텍스트 (사진 설명)</label>
+      <input class="input" id="imgAlt" maxlength="120" placeholder="예: 코엑스 웨딩박람회 입구에 줄 선 예비부부들" />
+    </div>
+    <div class="field">
+      <label class="lbl" for="imgCaption">캡션 (선택)</label>
+      <input class="input" id="imgCaption" maxlength="150" placeholder="사진 아래에 작게 보이는 글 · 예: 2026 코엑스 웨딩박람회" />
+      <p class="help" id="imgCreditNote" hidden>사진 작가 표시(Photo by … on Unsplash)는 자동으로 유지돼요</p>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-small btn-danger" type="button" id="imgRemove" hidden>사진 빼기</button>
+      <button class="btn btn-small" type="button" id="imgCancel">취소</button>
+      <button class="btn btn-small btn-primary" type="button" id="imgOk">확인</button>
+    </div>
+  </div>
+</div>
+
+<!-- 콜아웃 모달 -->
+<div class="modal" id="calloutModal" hidden>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="calloutTitle">
+    <h3 id="calloutTitle">콜아웃 넣기</h3>
+    <p>노션처럼 아이콘이 붙은 강조 박스예요. 사이트에서 색깔 박스로 보입니다.</p>
+    <div class="callout-types" id="calloutTypes">
+      <button type="button" data-icon="💡" aria-pressed="true"><span>💡</span>팁</button>
+      <button type="button" data-icon="⚠️" aria-pressed="false"><span>⚠️</span>주의</button>
+      <button type="button" data-icon="✅" aria-pressed="false"><span>✅</span>체크</button>
+      <button type="button" data-icon="📌" aria-pressed="false"><span>📌</span>정보</button>
+    </div>
+    <div class="field">
+      <label class="lbl" for="calloutText">내용</label>
+      <textarea class="input" id="calloutText" rows="4" placeholder="예: 당일 계약 혜택이 좋아 보여도 바로 결정할 필요는 없어요."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-small" type="button" id="calloutCancel">취소</button>
+      <button class="btn btn-small btn-primary" type="button" id="calloutInsert">넣기</button>
+    </div>
+  </div>
+</div>
+
 <!-- 버튼 넣기 모달 -->
 <div class="modal" id="ctaModal" hidden>
   <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="ctaTitle">
     <h3 id="ctaTitle">버튼 넣기</h3>
-    <p>본문 중간에 빨간 버튼이 들어갑니다.</p>
+    <p>본문 중간에 빨간 버튼이 들어갑니다. (편집 화면에선 링크로 보여요)</p>
     <div class="field">
       <label class="lbl" for="ctaLabel">버튼 글자</label>
       <input class="input" id="ctaLabel" value="전국 웨딩박람회 일정 보러가기" />
@@ -299,6 +455,43 @@
   </div>
 </div>
 
+<!-- 무료 사진(Unsplash) 모달 -->
+<div class="modal" id="usModal" hidden>
+  <div class="modal-box wide" role="dialog" aria-modal="true" aria-labelledby="usTitle">
+    <h3 id="usTitle">무료 사진 검색 <small style="font-size:12px;font-weight:400;color:var(--muted)">Unsplash · 상업적 사용 무료</small></h3>
+    <form class="us-search" id="usForm">
+      <input class="input" id="usQuery" placeholder="검색어 (영어가 결과가 더 많아요: wedding, bride, wedding dress…)" />
+      <button class="btn btn-dark" type="submit">검색</button>
+    </form>
+    <div class="us-tags" id="usTags">
+      <button type="button">wedding</button><button type="button">bride</button><button type="button">wedding dress</button>
+      <button type="button">wedding ring</button><button type="button">bouquet</button><button type="button">wedding hall</button>
+      <button type="button">couple</button><button type="button">honeymoon</button><button type="button">웨딩</button>
+    </div>
+    <div class="us-status" id="usStatus">검색어를 입력하거나 위 키워드를 눌러보세요.</div>
+    <div class="us-grid" id="usGrid"></div>
+    <div style="text-align:center;margin-top:12px"><button class="btn btn-small" type="button" id="usMore" hidden>더 보기</button></div>
+    <div class="us-pick" id="usPick" hidden>
+      <div><img id="usPickImg" alt="" /><div class="us-credit" id="usPickCredit"></div></div>
+      <div>
+        <div class="field" style="margin-top:0">
+          <label class="lbl" for="usAlt">대체 텍스트 (사진 설명)</label>
+          <input class="input" id="usAlt" maxlength="120" placeholder="한국어로 바꿔주세요 · 예: 웨딩드레스를 입은 신부" />
+        </div>
+        <div class="field">
+          <label class="lbl" for="usCaption">캡션 (선택) <small style="font-weight:400;color:var(--muted)">작가 표시는 자동으로 붙어요</small></label>
+          <input class="input" id="usCaption" maxlength="120" />
+        </div>
+        <div class="modal-actions" style="justify-content:flex-start">
+          <button class="btn btn-small btn-primary" type="button" id="usInsert">본문에 넣기</button>
+          <button class="btn btn-small" type="button" id="usThumb">대표 이미지로</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions"><button class="btn btn-small" type="button" id="usClose">닫기</button></div>
+  </div>
+</div>
+
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <!-- TOAST UI Editor 3.2.2 (MIT, NHN Cloud) + 한국어 — 사이트에 직접 올린 파일 -->
@@ -307,7 +500,6 @@
 (() => {
   const $ = (id) => document.getElementById(id);
   const SITE = location.origin;
-  const SLUG_RE = /^[a-z0-9-]+$/;
   const MAX_SIDE = 1600;          // 사진 긴 변 최대 px
   const MAX_BATCH_BYTES = 3.2e6;  // 한 번에 보내는 사진 용량 (Vercel 요청 한도 4.5MB)
 
@@ -342,7 +534,7 @@
       throw new Error('로그인이 만료됐습니다. 다시 로그인해주세요');
     }
     if (res.status === 413) throw new Error('사진 용량이 너무 큽니다');
-    if (!res.ok) throw new Error(data.error || `오류가 발생했습니다 (${res.status})`);
+    if (!res.ok) throw Object.assign(new Error(data.error || `오류가 발생했습니다 (${res.status})`), { data, status: res.status });
     return data;
   }
 
@@ -351,6 +543,14 @@
   const formatDate = (d) => { if (!d) return ''; const [y, m, day] = d.split('-').map(Number); return `${y}.${m}.${day}`; };
   const randomId = () => Math.random().toString(36).slice(2, 8);
   const absUrl = (u) => (u && u.startsWith('/') ? SITE + u : u);
+  const cleanMd = (s) => String(s || '').replace(/[\[\]\n\r]/g, ' ').replace(/\s+/g, ' ').trim();
+
+  // 모달 열고 닫기 (Esc 지원)
+  const openModal = (id) => { $(id).hidden = false; };
+  const closeModal = (id) => { $(id).hidden = true; };
+  document.querySelectorAll('.modal').forEach(m => m.addEventListener('mousedown', (e) => {
+    if (e.target === m) m.querySelector('[id$="Cancel"], [id$="Close"]')?.click();
+  }));
 
   // ═══════ 로그인 ═══════
   async function boot() {
@@ -407,15 +607,16 @@
           : p.date > today ? '<span class="badge badge-scheduled">예약</span>'
           : '<span class="badge badge-live">공개</span>';
         const thumb = p.thumbnail ? ` style="background-image:url('${escapeHtml(absUrl(p.thumbnail))}')"` : '';
+        const kw = p.keyword ? `<span>🔑 ${escapeHtml(p.keyword)}</span>` : '';
         return `<div class="post-row">
           <div class="post-thumb"${thumb}></div>
           <div>
-            <h2><button type="button" data-edit="${p.slug}">${escapeHtml(p.title)}</button></h2>
-            <div class="post-sub">${badge}<span>${formatDate(p.date)}</span><span>/blog/${p.slug}</span></div>
+            <h2><button type="button" data-edit="${escapeHtml(p.slug)}">${escapeHtml(p.title)}</button></h2>
+            <div class="post-sub">${badge}<span>${formatDate(p.date)}</span><span>/blog/${escapeHtml(p.slug)}</span>${kw}</div>
           </div>
           <div class="post-actions">
-            ${!p.draft ? `<a class="btn btn-small" href="/blog/${p.slug}" target="_blank" rel="noopener">보기</a>` : ''}
-            <button class="btn btn-small" type="button" data-edit="${p.slug}">수정</button>
+            ${!p.draft ? `<a class="btn btn-small" href="/blog/${escapeHtml(p.slug)}" target="_blank" rel="noopener">보기</a>` : ''}
+            <button class="btn btn-small" type="button" data-edit="${escapeHtml(p.slug)}">수정</button>
           </div>
         </div>`;
       }).join('');
@@ -440,7 +641,7 @@
   let originalSlug = '';
   let dirty = false;
   let pending = new Map();   // blob:URL → { blob, ext }  (저장 전 사진)
-  let thumbValue = '';       // 저장된 대표이미지 경로 또는 blob:URL
+  let thumbValue = '';       // 대표이미지 경로/주소 또는 blob:URL
 
   window.addEventListener('beforeunload', (e) => {
     if (dirty) { e.preventDefault(); e.returnValue = ''; }
@@ -474,77 +675,429 @@
     return url;
   }
 
+  // ═══════ 편집기 문서에 직접 넣기 (실행취소가 한 번에 한 단계씩 되도록) ═══════
+  const pm = () => editor.wwEditor.view;
+
+  // 텍스트 + 링크 조각 → 문단 안 내용   parts: ['글자', { text, href }, ...]
+  function inlineNodes(schema, parts) {
+    return parts.filter(x => (typeof x === 'string' ? x : x.text)).map(x => (typeof x === 'string'
+      ? schema.text(x)
+      : schema.text(x.text, [schema.marks.link.create({ linkUrl: x.href })])));
+  }
+  const captionParts = (caption, credit) => {
+    const parts = caption ? ['▲ ' + caption] : ['▲ '];
+    if (credit) {
+      parts.push(caption ? ' · Photo by ' : 'Photo by ', { text: credit.author, href: credit.authorUrl }, ' on ', { text: 'Unsplash', href: credit.unsplashUrl });
+    }
+    return parts;
+  };
+
+  // 지금 커서가 있는 블록 바로 뒤에 블록들을 넣고, 그 아래 빈 줄로 커서 이동
+  function insertBlocks(build) {
+    if (!editor.isWysiwygMode()) editor.changeMode('wysiwyg', true);
+    const view = pm();
+    const { state } = view;
+    const schema = state.schema;
+    const nodes = build(schema).filter(Boolean);
+    const $from = state.selection.$from;
+    const top = $from.depth >= 1 ? $from.node(1) : null;
+    let tr = state.tr;
+    let pos;
+    if (top && top.type === schema.nodes.paragraph && top.content.size === 0) {
+      pos = $from.before(1);
+      tr = tr.replaceWith(pos, $from.after(1), nodes);
+    } else {
+      pos = top ? $from.after(1) : state.doc.content.size;
+      tr = tr.insert(pos, nodes);
+    }
+    pos += nodes.reduce((n, node) => n + node.nodeSize, 0);
+    tr = tr.insert(pos, schema.nodes.paragraph.create());
+    tr = tr.setSelection(state.selection.constructor.near(tr.doc.resolve(pos + 1)));
+    view.dispatch(tr.scrollIntoView());
+    view.focus();
+    dirty = true;
+    scheduleSeo();
+  }
+
+  const imageBlocks = (schema, { url, alt, caption, credit }) => [
+    schema.nodes.paragraph.create(null, schema.nodes.image.create({ imageUrl: url, altText: alt || '사진' })),
+    (caption || credit) ? schema.nodes.paragraph.create(null, inlineNodes(schema, captionParts(caption, credit))) : null,
+  ];
+
+  // 문서 안 사진 찾기: { pos, node, paraPos, para, captionPos, caption }
+  function findImage(src) {
+    const doc = pm().state.doc;
+    let found = null;
+    doc.forEach((block, offset, index) => {
+      if (found || block.type.name !== 'paragraph') return;
+      block.forEach((child, childOffset) => {
+        if (!found && child.type.name === 'image' && child.attrs.imageUrl === src) {
+          const next = index + 1 < doc.childCount ? doc.child(index + 1) : null;
+          const isCaption = next && next.type.name === 'paragraph' && next.textContent.trim().startsWith('▲');
+          found = {
+            pos: offset + 1 + childOffset, node: child, paraPos: offset, para: block,
+            captionPos: isCaption ? offset + block.nodeSize : null, caption: isCaption ? next : null,
+          };
+        }
+      });
+    });
+    return found;
+  }
+
+  // 글을 불러온 직후: 실행취소로 불러온 내용이 지워지지 않게 기록 비우기
+  function resetHistory() {
+    const view = pm();
+    const { state } = view;
+    view.updateState(state.constructor.create({ doc: state.doc, plugins: state.plugins, schema: state.schema }));
+  }
+
+  // 사진 주소 바꾸기 (저장 후 blob: → 실제 경로) — 실행취소 기록에는 안 남김
+  function replaceImageUrls(map) {
+    const view = pm();
+    let tr = view.state.tr;
+    view.state.doc.descendants((node, pos) => {
+      if (node.type.name === 'image' && map[node.attrs.imageUrl]) {
+        tr = tr.setNodeMarkup(pos, null, { ...node.attrs, imageUrl: map[node.attrs.imageUrl] });
+      }
+    });
+    view.dispatch(tr.setMeta('addToHistory', false));
+  }
+
+  function toolButton(label, title, extraClass, onClick) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = `toastui-editor-toolbar-icons txt-tool ${extraClass || ''}`;
+    b.textContent = label;
+    b.setAttribute('aria-label', title);
+    b.addEventListener('click', onClick);
+    return b;
+  }
+
   function createEditor() {
-    const ctaBtn = document.createElement('button');
-    ctaBtn.type = 'button';
-    ctaBtn.className = 'toastui-editor-toolbar-icons cta-tool';
-    ctaBtn.textContent = '버튼';
-    ctaBtn.addEventListener('click', openCtaModal);
+    const imageBtn = document.createElement('button');
+    imageBtn.type = 'button';
+    imageBtn.className = 'image toastui-editor-toolbar-icons';
+    imageBtn.setAttribute('aria-label', '내 사진 넣기');
+    imageBtn.addEventListener('click', () => $('bodyFile').click());
 
     editor = new toastui.Editor({
       el: $('editor'),
-      height: 'calc(100vh - 260px)',
-      minHeight: '420px',
+      height: 'calc(100vh - 250px)',
+      minHeight: '440px',
       initialEditType: 'wysiwyg',
-      previewStyle: window.innerWidth > 900 ? 'vertical' : 'tab',
+      previewStyle: 'vertical',
       language: 'ko-KR',
       usageStatistics: false,
       placeholder: '내용을 입력하세요',
       hideModeSwitch: true,
       toolbarItems: [
         ['heading', 'bold', 'italic', 'strike'],
-        ['hr', 'quote'],
-        ['ul', 'ol'],
-        ['table', 'image', 'link'],
-        [{ name: 'cta', tooltip: '버튼 넣기', el: ctaBtn }],
+        ['hr', 'quote', { name: 'callout', tooltip: '콜아웃 (강조 박스)', el: toolButton('콜아웃', '콜아웃', '', openCalloutModal) }],
+        ['ul', 'ol', 'table'],
+        [{ name: 'myimage', tooltip: '내 사진 넣기', el: imageBtn },
+          { name: 'unsplash', tooltip: '무료 사진 검색', el: toolButton('무료사진', '무료 사진 검색', '', () => openUnsplash('body')) },
+          'link'],
+        [{ name: 'cta', tooltip: '버튼 넣기', el: toolButton('버튼', '버튼 넣기', 'cta-tool', openCtaModal) }],
       ],
       hooks: {
+        // 끌어다 놓기·붙여넣기 한 사진
         addImageBlobHook: async (blob, callback) => {
           try {
             const url = await addPendingImage(blob);
-            callback(url, (blob.name || '').replace(/\.[^.]+$/, '') || '사진');
+            const info = await askImageInfo({ src: url, alt: '', caption: '' });
+            if (!info) { pending.delete(url); URL.revokeObjectURL(url); return; }
+            callback(url, info.alt || '사진');
+            if (info.caption) {
+              setTimeout(() => insertBlocks(schema => [schema.nodes.paragraph.create(null, inlineNodes(schema, captionParts(info.caption)))]), 0);
+            }
+            scheduleSeo();
           } catch (e) {
             toast(e.message, true);
           }
         },
       },
-      events: { change: () => { dirty = true; } },
+      events: { change: () => { dirty = true; scheduleSeo(); } },
     });
+    window.__wsEditor = editor; // 문제 확인용
+
+    // 본문 사진 클릭 → 사진 정보 수정
+    $('editor').addEventListener('click', (e) => {
+      const img = e.target.closest('.toastui-editor-ww-container img');
+      if (img) editImageInfo(img.getAttribute('src'));
+    });
+
+    // 표 안에 커서가 있으면 표 편집 바
+    document.addEventListener('selectionchange', updateTableBar);
+    // 표의 마지막 칸에서 Tab → 편집기 밖으로 나가지 않고 줄 추가
+    $('editor').addEventListener('keydown', (e) => {
+      if (e.key !== 'Tab' || e.shiftKey) return;
+      const cell = currentCell();
+      if (!cell) return;
+      const all = cell.closest('table').querySelectorAll('th, td');
+      if (cell === all[all.length - 1]) {
+        e.preventDefault();
+        e.stopPropagation();
+        editor.exec('addRowToDown');
+      }
+    }, true);
   }
 
-  // 버튼 넣기
+  function currentCell() {
+    const sel = document.getSelection();
+    const node = sel && sel.anchorNode;
+    const el = node && (node.nodeType === 1 ? node : node.parentElement);
+    if (!el || !el.closest('.toastui-editor-ww-container')) return null;
+    return el.closest('td, th');
+  }
+  function updateTableBar() {
+    if (!editor || $('viewEditor').hidden) return;
+    const inTable = !!currentCell();
+    if (!inTable && document.activeElement && $('tableBar').contains(document.activeElement)) return;
+    $('tableBar').hidden = !inTable;
+  }
+  $('tableBar').addEventListener('mousedown', (e) => e.preventDefault()); // 커서 유지
+  $('tableBar').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-cmd]');
+    if (!b) return;
+    const cmd = b.dataset.cmd;
+    if (cmd === 'removeTable' && !confirm('표 전체를 삭제할까요?')) return;
+    try {
+      editor.exec(cmd);
+    } catch (err) {
+      toast('이 동작은 할 수 없어요 (마지막 줄·칸은 지울 수 없음)', true);
+    }
+    dirty = true;
+    if (cmd === 'removeTable') $('tableBar').hidden = true;
+    scheduleSeo();
+  });
+
+  // ═══════ 사진 정보 (대체 텍스트·캡션) ═══════
+  let imgResolve = null;
+  function askImageInfo({ src, alt, caption, removable, credit }) {
+    $('imgCreditNote').hidden = !credit;
+    $('imgPreview').style.backgroundImage = `url("${src.startsWith('blob:') ? src : absUrl(src)}")`;
+    $('imgAlt').value = alt || '';
+    $('imgCaption').value = caption || '';
+    $('imgRemove').hidden = !removable;
+    openModal('imgModal');
+    $('imgAlt').focus();
+    return new Promise((resolve) => { imgResolve = resolve; });
+  }
+  const finishImg = (v) => { closeModal('imgModal'); const r = imgResolve; imgResolve = null; if (r) r(v); };
+  $('imgOk').addEventListener('click', () => finishImg({ alt: cleanMd($('imgAlt').value), caption: cleanMd($('imgCaption').value) }));
+  $('imgCancel').addEventListener('click', () => finishImg(null));
+  $('imgRemove').addEventListener('click', () => finishImg({ remove: true }));
+  $('imgAlt').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); $('imgCaption').focus(); } });
+  $('imgCaption').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); $('imgOk').click(); } });
+
+  async function editImageInfo(src) {
+    if (!src) return;
+    const hit = findImage(src);
+    if (!hit) return;
+    // 캡션 문단: 사용자 글 + (무료사진이면) 작가 표시 링크
+    let caption = '';
+    let creditFrag = null;
+    if (hit.caption) {
+      const text = hit.caption.textContent.replace(/^\s*▲\s*/, '');
+      const at = hit.caption.textContent.indexOf('Photo by');
+      if (at >= 0) {
+        creditFrag = hit.caption.content.cut(at);
+        caption = hit.caption.textContent.slice(0, at).replace(/^\s*▲\s*/, '').replace(/\s*·\s*$/, '').trim();
+      } else {
+        caption = text.trim();
+      }
+    }
+    const info = await askImageInfo({ src, alt: hit.node.attrs.altText, caption, removable: true, credit: !!creditFrag });
+    if (!info) return;
+
+    const view = pm();
+    const schema = view.state.schema;
+    const again = findImage(src); // 모달 사이에 바뀌었을 수 있음
+    if (!again) return;
+    let tr = view.state.tr;
+    if (info.remove) {
+      const from = again.para.childCount === 1 ? again.paraPos : again.pos;
+      const to = again.captionPos !== null ? again.captionPos + again.caption.nodeSize
+        : (again.para.childCount === 1 ? again.paraPos + again.para.nodeSize : again.pos + again.node.nodeSize);
+      tr = tr.delete(from, to);
+    } else {
+      // 캡션 새로 만들기
+      let capNode = null;
+      if (info.caption || creditFrag) {
+        const lead = schema.text(info.caption ? `▲ ${info.caption}${creditFrag ? ' · ' : ''}` : '▲ ');
+        capNode = schema.nodes.paragraph.create(null, creditFrag ? [lead].concat(creditFrag.content) : [lead]);
+      }
+      const afterPara = again.paraPos + again.para.nodeSize;
+      if (again.captionPos !== null) {
+        tr = capNode ? tr.replaceWith(again.captionPos, again.captionPos + again.caption.nodeSize, capNode)
+          : tr.delete(again.captionPos, again.captionPos + again.caption.nodeSize);
+      } else if (capNode) {
+        tr = tr.insert(afterPara, capNode);
+      }
+      tr = tr.setNodeMarkup(again.pos, null, { ...again.node.attrs, altText: info.alt || '사진' });
+    }
+    view.dispatch(tr);
+    dirty = true;
+    scheduleSeo();
+  }
+
+  // 툴바 '내 사진' 버튼
+  const bodyFile = document.createElement('input');
+  bodyFile.type = 'file';
+  bodyFile.accept = 'image/*';
+  bodyFile.id = 'bodyFile';
+  bodyFile.hidden = true;
+  document.body.appendChild(bodyFile);
+  bodyFile.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    e.target.value = '';
+    if (!file) return;
+    try {
+      const url = await addPendingImage(file);
+      const info = await askImageInfo({ src: url, alt: '', caption: '' });
+      if (!info) { pending.delete(url); URL.revokeObjectURL(url); return; }
+      insertBlocks(schema => imageBlocks(schema, { url, alt: info.alt, caption: info.caption }));
+    } catch (err) {
+      toast(err.message, true);
+    }
+  });
+
+  // ═══════ 콜아웃 ═══════
+  let calloutIcon = '💡';
+  function openCalloutModal() {
+    $('calloutText').value = '';
+    openModal('calloutModal');
+    setTimeout(() => $('calloutText').focus(), 30);
+  }
+  $('calloutTypes').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-icon]');
+    if (!b) return;
+    calloutIcon = b.dataset.icon;
+    $('calloutTypes').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  });
+  $('calloutCancel').addEventListener('click', () => { closeModal('calloutModal'); editor.focus(); });
+  $('calloutInsert').addEventListener('click', () => {
+    const lines = $('calloutText').value.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+    if (!lines.length) return toast('내용을 입력해주세요', true);
+    closeModal('calloutModal');
+    insertBlocks(schema => [schema.nodes.blockQuote.create(null,
+      lines.map((l, i) => schema.nodes.paragraph.create(null, schema.text(i === 0 ? `${calloutIcon} ${l}` : l))))]);
+  });
+
+  // ═══════ 버튼 ═══════
   function openCtaModal() {
-    $('ctaModal').hidden = false;
+    openModal('ctaModal');
     $('ctaLabel').focus();
     $('ctaLabel').select();
   }
-  const closeCtaModal = () => { $('ctaModal').hidden = true; editor.focus(); };
-  $('ctaCancel').addEventListener('click', closeCtaModal);
-  $('ctaModal').addEventListener('click', (e) => { if (e.target === $('ctaModal')) closeCtaModal(); });
+  $('ctaCancel').addEventListener('click', () => { closeModal('ctaModal'); editor.focus(); });
   $('ctaInsert').addEventListener('click', () => {
-    const label = $('ctaLabel').value.trim().replace(/[\[\]]/g, '');
+    const label = cleanMd($('ctaLabel').value);
     let url = $('ctaUrl').value.trim();
     if (!label || !url) return toast('버튼 글자와 주소를 입력해주세요', true);
     if (!/^(https?:\/\/|\/)/.test(url)) url = 'https://' + url;
     url = url.replace(/[()\s]/g, encodeURIComponent);
-    $('ctaModal').hidden = true;
-    // 링크만 있는 한 줄 = 사이트에서 버튼
-    const wasWysiwyg = editor.isWysiwygMode();
-    if (wasWysiwyg) editor.changeMode('markdown', true);
-    editor.insertText(`\n\n[${label}](${url})\n\n`);
-    if (wasWysiwyg) editor.changeMode('wysiwyg', true);
-    dirty = true;
-    editor.focus();
+    closeModal('ctaModal');
+    insertBlocks(schema => [schema.nodes.paragraph.create(null, inlineNodes(schema, [{ text: label, href: url }]))]);
     toast('버튼을 넣었어요. 사이트에서는 빨간 버튼으로 보입니다');
   });
 
-  // 대표 이미지
+  // ═══════ 무료 사진 (Unsplash) ═══════
+  let usTarget = 'body';
+  let usQuery = '';
+  let usPage = 1;
+  let usPhotos = [];
+  let usSelected = null;
+
+  function openUnsplash(target) {
+    usTarget = target;
+    $('usInsert').hidden = target !== 'body';
+    $('usThumb').textContent = target === 'body' ? '대표 이미지로' : '대표 이미지로 쓰기';
+    openModal('usModal');
+    setTimeout(() => $('usQuery').focus(), 30);
+  }
+  $('thumbUnsplash').addEventListener('click', () => openUnsplash('thumb'));
+  $('usClose').addEventListener('click', () => closeModal('usModal'));
+  $('usTags').addEventListener('click', (e) => {
+    if (e.target.tagName !== 'BUTTON') return;
+    $('usQuery').value = e.target.textContent;
+    searchUnsplash(true);
+  });
+  $('usForm').addEventListener('submit', (e) => { e.preventDefault(); searchUnsplash(true); });
+  $('usMore').addEventListener('click', () => searchUnsplash(false));
+
+  async function searchUnsplash(fresh) {
+    const q = $('usQuery').value.trim();
+    if (!q) return;
+    if (fresh) { usQuery = q; usPage = 1; usPhotos = []; $('usGrid').innerHTML = ''; $('usPick').hidden = true; }
+    $('usStatus').hidden = false;
+    $('usStatus').textContent = '검색 중…';
+    $('usMore').hidden = true;
+    try {
+      const data = await api(`/api/admin/unsplash?q=${encodeURIComponent(usQuery)}&page=${usPage}`);
+      const start = usPhotos.length;
+      usPhotos = usPhotos.concat(data.photos);
+      $('usGrid').insertAdjacentHTML('beforeend', data.photos.map((p, i) => `
+        <button type="button" class="us-item" data-i="${start + i}" style="background:${escapeHtml(p.color || '#eee')}" aria-pressed="false">
+          <img src="${escapeHtml(p.thumb)}" alt="${escapeHtml(p.alt)}" loading="lazy" /><span>${escapeHtml(p.author)}</span>
+        </button>`).join(''));
+      $('usStatus').textContent = usPhotos.length ? '' : '검색 결과가 없어요. 영어로 검색해보세요 (예: wedding)';
+      $('usStatus').hidden = !!usPhotos.length;
+      $('usMore').hidden = usPage >= data.totalPages;
+      usPage++;
+    } catch (e) {
+      $('usStatus').innerHTML = e.data && e.data.setup
+        ? '무료사진 검색을 쓰려면 Vercel 환경변수에 <code>UNSPLASH_ACCESS_KEY</code>를 넣어주세요.<br />(unsplash.com/developers → New Application → Access Key)'
+        : escapeHtml(e.message);
+    }
+  }
+
+  $('usGrid').addEventListener('click', (e) => {
+    const b = e.target.closest('.us-item');
+    if (!b) return;
+    usSelected = usPhotos[Number(b.dataset.i)];
+    $('usGrid').querySelectorAll('.us-item').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    $('usPickImg').src = usSelected.thumb;
+    $('usPickCredit').innerHTML = `Photo by ${escapeHtml(usSelected.author)} on Unsplash`;
+    $('usAlt').value = usSelected.alt;
+    $('usCaption').value = '';
+    $('usPick').hidden = false;
+    $('usPick').scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  });
+
+  function trackUnsplash(p) {
+    api(`/api/admin/unsplash?track=${encodeURIComponent(p.downloadLocation)}`, { method: 'POST' }).catch(() => {});
+  }
+
+  $('usInsert').addEventListener('click', () => {
+    const p = usSelected;
+    if (!p) return;
+    const alt = cleanMd($('usAlt').value) || '사진';
+    const caption = cleanMd($('usCaption').value);
+    closeModal('usModal');
+    insertBlocks(schema => imageBlocks(schema, { url: p.url, alt, caption, credit: p }));
+    trackUnsplash(p);
+    toast('사진을 넣었어요. 사진을 클릭하면 설명을 고칠 수 있어요');
+  });
+  $('usThumb').addEventListener('click', () => {
+    const p = usSelected;
+    if (!p) return;
+    thumbValue = p.url;
+    dirty = true;
+    renderThumb();
+    trackUnsplash(p);
+    closeModal('usModal');
+    toast('대표 이미지로 정했어요');
+  });
+
+  // ═══════ 대표 이미지 ═══════
   function renderThumb() {
     const box = $('thumbPreview');
     const url = thumbValue && (thumbValue.startsWith('blob:') ? thumbValue : absUrl(thumbValue));
     box.style.backgroundImage = url ? `url("${url}")` : '';
     box.classList.toggle('has-image', !!url);
     $('thumbClear').hidden = !url;
+    scheduleSeo();
   }
   $('thumbPick').addEventListener('click', () => $('thumbFile').click());
   $('thumbFile').addEventListener('change', async (e) => {
@@ -561,40 +1114,112 @@
   });
   $('thumbClear').addEventListener('click', () => { thumbValue = ''; dirty = true; renderThumb(); });
 
-  $('fDesc').addEventListener('input', () => { $('descCount').textContent = `${$('fDesc').value.length}자`; });
-  ['fTitle', 'fSlug', 'fDesc', 'fDate', 'fDraft'].forEach(id => $(id).addEventListener('input', () => { dirty = true; }));
-  $('fSlug').addEventListener('input', () => {
-    const el = $('fSlug');
-    const cleaned = el.value.toLowerCase().replace(/[\s_]+/g, '-').replace(/[^a-z0-9-]/g, '');
-    if (cleaned !== el.value) el.value = cleaned;
-  });
+  // ═══════ SEO 점검 ═══════
+  let seoTimer;
+  function scheduleSeo() { clearTimeout(seoTimer); seoTimer = setTimeout(updateSeo, 250); }
+
+  function analyze() {
+    const title = $('fTitle').value.trim();
+    const seoTitle = $('fSeoTitle').value.trim() || title;
+    const desc = $('fDesc').value.trim();
+    const kw = $('fKeyword').value.trim().toLowerCase();
+    const md = editor ? editor.getMarkdown() : '';
+    const images = [...md.matchAll(/!\[([^\]]*)\]\(([^)\s]+)/g)];
+    const noAlt = images.filter(m => !m[1].trim() || /^(사진|image|img)$/i.test(m[1].trim()));
+    const links = [...md.matchAll(/(?<!!)\[[^\]]*\]\(([^)\s]+)/g)].map(m => m[1]);
+    const internal = links.filter(u => u.startsWith('/') || u.includes('weddingscoop.co.kr'));
+    const lines = md.split('\n');
+    const headings = lines.filter(l => /^#{1,6}\s/.test(l)).join(' ').toLowerCase();
+    const text = md
+      .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')
+      .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/[#>*_~`|▲-]/g, ' ');
+    const firstPara = (lines.find(l => l.trim() && !/^(#|!\[|>|\||-{3,}|▲)/.test(l.trim())) || '').toLowerCase();
+    const length = text.replace(/\s/g, '').length;
+    const count = kw ? text.toLowerCase().split(kw).length - 1 : 0;
+    const titleLen = seoTitle.length;
+    const thumb = thumbValue || (images[0] && images[0][2]);
+
+    const checks = [
+      [!!kw, '포커스 키워드를 정했어요', '이 글로 검색되고 싶은 검색어를 하나 정해주세요'],
+      [!!kw && title.toLowerCase().includes(kw), '제목에 키워드가 있어요', '제목에 키워드를 넣어주세요'],
+      [!!kw && seoTitle.toLowerCase().indexOf(kw) > -1 && seoTitle.toLowerCase().indexOf(kw) <= 10, '검색 제목 앞부분에 키워드가 있어요', '키워드를 검색 제목 앞쪽에 두면 더 좋아요'],
+      [!!kw && desc.toLowerCase().includes(kw), '메타 설명에 키워드가 있어요', '메타 설명에 키워드를 넣어주세요'],
+      [!!kw && firstPara.includes(kw), '첫 문단에 키워드가 있어요', '글 첫 문단에 키워드를 넣어주세요'],
+      [!!kw && headings.includes(kw), '소제목에 키워드가 있어요', '소제목(H) 중 하나에 키워드를 넣어주세요'],
+      [count >= 3, `본문에 키워드 ${count}번`, `키워드를 본문에 3번 이상 자연스럽게 써주세요 (지금 ${count}번)`],
+      [length >= 1000, `본문 ${length.toLocaleString()}자`, `본문을 1,000자 이상 써주세요 (지금 ${length.toLocaleString()}자)`],
+      [titleLen >= 10 && titleLen <= 40, `검색 제목 길이 적당 (${titleLen}자)`, `검색 제목은 10~40자가 좋아요 (지금 ${titleLen}자)`],
+      [desc.length >= 50 && desc.length <= 150, `메타 설명 길이 적당 (${desc.length}자)`, `메타 설명은 50~150자가 좋아요 (지금 ${desc.length}자)`],
+      [headings.length > 0, '소제목으로 글을 나눴어요', '소제목(H)으로 글을 나눠주세요'],
+      [images.length > 0, `사진 ${images.length}장`, '사진을 1장 이상 넣어주세요'],
+      [images.length > 0 && noAlt.length === 0, '모든 사진에 설명(대체 텍스트)이 있어요', `설명 없는 사진 ${noAlt.length}장 — 사진을 클릭해서 설명을 넣어주세요`],
+      [internal.length > 0, '사이트 내부 링크가 있어요', '박람회 일정 버튼이나 다른 글 링크를 넣어주세요'],
+      [!!thumb, '대표 이미지가 있어요', '대표 이미지를 정해주세요'],
+    ];
+    return { checks, seoTitle, desc };
+  }
+
+  function updateSeo() {
+    if ($('viewEditor').hidden) return;
+    const { checks, seoTitle, desc } = analyze();
+    const passed = checks.filter(c => c[0]).length;
+    const score = Math.round((passed / checks.length) * 100);
+    const el = $('seoScore');
+    el.textContent = `${score}점`;
+    el.className = `seo-score ${score >= 80 ? 'seo-good' : score >= 50 ? 'seo-ok' : 'seo-bad'}`;
+    $('seoList').innerHTML = checks
+      .sort((a, b) => Number(a[0]) - Number(b[0]))
+      .map(([ok, good, bad]) => `<li><span class="i">${ok ? '✅' : '⚠️'}</span><span>${escapeHtml(ok ? good : bad)}</span></li>`).join('');
+    const t = `${seoTitle || '제목'} | Wedding&Scoop`;
+    $('serpUrl').textContent = `weddingscoop.co.kr › blog › ${originalSlug || '새 글'}`;
+    $('serpTitle').textContent = t.length > 45 ? t.slice(0, 44) + '…' : t;
+    $('serpDesc').textContent = (desc || '메타 설명을 입력하면 여기에 보여요').slice(0, 150);
+    const tl = $('fSeoTitle').value.trim().length;
+    $('seoTitleCount').textContent = tl ? `${tl}자` : '';
+    $('descCount').textContent = `${$('fDesc').value.length}자`;
+    $('descCount').classList.toggle('warn', $('fDesc').value.length > 150);
+  }
+
+  ['fTitle', 'fDesc', 'fDate', 'fDraft', 'fKeyword', 'fSeoTitle'].forEach(id => $(id).addEventListener('input', () => { dirty = true; scheduleSeo(); }));
+
+  function renderAddr() {
+    $('addrText').innerHTML = originalSlug
+      ? `/blog/${escapeHtml(originalSlug)}`
+      : '저장하면 자동으로 정해져요<small>/blog/1, /blog/2 … 순서대로</small>';
+  }
 
   async function openEditor(slug) {
     if (!editor) createEditor();
     pending.forEach((_, url) => URL.revokeObjectURL(url));
     pending = new Map();
     show('viewEditor');
+    $('tableBar').hidden = true;
     $('saveBtn').disabled = true;
     $('editorStatus').textContent = slug ? '불러오는 중…' : '새 글';
     try {
-      let post = { slug: '', meta: { title: '', date: todayKst(), description: '', thumbnail: '', draft: false }, body: '' };
+      let post = { slug: '', meta: { title: '', seoTitle: '', keyword: '', date: todayKst(), description: '', thumbnail: '', draft: false }, body: '' };
       if (slug) post = await api(`/api/admin/posts?slug=${encodeURIComponent(slug)}`);
       originalSlug = post.slug;
       $('fTitle').value = post.meta.title;
-      $('fSlug').value = post.slug || `post-${todayKst().replace(/-/g, '')}-${randomId()}`;
+      $('fSeoTitle').value = post.meta.seoTitle || '';
+      $('fKeyword').value = post.meta.keyword || '';
       $('fDesc').value = post.meta.description;
-      $('descCount').textContent = `${post.meta.description.length}자`;
       $('fDate').value = post.meta.date || todayKst();
       $('fDate').max = todayKst();
       $('fDraft').checked = !!post.meta.draft;
       thumbValue = post.meta.thumbnail || '';
       renderThumb();
+      renderAddr();
       editor.setMarkdown(post.body || '', false);
+      resetHistory();
       $('deleteBtn').hidden = !slug;
       $('viewLiveBtn').hidden = !slug || post.meta.draft;
       $('viewLiveBtn').href = `/blog/${post.slug}`;
       $('editorStatus').textContent = slug ? `/blog/${slug}` : '새 글';
       dirty = false;
+      updateSeo();
       if (!slug) $('fTitle').focus();
     } catch (e) {
       toast(e.message, true);
@@ -613,28 +1238,28 @@
 
   $('saveBtn').addEventListener('click', async () => {
     const title = $('fTitle').value.trim();
-    const slug = $('fSlug').value.trim();
     const date = $('fDate').value;
     let body = editor.getMarkdown();
     if (!title) return toast('제목을 입력해주세요', true);
     if (!body.trim()) return toast('본문을 입력해주세요', true);
-    if (!SLUG_RE.test(slug)) return toast('글 주소는 영어 소문자, 숫자, 하이픈(-)만 쓸 수 있어요', true);
     if (!date) return toast('작성일을 선택해주세요', true);
     if (date > todayKst()) return toast('작성일은 오늘 이후로 정할 수 없어요', true);
 
     $('saveBtn').disabled = true;
     $('saveBtn').textContent = '저장 중…';
     try {
-      // 저장 전 사진 → images/blog/<글주소>/... 로 바꾸기
+      // 저장 전 사진 → images/blog/<연-월>/... 로 바꾸기
+      const folder = todayKst().slice(0, 7);
       const images = [];
+      const urlMap = [];
       let thumbnail = thumbValue;
-      let n = 0;
       for (const [url, img] of pending) {
         const inBody = body.includes(url);
         const isThumb = thumbnail === url;
         if (!inBody && !isThumb) continue;
-        const path = `images/blog/${slug}/${Date.now().toString(36)}-${n++}.${img.ext}`;
+        const path = `images/blog/${folder}/${Date.now().toString(36)}${randomId()}.${img.ext}`;
         images.push({ path, blob: img.blob });
+        urlMap.push([url, '/' + path]);
         if (inBody) body = body.split(url).join('/' + path);
         if (isThumb) thumbnail = '/' + path;
       }
@@ -656,28 +1281,35 @@
       }
       for (const b of batches) {
         $('saveBtn').textContent = '사진 올리는 중…';
-        await api('/api/admin/posts', { method: 'POST', body: { slug, imagesOnly: true, images: b } });
+        await api('/api/admin/posts', { method: 'POST', body: { imagesOnly: true, images: b } });
       }
 
       $('saveBtn').textContent = '저장 중…';
-      const meta = { title, date, description: $('fDesc').value.trim(), thumbnail, draft: $('fDraft').checked };
-      await api('/api/admin/posts', { method: 'POST', body: { originalSlug, slug, meta, body, images: batch } });
+      const meta = {
+        title, date, draft: $('fDraft').checked, thumbnail,
+        description: $('fDesc').value.trim(),
+        seoTitle: $('fSeoTitle').value.trim(),
+        keyword: $('fKeyword').value.trim(),
+      };
+      const result = await api('/api/admin/posts', { method: 'POST', body: { originalSlug, meta, body, images: batch } });
 
       // 저장 완료: 화면도 실제 경로로 교체
       pending.forEach((_, url) => URL.revokeObjectURL(url));
       pending = new Map();
       thumbValue = thumbnail;
       renderThumb();
-      if (images.length) editor.setMarkdown(body, false);
-      originalSlug = slug;
+      if (images.length) replaceImageUrls(Object.fromEntries(urlMap));
+      originalSlug = result.slug;
+      renderAddr();
       dirty = false;
       $('deleteBtn').hidden = false;
       $('viewLiveBtn').hidden = meta.draft;
-      $('viewLiveBtn').href = `/blog/${slug}`;
-      $('editorStatus').textContent = `/blog/${slug}`;
+      $('viewLiveBtn').href = `/blog/${originalSlug}`;
+      $('editorStatus').textContent = `/blog/${originalSlug}`;
+      updateSeo();
       toast(meta.draft
         ? '임시저장했습니다 (사이트에는 공개되지 않아요)'
-        : '저장했습니다! 1~2분 뒤 사이트에 반영되고 네이버에도 자동으로 알려집니다', false, 6000);
+        : `저장했습니다! 1~2분 뒤 /blog/${originalSlug} 에 반영되고 네이버에도 자동으로 알려집니다`, false, 6000);
     } catch (e) {
       toast(e.message, true, 6000);
     } finally {
@@ -707,7 +1339,10 @@
       e.preventDefault();
       $('saveBtn').click();
     }
-    if (e.key === 'Escape' && !$('ctaModal').hidden) closeCtaModal();
+    if (e.key === 'Escape') {
+      const open = [...document.querySelectorAll('.modal')].find(m => !m.hidden);
+      if (open) open.querySelector('[id$="Cancel"], [id$="Close"]')?.click();
+    }
   });
 
   boot();

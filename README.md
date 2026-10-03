@@ -58,8 +58,15 @@ weddingscoop/
 
 주소: `weddingscoop.co.kr/admin/<ADMIN_URL_KEY 값>` — 사이트 어디에도 링크가 없고, 열쇠 값이 틀리면 404가 뜹니다.
 
-글쓰기 화면에서 제목·본문을 쓰고, 사진을 끌어다 놓고, `버튼` 도구로 빨간 버튼을 넣은 뒤 **저장하기**를 누르면 끝입니다.
+글쓰기 화면에서 제목·본문을 쓰고 **저장하기**를 누르면 끝입니다.
 저장하면 GitHub에 자동 저장 → 1~2분 뒤 사이트 반영 → 네이버 자동 알림까지 이어집니다.
+
+- **글 주소**: 새 글은 저장할 때 `/blog/1`, `/blog/2` … 순서대로 자동으로 정해짐 (지운 글 번호가 가장 컸다면 그 번호를 다시 씀)
+- **사진**: 사진 아이콘·끌어다 놓기·붙여넣기 → 사진 설명(대체 텍스트)·캡션 입력. 넣은 사진을 클릭하면 다시 고칠 수 있음
+- **무료사진**: 언스플래시에서 검색해서 바로 넣기 (작가 표시 자동)
+- **콜아웃**: 💡팁 ⚠️주의 ✅체크 📌정보 색깔 박스 · **버튼**: 빨간 버튼 (링크만 한 줄에 따로 있으면 버튼으로 보임)
+- **표**: 표 안을 누르면 위에 줄/칸 추가·삭제, 표 삭제 메뉴가 나옴
+- **검색 노출(SEO)**: 포커스 키워드, 검색 결과 제목, 메타 설명, 검색 미리보기, 점검 목록(점수)
 
 ### 최초 1회 설정 (Vercel 환경변수 3개)
 
@@ -70,6 +77,7 @@ Vercel → 프로젝트 → `Settings` → `Environment Variables` 에 추가 �
 | `ADMIN_PASSWORD` | 어드민 로그인 비밀번호 (12자 이상 추천) |
 | `ADMIN_URL_KEY` | 어드민 주소 열쇠 (아무도 못 맞힐 긴 영문+숫자) |
 | `GITHUB_TOKEN` | 아래에서 만든 GitHub 토큰 |
+| `UNSPLASH_ACCESS_KEY` | (선택) 무료사진 검색용 — unsplash.com/developers → `New Application` → `Access Key` |
 
 **GitHub 토큰 만들기**: github.com → 오른쪽 위 프로필 → `Settings` → 맨 아래 `Developer settings` → `Personal access tokens` → `Fine-grained tokens` → `Generate new token`
 - Repository access: `Only select repositories` → `weddingscoop`
@@ -86,7 +94,7 @@ Vercel → 프로젝트 → `Settings` → `Environment Variables` 에 추가 �
 
 1. GitHub 저장소 → `posts` 폴더 → `_template.md` 열어서 내용 복사
 2. `posts` 폴더에서 `Add file` → `Create new file`
-3. 파일 이름을 **영어 소문자·숫자·하이픈**으로 짓기 (예: `seoul-expo-tips.md`) → 이 이름이 주소가 됨 (`/blog/seoul-expo-tips`)
+3. 파일 이름을 **다음 번호**로 짓기 (예: 마지막 글이 `5.md`면 `6.md`) → 주소가 `/blog/6` (어드민을 쓰면 자동)
 4. 복사한 견본을 붙여넣고 내용 수정 → `draft: true` 줄은 지우기 → `Commit changes`
 
 맨 위 `---` 사이 정보:
@@ -99,7 +107,10 @@ Vercel → 프로젝트 → `Settings` → `Environment Variables` 에 추가 �
 | `thumbnail` | ❌ | 대표 이미지 URL (목록 썸네일, 카톡 공유 미리보기) |
 | `draft` | ❌ | `true`면 사이트에 안 올라감 (임시저장) |
 
-본문 문법: `# 소제목`, `## 작은 소제목`, `**굵게**`, `[링크](주소)`, `![사진설명](이미지주소)`, `- 목록`, `1. 번호목록`, `> 강조박스`
+본문 문법: `# 소제목`, `## 작은 소제목`, `**굵게**`, `[링크](주소)`, `![사진설명](이미지주소)`, `- 목록`, `1. 번호목록`, `> 인용`
+- 사진 캡션: 사진 바로 다음 줄에 `▲ 캡션`
+- 콜아웃: `> 💡 내용` (💡 팁 · ⚠️ 주의 · ✅ 체크 · 📌 정보)
+- 검색 노출용 맨 위 정보: `keyword: 포커스 키워드`, `seoTitle: 검색 결과 제목`
 
 **버튼 넣기**: 링크를 앞뒤 빈 줄과 함께 한 줄에 따로 쓰면 빨간 버튼으로 바뀝니다. (문장 중간 링크는 글자 링크 그대로)
 

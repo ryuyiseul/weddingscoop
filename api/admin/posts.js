@@ -1,15 +1,31 @@
 // 어드민 글 관리 API
 //   GET              글 목록 (임시저장 포함)
 //   GET ?slug=xxx    글 하나 (본문 포함)
-//   POST             저장 { originalSlug, slug, meta, body, images: [{ path, base64 }] }
+//   POST             저장 { originalSlug, meta, body, images: [{ path, base64 }] }  — 새 글 주소는 1, 2, 3… 자동
 //   DELETE ?slug=xxx 삭제
 const { guard, listDir, readFile, commitFiles, readJson } = require('../_lib/admin');
-const { SLUG_RE, DATE_RE, parsePost, serializePost, isDraft } = require('../../lib/post-format');
+const { SLUG_RE, NUMERIC_SLUG_RE, DATE_RE, parsePost, serializePost, isDraft } = require('../../lib/post-format');
 
 const IMAGE_PATH_RE = /^images\/blog\/[a-z0-9-]+\/[a-z0-9-]+\.(webp|jpg|jpeg|png|gif)$/;
 const MAX_IMAGE_BYTES = 3 * 1024 * 1024;
 
 const postPath = (slug) => `posts/${slug}.md`;
+
+// 새 글 번호 = 지금 있는 숫자 주소 중 가장 큰 값 + 1
+async function nextSlug() {
+  const nums = (await listDir('posts'))
+    .map(f => f.name.replace(/\.md$/, ''))
+    .filter(n => NUMERIC_SLUG_RE.test(n))
+    .map(Number);
+  return String((nums.length ? Math.max(...nums) : 0) + 1);
+}
+
+const META_KEYS = ['title', 'seoTitle', 'keyword', 'date', 'description', 'thumbnail', 'draft'];
+const pickMeta = (meta) => {
+  const out = {};
+  for (const k of META_KEYS) out[k] = k === 'draft' ? isDraft(meta) : String(meta[k] || '');
+  return out;
+};
 
 function fail(res, status, error) {
   res.status(status).json({ error });
@@ -21,12 +37,12 @@ async function listPosts() {
     const slug = f.name.replace(/\.md$/, '');
     try {
       const { meta } = parsePost(await readFile(f.path), f.name);
-      return { slug, title: meta.title || '(제목 없음)', date: meta.date || '', description: meta.description || '', thumbnail: meta.thumbnail || '', draft: isDraft(meta) };
+      return { slug, ...pickMeta(meta), title: meta.title || '(제목 없음)' };
     } catch (e) {
       return { slug, title: `(형식 오류) ${f.name}`, date: '', draft: true, broken: true };
     }
   }));
-  return posts.sort((a, b) => (b.date || '').localeCompare(a.date || '') || a.slug.localeCompare(b.slug));
+  return posts.sort((a, b) => (b.date || '').localeCompare(a.date || '') || (Number(b.slug) || 0) - (Number(a.slug) || 0));
 }
 
 async function getPost(slug) {
@@ -35,19 +51,19 @@ async function getPost(slug) {
   const { meta, body } = parsePost(src, slug);
   return {
     slug,
-    meta: { title: meta.title || '', date: meta.date || '', description: meta.description || '', thumbnail: meta.thumbnail || '', draft: isDraft(meta) },
+    meta: pickMeta(meta),
     body,
   };
 }
 
 async function savePost(req, res) {
   const data = await readJson(req);
-  const slug = String(data.slug || '').trim();
   const originalSlug = String(data.originalSlug || '').trim();
+  // 사진만 먼저 올릴 때는 글 주소가 필요 없음
+  let slug = originalSlug || 'new';
   const meta = data.meta || {};
   const images = Array.isArray(data.images) ? data.images : [];
 
-  if (!SLUG_RE.test(slug)) return fail(res, 400, '글 주소는 영어 소문자, 숫자, 하이픈(-)만 쓸 수 있습니다');
   if (originalSlug && !SLUG_RE.test(originalSlug)) return fail(res, 400, '잘못된 글 주소입니다');
   if (!data.imagesOnly) {
     if (!String(meta.title || '').trim()) return fail(res, 400, '제목을 입력해주세요');
@@ -65,18 +81,18 @@ async function savePost(req, res) {
   // 사진이 많으면 화면에서 나눠 보냄: 사진만 먼저 저장
   if (data.imagesOnly) {
     if (!files.length) return fail(res, 400, '저장할 사진이 없습니다');
-    await commitFiles(`블로그 사진 업로드: ${slug}`, files);
+    await commitFiles(`블로그 사진 업로드 (${files.length}장)`, files);
     return res.status(200).json({ ok: true });
   }
 
   const isNew = !originalSlug;
-  const renamed = originalSlug && originalSlug !== slug;
-  if (isNew || renamed) {
-    if (await readFile(postPath(slug)) !== null) return fail(res, 409, `이미 같은 주소(${slug})의 글이 있습니다. 글 주소를 바꿔주세요`);
+  if (isNew) {
+    slug = await nextSlug();
+  } else if (await readFile(postPath(slug)) === null) {
+    return fail(res, 404, '수정할 글을 찾을 수 없습니다 (이미 삭제됐을 수 있어요)');
   }
 
-  files.push({ path: postPath(slug), content: serializePost(meta, data.body) });
-  if (renamed) files.push({ path: postPath(originalSlug), delete: true });
+  files.push({ path: postPath(slug), content: serializePost(pickMeta(meta), data.body) });
 
   const title = String(meta.title).trim();
   await commitFiles(`블로그 ${isNew ? '새 글' : '수정'}: ${title}${meta.draft ? ' (임시저장)' : ''}`, files);
