@@ -1,6 +1,8 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "buildCommand": "node scripts/build-blog.js",
+  "outputDirectory": ".",
   "regions": ["icn1"],
   "functions": {
     "api/expos.js": {

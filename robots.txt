@@ -31,3 +31,4 @@ Disallow: /api/
 
 # Sitemap 위치
 Sitemap: https://weddingscoop.co.kr/sitemap.xml
+Sitemap: https://weddingscoop.co.kr/sitemap-blog.xml
