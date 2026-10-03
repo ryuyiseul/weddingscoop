@@ -249,6 +249,16 @@
     color: var(--paper);
   }
   .topbar .date { font-variant-numeric: tabular-nums; opacity: 0.7; }
+  .topbar .topbar-right { display: flex; align-items: center; gap: 20px; flex-shrink: 0; }
+  .topbar .topbar-blog {
+    color: var(--paper);
+    text-decoration: none;
+    font-weight: 600;
+    padding: 6px 14px;
+    border: 1px solid rgba(255,255,255,0.35);
+    transition: border-color 0.2s ease, color 0.2s ease;
+  }
+  .topbar .topbar-blog:hover { border-color: var(--red); color: #fff; }
 
   /* 왼쪽 LIVE 강조 */
   .topbar .live-center {
@@ -4194,6 +4204,10 @@
       letter-spacing: 0.02em;
     }
     .topbar .live-center .tag-en { font-size: 9px; }
+    .topbar .topbar-right { gap: 10px; }
+    .topbar .topbar-blog { padding: 4px 8px; letter-spacing: 0.1em; }
+    .topbar .live-center .ko { white-space: nowrap; }
+    .topbar .date { display: none; }
 
     /* 히어로 */
     .hero { padding: 24px 18px 4px; }
@@ -4809,7 +4823,10 @@
     <span class="tag-en">LIVE</span>
     <span class="ko">신규박람회 매일 업데이트</span>
   </span>
-  <span class="date" id="todayDate"></span>
+  <span class="topbar-right">
+    <a class="topbar-blog" href="/blog">Blog</a>
+    <span class="date" id="todayDate"></span>
+  </span>
 </div>
 
 <section class="hero">
@@ -5931,6 +5948,8 @@
   <div class="footer-bottom">
     <span>© 2026 WEDDING&amp;SCOOP · ALL RIGHTS RESERVED</span>
     <span class="footer-legal-links">
+      <a class="footer-legal-btn" href="/blog" style="text-decoration: none;">블로그</a>
+      <span class="footer-legal-sep">·</span>
       <button class="footer-legal-btn" type="button" data-legal="terms">이용약관</button>
       <span class="footer-legal-sep">·</span>
       <button class="footer-legal-btn" type="button" data-legal="privacy">개인정보처리방침</button>
