@@ -143,7 +143,7 @@
   .tb-big.on { background: #fdecec; color: var(--red); }
   .tb-big.tb-red { color: var(--red); }
   .tb-big.tb-red:hover { background: #fdecec; }
-  .tb-format { display: flex; align-items: center; gap: 2px; padding: 6px 10px; overflow-x: auto; scrollbar-width: none; }
+  .tb-format { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; padding: 6px 10px; }
   .tb-format::-webkit-scrollbar { display: none; }
   .tb-format select {
     flex: 0 0 auto; height: 34px; padding: 0 28px 0 10px; border: 1px solid #dadde1; border-radius: 6px; background: #fff;
@@ -156,6 +156,20 @@
   .tb-sm svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
   .tb-sm:hover { background: #f3f4f6; }
   .tb-sm.on { background: var(--ink); color: #fff; }
+  .tb-color { position: relative; flex: 0 0 auto; }
+  .tb-color-btn { display: grid; place-items: center; align-content: center; gap: 1px; }
+  .tb-color-a { font-weight: 800; line-height: 1; }
+  .tb-color-bar { width: 18px; height: 4px; border-radius: 2px; background: var(--ink); }
+  .tb-palette {
+    position: absolute; top: calc(100% + 6px); left: 0; z-index: 40; width: 216px; padding: 12px;
+    background: #fff; border: 1px solid #dadde1; border-radius: 10px; box-shadow: 0 12px 30px -12px rgba(0,0,0,0.35);
+  }
+  .tb-palette-title { font-size: 12px; font-weight: 800; margin-bottom: 8px; }
+  .tb-swatches { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+  .tb-swatch { width: 26px; height: 26px; border-radius: 6px; border: 2px solid #fff; box-shadow: 0 0 0 1px #dadde1; cursor: pointer; padding: 0; }
+  .tb-swatch:hover, .tb-swatch.on { box-shadow: 0 0 0 2px var(--ink); }
+  .tb-color-reset { margin-top: 10px; width: 100%; padding: 7px; border: 1px solid #dadde1; border-radius: 6px; background: #fff; font-size: 12.5px; font-weight: 600; cursor: pointer; }
+  .tb-color-reset:hover { border-color: var(--ink); }
   .tb-sep { flex: 0 0 auto; width: 1px; height: 20px; background: #dadde1; margin: 0 6px; }
   .editor-box .toastui-editor-defaultUI { border-radius: 0 0 10px 10px; border-color: #dadde1; }
   .editor-box .toastui-editor-defaultUI-toolbar, .editor-box .toastui-editor-toolbar { display: none !important; }
@@ -372,6 +386,29 @@
             <button type="button" class="tb-sm" data-act="bold" title="굵게 (Ctrl+B)"><b>가</b></button>
             <button type="button" class="tb-sm" data-act="italic" title="기울임 (Ctrl+I)"><i>가</i></button>
             <button type="button" class="tb-sm" data-act="strike" title="취소선"><s>가</s></button>
+            <div class="tb-color">
+              <button type="button" class="tb-sm tb-color-btn" id="tbColorBtn" title="글자색 (글자를 드래그한 뒤 누르세요)" aria-haspopup="true" aria-expanded="false">
+                <span class="tb-color-a">가</span><span class="tb-color-bar" id="tbColorBar"></span>
+              </button>
+              <div class="tb-palette" id="tbPalette" hidden>
+                <div class="tb-palette-title">글자색</div>
+                <div class="tb-swatches">
+                <button type="button" class="tb-swatch" data-color="#b8232f" title="웨딩스쿱 빨강" style="background:#b8232f"></button>
+                <button type="button" class="tb-swatch" data-color="#8a1a24" title="진한 빨강" style="background:#8a1a24"></button>
+                <button type="button" class="tb-swatch" data-color="#c2255c" title="분홍" style="background:#c2255c"></button>
+                <button type="button" class="tb-swatch" data-color="#d9480f" title="주황" style="background:#d9480f"></button>
+                <button type="button" class="tb-swatch" data-color="#b7791f" title="황토" style="background:#b7791f"></button>
+                <button type="button" class="tb-swatch" data-color="#1f7a4d" title="초록" style="background:#1f7a4d"></button>
+                <button type="button" class="tb-swatch" data-color="#0b7285" title="청록" style="background:#0b7285"></button>
+                <button type="button" class="tb-swatch" data-color="#1c64b8" title="파랑" style="background:#1c64b8"></button>
+                <button type="button" class="tb-swatch" data-color="#2b3a67" title="남색" style="background:#2b3a67"></button>
+                <button type="button" class="tb-swatch" data-color="#6b3fa0" title="보라" style="background:#6b3fa0"></button>
+                <button type="button" class="tb-swatch" data-color="#5a5752" title="진한 회색" style="background:#5a5752"></button>
+                <button type="button" class="tb-swatch" data-color="#8a8680" title="회색" style="background:#8a8680"></button>
+                </div>
+                <button type="button" class="tb-color-reset" data-color="">기본색으로</button>
+              </div>
+            </div>
             <span class="tb-sep"></span>
             <button type="button" class="tb-sm" data-act="bulletList" title="점 목록"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="7" r="1.2" fill="currentColor"/><circle cx="5" cy="12" r="1.2" fill="currentColor"/><circle cx="5" cy="17" r="1.2" fill="currentColor"/><path d="M9 7h11M9 12h11M9 17h11"/></svg></button>
             <button type="button" class="tb-sm" data-act="orderedList" title="번호 목록"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h1.5v4M4 9h3M4 14.5c0-1 2.5-1.2 2.5 0 0 .8-2.5 1.8-2.5 3h2.6"/><path d="M10 7h10M10 12h10M10 17h10"/></svg></button>
@@ -581,7 +618,7 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<!-- TOAST UI Editor 3.2.2 (MIT, NHN Cloud) + 한국어 — 사이트에 직접 올린 파일 -->
+<!-- TOAST UI Editor 3.2.2 + 글자색 플러그인 3.1.0 (MIT, NHN Cloud) + 한국어 — 사이트에 직접 올린 파일 -->
 <script src="/admin-assets/toastui-editor-3.2.2.js"></script>
 <script>
 (() => {
@@ -864,6 +901,7 @@
       placeholder: '내용을 입력하세요',
       hideModeSwitch: true,
       toolbarItems: [],
+      plugins: [[toastui.colorSyntax, { preset: [] }]],
       hooks: {
         // 끌어다 놓기·붙여넣기 한 사진
         addImageBlobHook: async (blob, callback) => {
@@ -928,6 +966,48 @@
       default: run(act); // bold, italic, strike, bulletList, orderedList, undo, redo
     }
   });
+  // ═══════ 글자색 ═══════
+  const togglePalette = (open) => {
+    const show = open === undefined ? $('tbPalette').hidden : open;
+    $('tbPalette').hidden = !show;
+    $('tbColorBtn').setAttribute('aria-expanded', String(show));
+    if (show) {
+      // 화면 밖으로 나가지 않게 위치 조정 (모바일)
+      const pal = $('tbPalette');
+      pal.style.left = '0px';
+      const r = pal.getBoundingClientRect();
+      const over = r.right - (document.documentElement.clientWidth - 8);
+      if (over > 0) pal.style.left = `${-over}px`;
+    }
+  };
+  $('tbColorBtn').addEventListener('click', () => togglePalette());
+  document.addEventListener('mousedown', (e) => {
+    if (!$('tbPalette').hidden && !e.target.closest('.tb-color')) togglePalette(false);
+  });
+  $('tbPalette').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-color]');
+    if (!b) return;
+    const color = b.dataset.color;
+    const view = pm();
+    const { state } = view;
+    const { from, to, empty } = state.selection;
+    if (empty) {
+      togglePalette(false);
+      return toast('색을 바꿀 글자를 먼저 드래그해서 선택해주세요', true);
+    }
+    // 기존 색 지우고 새 색 입히기
+    view.dispatch(state.tr.removeMark(from, to, state.schema.marks.span));
+    if (color) editor.exec('color', { selectedColor: color });
+    togglePalette(false);
+    dirty = true;
+    updateToolbarState();
+  });
+  const markColor = (marks) => {
+    const span = marks.find(m => m.type.name === 'span');
+    const m = span && JSON.stringify(span.attrs).match(/color:\s*([^;"\\]+)/);
+    return m ? m[1].trim() : '';
+  };
+
   $('tbHeading').addEventListener('change', () => {
     editor.focus();
     editor.exec('heading', { level: Number($('tbHeading').value) });
@@ -950,6 +1030,9 @@
     set('bulletList', inside('bulletList'));
     set('orderedList', inside('orderedList'));
     set('quote', inside('blockQuote'));
+    const color = markColor(marks);
+    $('tbColorBar').style.background = color || 'var(--ink)';
+    $('tbPalette').querySelectorAll('.tb-swatch').forEach(sw => sw.classList.toggle('on', !!color && sw.dataset.color.toLowerCase() === color.toLowerCase()));
     const parent = $from.parent;
     $('tbHeading').value = parent.type.name === 'heading' ? String(Math.min(parent.attrs.level, 3)) : '0';
   }
@@ -1558,6 +1641,7 @@
       e.preventDefault();
       $('saveBtn').click();
     }
+    if (e.key === 'Escape' && !$('tbPalette').hidden) { togglePalette(false); return; }
     if (e.key === 'Escape') {
       const open = [...document.querySelectorAll('.modal')].find(m => !m.hidden);
       if (open) open.querySelector('[id$="Cancel"], [id$="Close"]')?.click();
