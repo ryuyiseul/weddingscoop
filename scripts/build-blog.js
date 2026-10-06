@@ -38,8 +38,10 @@ function setupMarked(m) {
     const meaningful = line.filter(t => !(t.type === 'text' && !t.raw.trim()));
     if (meaningful.length === 1 && meaningful[0].type === 'link') {
       const link = meaningful[0];
-      const label = parser.parseInline(link.tokens).replace(/\s*(&gt;&gt;|»|→|▶)\s*$/, '');
-      return `<p class="post-btn-wrap"><a class="post-btn" href="${escapeHtml(link.href)}"${linkAttrs(link.href)}>${label}<span class="post-btn-arrow" aria-hidden="true">▶</span></a></p>\n`;
+      const label = parser.parseInline(link.tokens)
+        .replace(/\s*(&gt;&gt;|»|→|▶)\s*$/, '')
+        .replace(/\s+&amp;\s+/, '<br />&amp; '); // " & " 앞에서 줄바꿈 → 두 줄 버튼
+      return `<p class="post-btn-wrap"><a class="post-btn" href="${escapeHtml(link.href)}"${linkAttrs(link.href)}><span class="post-btn-text">${label}</span><span class="post-btn-arrow" aria-hidden="true">▶</span></a></p>\n`;
     }
     const html = parser.parseInline(line).trim();
     if (/^▲/.test(line.map(t => t.raw).join('').trim())) return `<p class="img-caption">${html}</p>\n`;
@@ -65,9 +67,8 @@ function setupMarked(m) {
         const level = Math.min(depth + 1, 6);
         return `<h${level}>${this.parser.parseInline(tokens)}</h${level}>\n`;
       },
-      // 링크만 단독으로 있는 줄 → 버튼  예) [전국 웨딩박람회 일정 보러가기](/#campaigns)
       // 편집기에서 엔터 한 번 = 한 줄 = 문단 하나. 줄마다 따로 처리
-      //  - 링크만 있는 줄 → 버튼   예) [전국 웨딩박람회 일정 보러가기](/#campaigns)
+      //  - 링크만 있는 줄 → 버튼   예) [전국 웨딩박람회 일정 확인 & 무료초대권 받기](/#campaigns)
       //  - ▲ 로 시작하는 줄 → 사진 캡션
       paragraph({ tokens }) {
         const lines = [[]];
@@ -208,7 +209,8 @@ ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script
   }
   .post-body a.post-btn:hover { background: var(--red-deep); transform: translateY(-2px); }
   .post-body a.post-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--red-deep); }
-  .post-body .post-btn-arrow { font-size: 12px; }
+  .post-body .post-btn-text { text-align: center; }
+  .post-body .post-btn-arrow { font-size: 12px; flex-shrink: 0; }
   .post-body strong { color: var(--ink); }
   .post-body img { max-width: 100%; height: auto; border-radius: 6px; display: block; }
   .post-body blockquote { border-left: 3px solid var(--red); background: var(--paper-soft); padding: 14px 18px; color: var(--muted-dark); }
@@ -236,10 +238,10 @@ ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script
     margin-top: 56px; padding: 32px 24px; text-align: center; background: var(--ink); color: var(--paper); border-radius: 10px;
   }
   .cta p { font-size: 18px; font-weight: 700; letter-spacing: -0.02em; }
-  .cta span { display: block; margin-top: 6px; font-size: 14px; opacity: 0.7; font-weight: 400; }
+  .cta p span { display: block; margin-top: 6px; font-size: 14px; opacity: 0.7; font-weight: 400; }
   .cta a {
-    display: inline-block; margin-top: 18px; padding: 13px 26px; background: var(--red); color: #fff;
-    font-weight: 700; font-size: 15px; border-radius: 8px; text-decoration: none;
+    display: inline-flex; align-items: center; gap: 10px; margin-top: 18px; padding: 13px 26px; background: var(--red); color: #fff;
+    font-weight: 700; font-size: 15px; line-height: 1.4; text-align: center; border-radius: 8px; text-decoration: none;
   }
   .cta a:hover { background: var(--red-deep); }
   /* 심장 뛰는 효과 (두 번 쿵쿵 → 쉬기) */
@@ -298,7 +300,7 @@ ${body}
 const ctaBlock = `
 <aside class="cta">
   <p>가까운 웨딩박람회, 무료초대권으로 다녀오세요<span>전국 박람회 일정을 한눈에 확인하고 사전신청 혜택을 받아보세요</span></p>
-  <a href="/#campaigns">박람회 일정 보러가기 →</a>
+  <a href="/#campaigns"><span>전국 웨딩박람회 일정 확인<br />&amp; 무료초대권 받기</span><span aria-hidden="true">→</span></a>
 </aside>`;
 
 // ═══════ 빌드 ═══════
