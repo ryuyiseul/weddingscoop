@@ -15,7 +15,7 @@ draft: true
 
 링크만 한 줄에 따로 쓰면 빨간 버튼으로 보입니다:
 
-[전국 웨딩박람회 일정 보러가기](https://weddingscoop.co.kr/#campaigns)
+[전국 웨딩박람회 일정 확인 & 무료초대권 받기](https://weddingscoop.co.kr/#campaigns)
 
 > 💡 이렇게 쓰면 색깔 강조 박스(콜아웃)가 됩니다
 

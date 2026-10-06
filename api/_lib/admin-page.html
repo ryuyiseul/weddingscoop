@@ -566,7 +566,8 @@
     <p>본문 중간에 빨간 버튼이 들어갑니다. (편집 화면에선 링크로 보여요)</p>
     <div class="field">
       <label class="lbl" for="ctaLabel">버튼 글자</label>
-      <input class="input" id="ctaLabel" value="전국 웨딩박람회 일정 보러가기" />
+      <input class="input" id="ctaLabel" value="전국 웨딩박람회 일정 확인 &amp; 무료초대권 받기" />
+      <p class="help">글자 중간에 " &amp; "를 넣으면 그 앞에서 줄이 바뀌어 두 줄 버튼이 돼요</p>
     </div>
     <div class="field">
       <label class="lbl" for="ctaUrl">이동할 주소</label>
@@ -1430,7 +1431,7 @@
     add('사진', !!thumb, true, '대표 이미지가 있어요', '대표 이미지를 정해주세요 (목록·카톡·검색 미리보기에 쓰여요)');
 
     // 링크
-    add('링크', internal.length >= 1, true, `사이트 안 링크 ${internal.length}개`, '사이트 안 링크가 없어요 — 버튼 도구로 "박람회 일정 보러가기"를 넣거나 다른 블로그 글을 링크해주세요');
+    add('링크', internal.length >= 1, true, `사이트 안 링크 ${internal.length}개`, '사이트 안 링크가 없어요 — 버튼 도구로 "박람회 일정 확인" 버튼을 넣거나 다른 블로그 글을 링크해주세요');
     add('링크', ctas.length >= 1, false, '버튼(행동 유도)이 있어요', '본문 중간에 빨간 버튼을 1개 이상 넣어주세요 (방문자가 박람회 신청으로 이어지게)');
     add('링크', external.length >= 1, false, `참고 링크 ${external.length}개`, '믿을 만한 외부 출처(박람회 공식 사이트 등) 링크를 1개 넣으면 신뢰도에 도움돼요');
 
