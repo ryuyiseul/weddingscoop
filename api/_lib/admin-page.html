@@ -127,10 +127,43 @@
   #editor { background: #fff; }
   .editor-tip { margin-top: 8px; font-size: 12.5px; color: var(--muted); line-height: 1.7; }
 
+  /* 툴바 (네이버 블로그 스타일: 큰 아이콘 + 글자) */
+  .tb {
+    position: sticky; top: 58px; z-index: 25; background: #fff; border: 1px solid #dadde1; border-bottom: none;
+    border-radius: 10px 10px 0 0; box-shadow: 0 6px 14px -12px rgba(0,0,0,0.35);
+  }
+  .tb-insert { display: flex; gap: 2px; padding: 8px 10px 6px; border-bottom: 1px solid #eceef0; overflow-x: auto; scrollbar-width: none; }
+  .tb-insert::-webkit-scrollbar { display: none; }
+  .tb-big {
+    flex: 0 0 auto; min-width: 66px; display: grid; justify-items: center; gap: 4px; padding: 8px 6px 6px;
+    border: none; background: none; border-radius: 8px; cursor: pointer; color: #333; font-size: 12.5px; font-weight: 600;
+  }
+  .tb-big svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .tb-big:hover { background: #f3f4f6; color: var(--ink); }
+  .tb-big.on { background: #fdecec; color: var(--red); }
+  .tb-big.tb-red { color: var(--red); }
+  .tb-big.tb-red:hover { background: #fdecec; }
+  .tb-format { display: flex; align-items: center; gap: 2px; padding: 6px 10px; overflow-x: auto; scrollbar-width: none; }
+  .tb-format::-webkit-scrollbar { display: none; }
+  .tb-format select {
+    flex: 0 0 auto; height: 34px; padding: 0 28px 0 10px; border: 1px solid #dadde1; border-radius: 6px; background: #fff;
+    font-size: 13.5px; font-weight: 600; cursor: pointer;
+  }
+  .tb-sm {
+    flex: 0 0 auto; width: 36px; height: 34px; display: grid; place-items: center; border: none; background: none;
+    border-radius: 6px; cursor: pointer; font-size: 16px; color: #333;
+  }
+  .tb-sm svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .tb-sm:hover { background: #f3f4f6; }
+  .tb-sm.on { background: var(--ink); color: #fff; }
+  .tb-sep { flex: 0 0 auto; width: 1px; height: 20px; background: #dadde1; margin: 0 6px; }
+  .editor-box .toastui-editor-defaultUI { border-radius: 0 0 10px 10px; border-color: #dadde1; }
+  .editor-box .toastui-editor-defaultUI-toolbar, .editor-box .toastui-editor-toolbar { display: none !important; }
+
   /* 표 편집 바 (표 안에 커서가 있을 때) */
   .table-bar {
-    position: sticky; top: 64px; z-index: 20; display: flex; flex-wrap: wrap; align-items: center; gap: 4px;
-    padding: 8px 10px; margin-bottom: 6px; background: var(--ink); color: #fff; border-radius: 8px;
+    position: sticky; top: 196px; z-index: 20; display: flex; flex-wrap: wrap; align-items: center; gap: 4px;
+    padding: 8px 10px; background: var(--ink); color: #fff;
     box-shadow: 0 8px 20px -10px rgba(0,0,0,0.5);
   }
   .table-bar span { font-size: 12px; font-weight: 700; margin-right: 6px; opacity: 0.8; }
@@ -231,13 +264,6 @@
   .us-credit { font-size: 12px; color: var(--muted); margin-top: 6px; }
 
   /* 편집기 안 커스텀 */
-  .toastui-editor-toolbar-icons.txt-tool {
-    background: none; width: auto; padding: 0 8px; margin: 7px 3px; font-size: 12px; font-weight: 800;
-    border-radius: 4px; height: 22px; line-height: 22px; color: var(--ink); border: 1px solid #d9d6cf;
-  }
-  .toastui-editor-toolbar-icons.txt-tool:not(:disabled):hover { background: var(--paper-soft); border-color: var(--ink); }
-  .toastui-editor-toolbar-icons.txt-tool.cta-tool { color: #fff; background: var(--red); border-color: var(--red); }
-  .toastui-editor-toolbar-icons.txt-tool.cta-tool:not(:disabled):hover { background: var(--red-deep); }
   .toastui-editor-contents { font-family: 'Pretendard Variable', 'Pretendard', sans-serif; font-size: 16px; }
   .toastui-editor-contents img { max-width: 100%; cursor: pointer; }
   .toastui-editor-contents img:hover { outline: 3px solid rgba(184, 35, 47, 0.35); }
@@ -259,7 +285,12 @@
     .post-thumb { width: 56px; height: 44px; }
     .post-actions { grid-column: 1 / -1; justify-content: flex-end; }
     .title-input { font-size: 22px; }
-    .table-bar { top: 56px; }
+    .tb { top: 52px; }
+    .tb-insert { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; overflow: visible; padding: 6px; }
+    .tb-format { flex-wrap: wrap; row-gap: 4px; }
+    .tb-big { min-width: 58px; font-size: 11.5px; padding: 6px 4px 5px; }
+    .tb-big svg { width: 23px; height: 23px; }
+    .table-bar { top: 52px; }
     .us-pick { grid-template-columns: 1fr; }
     .callout-types { grid-template-columns: repeat(2, 1fr); }
   }
@@ -319,6 +350,36 @@
     <section>
       <input class="title-input" id="fTitle" placeholder="제목을 입력하세요" maxlength="120" />
       <div class="editor-box">
+        <div class="tb" id="toolbar">
+          <div class="tb-insert">
+          <button type="button" class="tb-big" data-act="photo" title="내 컴퓨터·휴대폰 사진 넣기"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 8"/></svg><span>사진</span></button>
+          <button type="button" class="tb-big" data-act="unsplash" title="무료 사진 검색해서 넣기"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="13" height="11" rx="2"/><path d="M3 13l4-3 5 4"/><circle cx="17.5" cy="16.5" r="3.5"/><path d="M20 19l2.5 2.5"/></svg><span>무료사진</span></button>
+          <button type="button" class="tb-big" data-act="table" title="표 넣기"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M3 15h18M9 4v16M15 4v16"/></svg><span>표</span></button>
+          <button type="button" class="tb-big" data-act="callout" title="💡⚠️✅📌 강조 박스"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M8 10h8M8 14h5"/><circle cx="6" cy="10" r="0.6" fill="currentColor"/></svg><span>콜아웃</span></button>
+          <button type="button" class="tb-big tb-red" data-act="cta" title="빨간 버튼 넣기"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="10" rx="5"/><path d="M10 10l4 2-4 2z" fill="currentColor"/></svg><span>버튼</span></button>
+          <button type="button" class="tb-big" data-act="quote" title="인용구"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 17c-1.5 0-2.5-1.2-2.5-3 0-3 2-6 5-7M15 17c-1.5 0-2.5-1.2-2.5-3 0-3 2-6 5-7"/></svg><span>인용구</span></button>
+          <button type="button" class="tb-big" data-act="hr" title="구분선"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h18"/><path d="M6 7h12M6 17h12" opacity="0.35"/></svg><span>구분선</span></button>
+          <button type="button" class="tb-big" data-act="link" title="링크 넣기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg><span>링크</span></button>
+          </div>
+          <div class="tb-format">
+            <select id="tbHeading" title="글자 종류">
+              <option value="0">본문</option>
+              <option value="1">소제목 (큰)</option>
+              <option value="2">소제목 (중간)</option>
+              <option value="3">소제목 (작은)</option>
+            </select>
+            <span class="tb-sep"></span>
+            <button type="button" class="tb-sm" data-act="bold" title="굵게 (Ctrl+B)"><b>가</b></button>
+            <button type="button" class="tb-sm" data-act="italic" title="기울임 (Ctrl+I)"><i>가</i></button>
+            <button type="button" class="tb-sm" data-act="strike" title="취소선"><s>가</s></button>
+            <span class="tb-sep"></span>
+            <button type="button" class="tb-sm" data-act="bulletList" title="점 목록"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="7" r="1.2" fill="currentColor"/><circle cx="5" cy="12" r="1.2" fill="currentColor"/><circle cx="5" cy="17" r="1.2" fill="currentColor"/><path d="M9 7h11M9 12h11M9 17h11"/></svg></button>
+            <button type="button" class="tb-sm" data-act="orderedList" title="번호 목록"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h1.5v4M4 9h3M4 14.5c0-1 2.5-1.2 2.5 0 0 .8-2.5 1.8-2.5 3h2.6"/><path d="M10 7h10M10 12h10M10 17h10"/></svg></button>
+            <span class="tb-sep"></span>
+            <button type="button" class="tb-sm" data-act="undo" title="되돌리기 (Ctrl+Z)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>
+            <button type="button" class="tb-sm" data-act="redo" title="다시하기 (Ctrl+Y)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 14l5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg></button>
+          </div>
+        </div>
         <div class="table-bar" id="tableBar" hidden>
           <span>표 편집</span>
           <button type="button" data-cmd="addRowToUp">위에 줄 추가</button>
@@ -332,9 +393,7 @@
         <div id="editor"></div>
       </div>
       <p class="editor-tip">
-        💡 <strong>사진</strong>: 사진 아이콘, 끌어다 놓기, 붙여넣기 모두 가능 · 넣은 사진을 클릭하면 설명(대체 텍스트)·캡션을 고칠 수 있어요<br />
-        💡 <strong>무료사진</strong>: 언스플래시에서 검색해서 바로 넣기 · <strong>콜아웃</strong>: 💡⚠️✅📌 강조 박스 · <strong>버튼</strong>: 빨간 버튼<br />
-        💡 <strong>표</strong>: 표 안을 누르면 위에 표 편집 메뉴가 나와요 (칸 이동은 Tab 키)
+        💡 사진은 끌어다 놓거나 붙여넣어도 돼요 · 넣은 사진을 클릭하면 설명·캡션 수정 · 표 안을 누르면 표 편집 메뉴가 나와요 (칸 이동은 Tab)
       </p>
     </section>
     <aside class="side">
@@ -439,6 +498,26 @@
     <div class="modal-actions">
       <button class="btn btn-small" type="button" id="calloutCancel">취소</button>
       <button class="btn btn-small btn-primary" type="button" id="calloutInsert">넣기</button>
+    </div>
+  </div>
+</div>
+
+<!-- 링크 넣기 모달 -->
+<div class="modal" id="linkModal" hidden>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="linkTitle">
+    <h3 id="linkTitle">링크 넣기</h3>
+    <p>문장 안에 들어가는 글자 링크예요. (빨간 버튼은 '버튼' 도구를 쓰세요)</p>
+    <div class="field">
+      <label class="lbl" for="linkText">보이는 글자</label>
+      <input class="input" id="linkText" placeholder="예: 코엑스 홈페이지" />
+    </div>
+    <div class="field">
+      <label class="lbl" for="linkUrl">주소</label>
+      <input class="input" id="linkUrl" placeholder="https://" />
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-small" type="button" id="linkCancel">취소</button>
+      <button class="btn btn-small btn-primary" type="button" id="linkInsert">넣기</button>
     </div>
   </div>
 </div>
@@ -773,23 +852,7 @@
     view.dispatch(tr.setMeta('addToHistory', false));
   }
 
-  function toolButton(label, title, extraClass, onClick) {
-    const b = document.createElement('button');
-    b.type = 'button';
-    b.className = `toastui-editor-toolbar-icons txt-tool ${extraClass || ''}`;
-    b.textContent = label;
-    b.setAttribute('aria-label', title);
-    b.addEventListener('click', onClick);
-    return b;
-  }
-
   function createEditor() {
-    const imageBtn = document.createElement('button');
-    imageBtn.type = 'button';
-    imageBtn.className = 'image toastui-editor-toolbar-icons';
-    imageBtn.setAttribute('aria-label', '내 사진 넣기');
-    imageBtn.addEventListener('click', () => $('bodyFile').click());
-
     editor = new toastui.Editor({
       el: $('editor'),
       height: 'calc(100vh - 250px)',
@@ -800,15 +863,7 @@
       usageStatistics: false,
       placeholder: '내용을 입력하세요',
       hideModeSwitch: true,
-      toolbarItems: [
-        ['heading', 'bold', 'italic', 'strike'],
-        ['hr', 'quote', { name: 'callout', tooltip: '콜아웃 (강조 박스)', el: toolButton('콜아웃', '콜아웃', '', openCalloutModal) }],
-        ['ul', 'ol', 'table'],
-        [{ name: 'myimage', tooltip: '내 사진 넣기', el: imageBtn },
-          { name: 'unsplash', tooltip: '무료 사진 검색', el: toolButton('무료사진', '무료 사진 검색', '', () => openUnsplash('body')) },
-          'link'],
-        [{ name: 'cta', tooltip: '버튼 넣기', el: toolButton('버튼', '버튼 넣기', 'cta-tool', openCtaModal) }],
-      ],
+      toolbarItems: [],
       hooks: {
         // 끌어다 놓기·붙여넣기 한 사진
         addImageBlobHook: async (blob, callback) => {
@@ -826,7 +881,7 @@
           }
         },
       },
-      events: { change: () => { dirty = true; scheduleSeo(); } },
+      events: { change: () => { dirty = true; scheduleSeo(); }, caretChange: () => updateToolbarState() },
     });
     window.__wsEditor = editor; // 문제 확인용
 
@@ -837,7 +892,7 @@
     });
 
     // 표 안에 커서가 있으면 표 편집 바
-    document.addEventListener('selectionchange', updateTableBar);
+    document.addEventListener('selectionchange', () => { updateTableBar(); updateToolbarState(); });
     // 표의 마지막 칸에서 Tab → 편집기 밖으로 나가지 않고 줄 추가
     $('editor').addEventListener('keydown', (e) => {
       if (e.key !== 'Tab' || e.shiftKey) return;
@@ -851,6 +906,76 @@
       }
     }, true);
   }
+
+  // ═══════ 툴바 ═══════
+  $('toolbar').addEventListener('mousedown', (e) => {
+    if (e.target.closest('button')) e.preventDefault(); // 편집기 커서 유지
+  });
+  $('toolbar').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-act]');
+    if (!b || !editor) return;
+    const act = b.dataset.act;
+    const run = (cmd, payload) => { editor.exec(cmd, payload); dirty = true; scheduleSeo(); updateToolbarState(); };
+    switch (act) {
+      case 'photo': $('bodyFile').click(); break;
+      case 'unsplash': openUnsplash('body'); break;
+      case 'callout': openCalloutModal(); break;
+      case 'cta': openCtaModal(); break;
+      case 'link': openLinkModal(); break;
+      case 'table': run('addTable', { rowCount: 3, columnCount: 3 }); toast('표를 넣었어요. 표 안을 누르면 줄·칸을 추가하거나 지울 수 있어요'); break;
+      case 'quote': run('blockQuote'); break;
+      case 'hr': run('hr'); break;
+      default: run(act); // bold, italic, strike, bulletList, orderedList, undo, redo
+    }
+  });
+  $('tbHeading').addEventListener('change', () => {
+    editor.focus();
+    editor.exec('heading', { level: Number($('tbHeading').value) });
+    dirty = true;
+    scheduleSeo();
+  });
+
+  // 커서 위치에 맞게 툴바 버튼 켜기 (굵게·소제목 등)
+  function updateToolbarState() {
+    if (!editor || $('viewEditor').hidden) return;
+    const { state } = pm();
+    const { $from } = state.selection;
+    const marks = state.storedMarks || $from.marks();
+    const has = (name) => marks.some(m => m.type.name === name);
+    const inside = (name) => { for (let d = $from.depth; d > 0; d--) if ($from.node(d).type.name === name) return true; return false; };
+    const set = (act, on) => { const el = $('toolbar').querySelector(`[data-act="${act}"]`); if (el) el.classList.toggle('on', on); };
+    set('bold', has('strong'));
+    set('italic', has('emph'));
+    set('strike', has('strike'));
+    set('bulletList', inside('bulletList'));
+    set('orderedList', inside('orderedList'));
+    set('quote', inside('blockQuote'));
+    const parent = $from.parent;
+    $('tbHeading').value = parent.type.name === 'heading' ? String(Math.min(parent.attrs.level, 3)) : '0';
+  }
+
+  // 링크
+  function openLinkModal() {
+    const { state } = pm();
+    const { from, to } = state.selection;
+    $('linkText').value = from !== to ? state.doc.textBetween(from, to, ' ') : '';
+    $('linkUrl').value = '';
+    openModal('linkModal');
+    ($('linkText').value ? $('linkUrl') : $('linkText')).focus();
+  }
+  $('linkCancel').addEventListener('click', () => { closeModal('linkModal'); editor.focus(); });
+  $('linkInsert').addEventListener('click', () => {
+    const text = cleanMd($('linkText').value);
+    let url = $('linkUrl').value.trim();
+    if (!text || !url) return toast('보이는 글자와 주소를 입력해주세요', true);
+    if (!/^(https?:\/\/|\/)/.test(url)) url = 'https://' + url;
+    closeModal('linkModal');
+    editor.focus();
+    editor.exec('addLink', { linkUrl: url, linkText: text });
+    dirty = true;
+    scheduleSeo();
+  });
+  $('linkUrl').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); $('linkInsert').click(); } });
 
   function currentCell() {
     const sel = document.getSelection();
