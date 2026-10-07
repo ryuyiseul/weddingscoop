@@ -1,7 +1,7 @@
-# 매일 아침 사이트를 다시 배포 → 블로그 글 속 "실시간 박람회 목록"을 그날 기준으로 새로 만듦
-# (네이버 검색로봇이 읽는 목록이 매일 바뀌고, 그 뒤 IndexNow 알림도 자동으로 나감)
-# 설정: Vercel → Settings → Git → Deploy Hooks 에서 주소를 만들고,
-#       GitHub 저장소 → Settings → Secrets and variables → Actions 에 VERCEL_DEPLOY_HOOK 로 저장
+# 매일 아침 사이트를 다시 배포 → 메인·지역 페이지·블로그 글의 박람회 목록을 그날 기준으로 새로 만듦
+# (네이버 검색로봇이 읽는 목록·사이트맵 날짜가 매일 바뀌고, 그 뒤 IndexNow 알림도 자동으로 나감)
+# VERCEL_DEPLOY_HOOK 비밀값이 있으면 그걸로 배포하고,
+# 없으면 날짜 파일(.rebuild-stamp)을 main 에 커밋 → Vercel 이 자동 배포
 name: Daily rebuild
 
 on:
@@ -9,17 +9,42 @@ on:
     - cron: '7 21 * * *' # 매일 06:07 (한국 시간)
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   rebuild:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger Vercel deploy
+      - name: Trigger Vercel deploy (deploy hook)
+        id: hook
         env:
           HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
         run: |
           if [ -z "$HOOK" ]; then
-            echo "VERCEL_DEPLOY_HOOK 가 설정되지 않아 건너뜁니다."
+            echo "used=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           curl -fsS -X POST "$HOOK" > /dev/null
-          echo "배포 요청 완료"
+          echo "used=true" >> "$GITHUB_OUTPUT"
+          echo "배포 요청 완료 (deploy hook)"
+
+      - uses: actions/checkout@v4
+        if: steps.hook.outputs.used != 'true'
+        with:
+          ref: main
+
+      - name: Trigger Vercel deploy (date commit)
+        if: steps.hook.outputs.used != 'true'
+        run: |
+          TZ=Asia/Seoul date +%F > .rebuild-stamp
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .rebuild-stamp
+          if git diff --cached --quiet; then
+            echo "오늘 이미 갱신됨"
+            exit 0
+          fi
+          git commit -m "매일 갱신: 박람회 목록 다시 만들기 ($(cat .rebuild-stamp))"
+          git push origin HEAD:main
+          echo "배포 요청 완료 (날짜 커밋)"
