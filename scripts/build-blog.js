@@ -65,9 +65,13 @@ function setupMarked(m) {
         .replace(/\s+&amp;\s+/, '<br />&amp; '); // " & " 앞에서 줄바꿈 → 두 줄 버튼
       return `<p class="post-btn-wrap"><a class="post-btn" href="${escapeHtml(link.href)}"${linkAttrs(link.href)}><span class="post-btn-text">${label}</span><span class="post-btn-arrow" aria-hidden="true">▶</span></a></p>\n`;
     }
+    // 편집기가 붙이는 \[ \| 같은 역슬래시는 떼고 판단
+    const rawLine = line.map(t => t.raw).join('').trim().replace(/\\([\[\]|\-:_*])/g, '$1');
     // [[박람회:서울]] → 실시간 박람회 목록
-    const marker = line.map(t => t.raw).join('').trim().match(LIVE.MARKER);
+    const marker = rawLine.match(LIVE.MARKER);
     if (marker) return LIVE.renderBlock(liveExpos, marker[1].trim());
+    // [[사진:검색어|설명]] → 어드민에서 아직 사진으로 안 바꾼 자리: 사이트에는 안 보이게
+    if (/^\[\[사진:[^\]]*\]\]$/.test(rawLine)) return '';
     const html = parser.parseInline(line).trim();
     if (/^▲/.test(line.map(t => t.raw).join('').trim())) return `<p class="img-caption">${html}</p>\n`;
     return `<p>${html}</p>\n`;
