@@ -17,6 +17,10 @@ async function unsplash(path, key) {
   return res.json();
 }
 
+// 사진 설명·태그에 웨딩 관련 말이 있는 사진을 우선 사용
+const WEDDING_WORDS = /wedding|bride|bridal|groom|marriage|married|ceremony|bouquet|ring|engag|couple|reception|veil|honeymoon|invitation|cake|vow/i;
+const isWeddingPhoto = (p) => WEDDING_WORDS.test([p.alt_description, p.description, ...(p.tags || []).map(t => t.title)].filter(Boolean).join(' '));
+
 async function inBatches(items, size, fn) {
   const out = [];
   for (let i = 0; i < items.length; i += size) out.push(...await Promise.all(items.slice(i, i + size).map(fn)));
@@ -66,8 +70,9 @@ async function fillAllPhotoSlots(key) {
     for (const slot of post.slots) {
       const pool = pools[slot.query];
       if (!pool || !pool.length) continue;
-      const photo = pool
-        .filter(p => !inPost.has(p.id))
+      const fresh = pool.filter(p => !inPost.has(p.id));
+      const wedding = fresh.filter(isWeddingPhoto);
+      const photo = (wedding.length ? wedding : fresh)
         .sort((a, b) => (usage.get(a.id) || 0) - (usage.get(b.id) || 0))[0];
       if (!photo) continue;
       inPost.add(photo.id);
