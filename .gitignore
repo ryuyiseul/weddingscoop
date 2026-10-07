@@ -2,3 +2,15 @@ blog/
 sitemap-blog.xml
 rss.xml
 node_modules/
+sitemap.xml
+# 빌드가 만드는 지역 페이지
+/seoul.html
+/gyeonggi.html
+/incheon.html
+/busan.html
+/chungcheong.html
+/jeolla.html
+/gangwon.html
+/gyeongsang.html
+/jeju.html
+/etc.html

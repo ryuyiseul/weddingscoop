@@ -23,21 +23,11 @@
     }
   },
   "redirects": [
-    { "source": "/blog/wedding-expo-checklist", "destination": "/blog/1", "permanent": true }
+    { "source": "/blog/wedding-expo-checklist", "destination": "/blog/1", "permanent": true },
+    { "source": "/gwangju", "destination": "/blog/15", "permanent": true }
   ],
   "rewrites": [
-    { "source": "/admin/:key", "destination": "/api/admin/page?key=:key" },
-    { "source": "/seoul", "destination": "/" },
-    { "source": "/gyeonggi", "destination": "/" },
-    { "source": "/incheon", "destination": "/" },
-    { "source": "/busan", "destination": "/" },
-    { "source": "/gyeongsang", "destination": "/" },
-    { "source": "/gwangju", "destination": "/" },
-    { "source": "/jeju", "destination": "/" },
-    { "source": "/gangwon", "destination": "/" },
-    { "source": "/chungcheong", "destination": "/" },
-    { "source": "/jeolla", "destination": "/" },
-    { "source": "/etc", "destination": "/" }
+    { "source": "/admin/:key", "destination": "/api/admin/page?key=:key" }
   ],
   "headers": [
     {

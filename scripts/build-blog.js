@@ -448,9 +448,8 @@ function loadPosts() {
 async function build() {
   marked = (await import('marked')).marked;
   setupMarked(marked);
-  const usesLive = fs.existsSync(POSTS_DIR) && fs.readdirSync(POSTS_DIR)
-    .some(f => f.endsWith('.md') && fs.readFileSync(path.join(POSTS_DIR, f), 'utf8').includes('[[박람회:'));
-  if (usesLive) liveExpos = await fetchExpos();
+  // 블로그 글 속 실시간 목록 + 메인/지역 페이지 미리 채우기에 씀
+  liveExpos = await fetchExpos();
 
   const posts = loadPosts();
   fs.rmSync(OUT_DIR, { recursive: true, force: true });
@@ -591,6 +590,9 @@ ${posts.map(p => `    <item>
     : '\n    ';
   const homeOut = homeSrc.replace(/(<!-- BLOG_GUIDES:START[^>]*-->)[\s\S]*?(<!-- BLOG_GUIDES:END -->)/, `$1${guideHtml}$2`);
   if (homeOut !== homeSrc) fs.writeFileSync(HOME, homeOut);
+
+  // 메인 + 지역 페이지(/seoul …) 검색로봇용으로 미리 채우기, 메인 사이트맵
+  require('./build-pages').buildPages({ root: ROOT, expos: liveExpos, posts });
 
   console.log(`[blog] ${posts.length}개 글 빌드 완료 → /blog (메인 가이드 링크 ${guides.length}개)`);
 }
