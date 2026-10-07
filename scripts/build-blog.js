@@ -409,7 +409,7 @@ function loadPosts() {
     })
     // 임시저장(draft: true) 글과 날짜가 미래인 글은 공개하지 않음
     .filter(p => !p.draft && p.date <= today)
-    .sort((a, b) => b.date.localeCompare(a.date) || a.slug.localeCompare(b.slug));
+    .sort((a, b) => b.date.localeCompare(a.date) || (Number(b.slug) || 0) - (Number(a.slug) || 0) || a.slug.localeCompare(b.slug));
 }
 
 async function build() {
@@ -427,7 +427,12 @@ async function build() {
   const relatedOf = (p) => {
     const region = p.place && LIVE.regionOf(p.place);
     if (!region) return '';
-    const list = posts.filter(o => o !== p && o.place && LIVE.regionOf(o.place) === region).slice(0, 12);
+    // 권역 대표 글(예: 경기·강원)이 먼저, 그다음 글 번호 순(주요 도시가 앞 번호)
+    const isHub = (o) => ['서울', '경기', '인천', '부산', '강원', '제주'].includes(o.place);
+    const list = posts
+      .filter(o => o !== p && o.place && LIVE.regionOf(o.place) === region)
+      .sort((a, b) => Number(isHub(b)) - Number(isHub(a)) || (Number(a.slug) || 0) - (Number(b.slug) || 0))
+      .slice(0, 12);
     if (!list.length) return '';
     return `
 <nav class="related-regions" aria-label="가까운 지역 웨딩박람회">
