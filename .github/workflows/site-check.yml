@@ -24,8 +24,14 @@ jobs:
           grep -o '<strong class="live-card-title">[^<]*' /tmp/b2 | head -6 | sed 's/.*>/  - /'
           echo '--- 메인 페이지 → 블로그 링크'
           echo "지역 가이드 링크: $(curl -sS -A "$UA" $S/ | grep -o 'href="/blog/[0-9]*"' | sort -u | wc -l)"
+          echo '--- 지역 페이지 (/seoul, /busan)'
+          for r in seoul busan; do
+            curl -sS -A "$UA" $S/$r > /tmp/r
+            echo "/$r  $(grep -o '<title[^<]*' /tmp/r | sed 's/.*>//') | canonical $(grep -o 'rel="canonical" href="[^"]*' /tmp/r | sed 's/.*href="//') | 카드 $(sed -n '/GRID:START/,/GRID:END/p' /tmp/r | grep -c 'class="card"') | 가이드 링크 $(sed -n '/class="region-intro"/,/<\/section>/p' /tmp/r | grep -c 'href="/blog/')"
+          done
+          echo "메인 미리 넣은 카드: $(curl -sS -A "$UA" $S/ | sed -n '/GRID:START/,/GRID:END/p' | grep -c 'class="card"')"
           echo '--- 사이트맵'
-          echo "블로그 사이트맵 주소 수: $(curl -sS $S/sitemap-blog.xml | grep -c '<loc>')"
+          echo "블로그 사이트맵 주소 수: $(curl -sS $S/sitemap-blog.xml | grep -c '<loc>')  메인 사이트맵: $(curl -sS $S/sitemap.xml | grep -c '<loc>') (날짜 $(curl -sS $S/sitemap.xml | grep -o '<lastmod>[^<]*' | head -1 | sed 's/.*>//'))"
           echo '--- 박람회 없는 도시 글 예시 (/blog/41 진주)'
           curl -sS -A "$UA" $S/blog/41 | grep -o 'class="live-expos-note">[^<]*\|class="live-card"' | sort | uniq -c
       - name: Expo data source

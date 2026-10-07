@@ -24,6 +24,10 @@ async function main() {
     .filter(e => all || e.loc === `${SITE}/blog` || (e.lastmod && e.lastmod >= cutoff))
     .map(e => e.loc);
 
+  // 메인·지역 페이지는 박람회 목록이 매일 바뀌므로 매번 알림
+  const main = await fetch(`${SITE}/sitemap.xml`, { cache: 'no-store' }).then(r => (r.ok ? r.text() : '')).catch(() => '');
+  for (const m of main.matchAll(/<loc>([^<]+)<\/loc>/g)) if (!urls.includes(m[1].trim())) urls.push(m[1].trim());
+
   if (!urls.length) { console.log('[IndexNow] 알릴 페이지 없음'); return; }
   console.log(`[IndexNow] ${urls.length}개 URL 전송:\n  ${urls.join('\n  ')}`);
 

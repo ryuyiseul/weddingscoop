@@ -3606,6 +3606,12 @@
     transition: border-color 0.2s ease, color 0.2s ease;
   }
   .seo-regions-keywords a:hover { border-color: var(--red); color: var(--red); }
+  /* 지역 페이지(/seoul 등) 소개 — 빌드가 채움 */
+  .region-intro { padding: 8px 20px 32px; }
+  .region-intro-inner { max-width: 1200px; margin: 0 auto; }
+  .region-intro-title { font-size: 20px; font-weight: 800; margin: 0 0 8px; }
+  .region-intro-desc { font-size: 14px; line-height: 1.7; opacity: 0.8; margin: 0 0 14px; }
+  .region-intro-sub { font-size: 15px; font-weight: 700; margin: 0 0 10px; }
   .seo-regions-keywords span:hover {
     border-color: var(--red);
     color: var(--red);
@@ -5001,15 +5007,17 @@
         </select>
         <span class="sort-arrow">▾</span>
       </div>
-      <span class="count-badge"><strong id="countNum">0</strong>개 박람회</span>
+      <span class="count-badge"><strong id="countNum">00</strong>개 박람회</span>
     </div>
   </div>
 </section>
 
 <main>
-  <div class="grid" id="grid"></div>
+  <div class="grid" id="grid"><!-- GRID:START — 빌드(scripts/build-pages.js)가 검색로봇용 카드를 미리 채움 --><!-- GRID:END --></div>
   <nav class="pagination" id="pagination" aria-label="박람회 페이지 이동"></nav>
 </main>
+
+<!-- REGION_INTRO:START — 지역 페이지(/seoul 등)에만 빌드가 채움 --><!-- REGION_INTRO:END -->
 
 <!-- ═══ 웨딩박람회란? (SEO 본문 콘텐츠) ═══ -->
 <section class="intro-section">
@@ -6202,7 +6210,7 @@
     const pageItems = filtered.slice(start, start + ITEMS_PER_PAGE);
 
     grid.innerHTML = pageItems.map((e, i) => `
-      <a class="card" href="${e.link}" target="_blank" rel="noopener">
+      <a class="card" href="${e.link}" target="_blank" rel="sponsored noopener">
         <div class="card-image">
           <img src="${e.thumbnail}" alt="${e.title} - ${e.region} 웨딩박람회·결혼박람회 무료초대권 신청" loading="lazy" />
         </div>
@@ -6458,8 +6466,9 @@
       title = '전국 웨딩박람회 일정·신청 | 무료초대권 | Wedding&Scoop';
       description = `전국 웨딩박람회·결혼박람회·웨딩페어 ${count || ''}개 일정과 5만원 무료초대권 신청. 실시간 업데이트.`;
     } else {
-      title = `${region} 웨딩박람회 일정·신청 | ${count || ''}개 무료초대권 | Wedding&Scoop`;
-      description = `${region} 웨딩박람회·결혼박람회 ${count || ''}개 일정과 5만원 무료초대권 신청. 마감임박순 실시간.`;
+      const label = { '경기도': '경기', '제주도': '제주', '기타': '기타 지역' }[region] || region;
+      title = `${label} 웨딩박람회 일정·무료초대권 신청${count ? ` (${count}개)` : ''} | Wedding&Scoop`;
+      description = `${label} 웨딩박람회·결혼박람회${count ? ` ${count}개` : ''} 일정과 무료초대권 신청. 실시간 정리, 매일 업데이트.`;
     }
 
     // title, description, canonical 업데이트
