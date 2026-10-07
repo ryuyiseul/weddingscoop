@@ -1,0 +1,30 @@
+# 실제 사이트를 검색로봇처럼 열어 보고 상태를 기록 (수동 실행)
+name: Site check
+
+on:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check live pages
+        run: |
+          UA='Mozilla/5.0 (compatible; Yeti/1.1; +https://naver.me/spd)'
+          S=https://weddingscoop.co.kr
+          for u in / /blog /blog/2 /blog/14 /blog/41 /sitemap.xml /sitemap-blog.xml /rss.xml /robots.txt /blog/wedding-expo-checklist; do
+            printf '%-32s ' "$u"; curl -sS -o /tmp/p -w '%{http_code} %{size_download}B' -A "$UA" "$S$u"; echo
+          done
+          echo '--- /blog/2 (서울) 로봇이 보는 내용'
+          curl -sS -A "$UA" $S/blog/2 > /tmp/b2
+          echo "실시간 박람회 카드: $(grep -o 'class="live-card"' /tmp/b2 | wc -l)"
+          echo "기준 날짜: $(grep -o '[0-9]*년 [0-9]*월 [0-9]*일 기준' /tmp/b2 | head -1)"
+          echo "사진: $(grep -o '<figure class="photo">' /tmp/b2 | wc -l)  대체텍스트에 키워드: $(grep -o 'alt="[^"]*서울 웨딩박람회[^"]*"' /tmp/b2 | wc -l)"
+          echo "FAQ 구조화: $(grep -c '"FAQPage"' /tmp/b2)  title: $(grep -o '<title>[^<]*' /tmp/b2)"
+          grep -o '<strong class="live-card-title">[^<]*' /tmp/b2 | head -6 | sed 's/.*>/  - /'
+          echo '--- 메인 페이지 → 블로그 링크'
+          echo "지역 가이드 링크: $(curl -sS -A "$UA" $S/ | grep -o 'href="/blog/[0-9]*"' | sort -u | wc -l)"
+          echo '--- 사이트맵'
+          echo "블로그 사이트맵 주소 수: $(curl -sS $S/sitemap-blog.xml | grep -c '<loc>')"
+          echo '--- 박람회 없는 도시 글 예시 (/blog/41 진주)'
+          curl -sS -A "$UA" $S/blog/41 | grep -o 'class="live-expos-note">[^<]*\|class="live-card"' | sort | uniq -c

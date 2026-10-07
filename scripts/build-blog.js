@@ -129,6 +129,25 @@ const markdownToHtml = (md) => marked.parse(md).replace(CREDIT_RE, (all, img, ca
   `<figure class="photo">${img}<figcaption class="photo-credit">© ${author} / ${unsplash}</figcaption></figure>\n`
   + (caption ? `<p class="img-caption">▲ ${caption}</p>\n` : ''));
 
+// "# 자주 묻는 질문" 아래 "## 질문" + 답 → 검색엔진용 FAQ 정보
+function faqJsonLd(md) {
+  const plainText = (t) => t.replace(/\\([\[\]|\-:_*])/g, '$1').replace(/!\[[^\]]*\]\([^)]*\)/g, '')
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1').replace(/<[^>]+>/g, '').replace(/[*_~`>#]/g, '').replace(/\s+/g, ' ').trim();
+  const sec = md.split(/^# /m).find(part => /^자주 묻는 질문/.test(part));
+  if (!sec) return [];
+  const qa = sec.split(/^## /m).slice(1).map((chunk) => {
+    const [q, ...rest] = chunk.split('\n');
+    const a = rest.filter(l => l.trim() && !/^\s*(\[\[|\\\[|\[[^\]]+\]\([^)]+\)\s*$)/.test(l)).map(plainText).filter(Boolean).join(' ');
+    return { q: plainText(q), a };
+  }).filter(x => x.q && x.a);
+  if (!qa.length) return [];
+  return [{
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: qa.map(x => ({ '@type': 'Question', name: x.q, acceptedAnswer: { '@type': 'Answer', text: x.a } })),
+  }];
+}
+
 // /images/... 같은 사이트 내부 경로 → https://weddingscoop.co.kr/images/... (카톡·네이버 미리보기용)
 const absUrl = (u) => (u && u.startsWith('/') ? SITE + u : u);
 
@@ -465,7 +484,7 @@ ${ctaBlock}`;
       url,
       image: absUrl(p.thumbnail) || DEFAULT_IMAGE,
       type: 'article',
-      jsonLd: {
+      jsonLd: [{
         '@context': 'https://schema.org',
         '@type': 'BlogPosting',
         headline: p.title,
@@ -476,7 +495,15 @@ ${ctaBlock}`;
         url,
         mainEntityOfPage: url,
         publisher: { '@type': 'Organization', name: 'Wedding&Scoop', url: SITE },
-      },
+      }, {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: '웨딩스쿱', item: `${SITE}/` },
+          { '@type': 'ListItem', position: 2, name: '웨딩 블로그', item: `${SITE}/blog` },
+          { '@type': 'ListItem', position: 3, name: p.title, item: url },
+        ],
+      }, ...faqJsonLd(p.body)],
       body,
     }));
   }
@@ -541,7 +568,17 @@ ${posts.map(p => `    <item>
 </rss>
 `);
 
-  console.log(`[blog] ${posts.length}개 글 빌드 완료 → /blog`);
+  // 메인 페이지 "지역별 웨딩박람회 가이드" 링크 (네이버 로봇이 자주 오는 메인에서 지역 글로 바로 연결)
+  const HOME = path.join(ROOT, 'index.html');
+  const homeSrc = fs.readFileSync(HOME, 'utf8');
+  const guides = posts.filter(p => p.place).sort((a, b) => (Number(a.slug) || 0) - (Number(b.slug) || 0));
+  const guideHtml = guides.length
+    ? `\n    <div class="seo-regions-keywords">\n${guides.map(p => `      <a href="/blog/${p.slug}">${escapeHtml(p.keyword || p.title)}</a>`).join('\n')}\n    </div>\n    `
+    : '\n    ';
+  const homeOut = homeSrc.replace(/(<!-- BLOG_GUIDES:START[^>]*-->)[\s\S]*?(<!-- BLOG_GUIDES:END -->)/, `$1${guideHtml}$2`);
+  if (homeOut !== homeSrc) fs.writeFileSync(HOME, homeOut);
+
+  console.log(`[blog] ${posts.length}개 글 빌드 완료 → /blog (메인 가이드 링크 ${guides.length}개)`);
 }
 
 build().catch((e) => { console.error(`[blog] 빌드 실패: ${e.message}`); process.exit(1); });
