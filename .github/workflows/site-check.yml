@@ -33,9 +33,9 @@ jobs:
           B='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
           for ua in 'Mozilla/5.0 (compatible; WeddingScoopBlogBuild/1.0)' "$B"; do
             printf 'cpaad [%s]: ' "${ua:0:40}"
-            curl -sS -o /tmp/c -w '%{http_code} %{size_download}B' -A "$ua" -H 'Accept: application/json' https://cpaad.co.kr/api/ad_json_date.php || true; echo
-            head -c 200 /tmp/c; echo
+            curl -sS --max-time 20 -o /tmp/c -w '%{http_code} %{size_download}B' -A "$ua" -H 'Accept: application/json' https://cpaad.co.kr/api/ad_json_date.php || true; echo
+            head -c 200 /tmp/c 2>/dev/null || true; echo
           done
           printf '/api/expos: '
-          curl -sS -o /tmp/e -w '%{http_code} %{size_download}B' -H 'Referer: https://weddingscoop.co.kr/' https://weddingscoop.co.kr/api/expos; echo
-          head -c 200 /tmp/e; echo
+          curl -sS --max-time 30 -o /tmp/e -w '%{http_code} %{size_download}B' -H 'Referer: https://weddingscoop.co.kr/' https://weddingscoop.co.kr/api/expos; echo
+          head -c 200 /tmp/e 2>/dev/null || true; echo

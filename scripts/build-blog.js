@@ -23,23 +23,37 @@ const escapeHtml = (s) => String(s)
 // 한국 날짜 (Vercel 서버는 UTC라서 +9시간)
 // ═══════ 실시간 박람회 목록 (배포 시점 목록을 미리 넣어둠) ═══════
 let liveExpos = [];
-async function fetchExpos() {
+// 박람회 원본(cpaad)은 해외 서버에서 응답이 없어서(빌드 서버는 미국),
+// 서울 리전에서 도는 우리 사이트 /api/expos 를 먼저 거쳐서 받음
+async function getJson(url, headers, ms) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), ms);
   try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 20000);
-    const res = await fetch('https://cpaad.co.kr/api/ad_json_date.php', {
-      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; WeddingScoopBlogBuild/1.0)', Accept: 'application/json' },
-      signal: controller.signal,
-    });
-    clearTimeout(timer);
+    const res = await fetch(url, { headers: { Accept: 'application/json', ...headers }, signal: controller.signal });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const list = LIVE.normalize(JSON.parse(await res.text()));
-    console.log(`[blog] 박람회 ${list.length}개 불러옴`);
-    return list;
-  } catch (e) {
-    console.log(`[blog] 박람회 목록을 못 불러옴 (${e.message}) — 방문자 화면에서 불러옵니다`);
-    return [];
+    return JSON.parse(await res.text());
+  } finally {
+    clearTimeout(timer);
   }
+}
+
+async function fetchExpos() {
+  const sources = [
+    ['사이트 /api/expos', () => getJson(`${SITE}/api/expos`, { Referer: `${SITE}/`, 'User-Agent': 'Mozilla/5.0 (compatible; WeddingScoopBlogBuild/1.0)' }, 30000)],
+    ['cpaad', () => getJson('https://cpaad.co.kr/api/ad_json_date.php', { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36' }, 15000)],
+  ];
+  for (const [name, get] of sources) {
+    try {
+      const list = LIVE.normalize(await get());
+      if (!list.length) throw new Error('0개');
+      console.log(`[blog] 박람회 ${list.length}개 불러옴 (${name})`);
+      return list;
+    } catch (e) {
+      console.log(`[blog] 박람회 목록 실패 (${name}: ${e.name === 'AbortError' ? '시간 초과' : e.message})`);
+    }
+  }
+  console.log('[blog] 박람회 목록을 못 불러옴 — 방문자 화면에서 불러옵니다');
+  return [];
 }
 
 const todayKst = () => new Date(Date.now() + 9 * 3600000).toISOString().slice(0, 10);
