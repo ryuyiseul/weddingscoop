@@ -1,0 +1,25 @@
+# 매일 아침 사이트를 다시 배포 → 블로그 글 속 "실시간 박람회 목록"을 그날 기준으로 새로 만듦
+# (네이버 검색로봇이 읽는 목록이 매일 바뀌고, 그 뒤 IndexNow 알림도 자동으로 나감)
+# 설정: Vercel → Settings → Git → Deploy Hooks 에서 주소를 만들고,
+#       GitHub 저장소 → Settings → Secrets and variables → Actions 에 VERCEL_DEPLOY_HOOK 로 저장
+name: Daily rebuild
+
+on:
+  schedule:
+    - cron: '7 21 * * *' # 매일 06:07 (한국 시간)
+  workflow_dispatch:
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Vercel deploy
+        env:
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "VERCEL_DEPLOY_HOOK 가 설정되지 않아 건너뜁니다."
+            exit 0
+          fi
+          curl -fsS -X POST "$HOOK" > /dev/null
+          echo "배포 요청 완료"

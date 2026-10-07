@@ -5,6 +5,7 @@
 const fs = require('fs');
 const path = require('path');
 const { SLUG_RE, DATE_RE, parsePost, isDraft } = require('../lib/post-format');
+const LIVE = require('../lib/live-expos');
 
 const ROOT = path.join(__dirname, '..');
 const POSTS_DIR = path.join(ROOT, 'posts');
@@ -20,6 +21,27 @@ const escapeHtml = (s) => String(s)
   .replace(/"/g, '&quot;');
 
 // 한국 날짜 (Vercel 서버는 UTC라서 +9시간)
+// ═══════ 실시간 박람회 목록 (배포 시점 목록을 미리 넣어둠) ═══════
+let liveExpos = [];
+async function fetchExpos() {
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 20000);
+    const res = await fetch('https://cpaad.co.kr/api/ad_json_date.php', {
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; WeddingScoopBlogBuild/1.0)', Accept: 'application/json' },
+      signal: controller.signal,
+    });
+    clearTimeout(timer);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const list = LIVE.normalize(JSON.parse(await res.text()));
+    console.log(`[blog] 박람회 ${list.length}개 불러옴`);
+    return list;
+  } catch (e) {
+    console.log(`[blog] 박람회 목록을 못 불러옴 (${e.message}) — 방문자 화면에서 불러옵니다`);
+    return [];
+  }
+}
+
 const todayKst = () => new Date(Date.now() + 9 * 3600000).toISOString().slice(0, 10);
 
 const formatDate = (d) => {
@@ -43,6 +65,9 @@ function setupMarked(m) {
         .replace(/\s+&amp;\s+/, '<br />&amp; '); // " & " 앞에서 줄바꿈 → 두 줄 버튼
       return `<p class="post-btn-wrap"><a class="post-btn" href="${escapeHtml(link.href)}"${linkAttrs(link.href)}><span class="post-btn-text">${label}</span><span class="post-btn-arrow" aria-hidden="true">▶</span></a></p>\n`;
     }
+    // [[박람회:서울]] → 실시간 박람회 목록
+    const marker = line.map(t => t.raw).join('').trim().match(LIVE.MARKER);
+    if (marker) return LIVE.renderBlock(liveExpos, marker[1].trim());
     const html = parser.parseInline(line).trim();
     if (/^▲/.test(line.map(t => t.raw).join('').trim())) return `<p class="img-caption">${html}</p>\n`;
     return `<p>${html}</p>\n`;
@@ -99,7 +124,7 @@ const markdownToHtml = (md) => marked.parse(md);
 const absUrl = (u) => (u && u.startsWith('/') ? SITE + u : u);
 
 // ═══════ 공통 레이아웃 ═══════
-function layout({ title, description, url, image, type, jsonLd, body, keywords }) {
+function layout({ title, description, url, image, type, jsonLd, body, keywords, live }) {
   return `<!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -131,7 +156,7 @@ function layout({ title, description, url, image, type, jsonLd, body, keywords }
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,900&family=Inter:wght@400;600&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
-${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>` : ''}
+${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>` : ''}${live ? '\n<script src="/lib/live-expos.js" defer></script>' : ''}
 <style>
   :root {
     --paper: #fefdfa; --paper-soft: #faf7f0; --ink: #0a0a0a; --ink-soft: #2a2a2a;
@@ -225,6 +250,30 @@ ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script
   .callout-warn { background: #fdecec; border-color: #f5c9cc; }
   .callout-check { background: #e9f6ee; border-color: #c4e6d1; }
   .callout-info { background: #eef3fb; border-color: #cddcf2; }
+
+  /* 실시간 박람회 목록 */
+  .live-expos { margin: 2em 0; padding: 20px; border: 1.5px solid var(--ink); border-radius: 14px; background: #fff; }
+  .live-expos-head { display: flex; align-items: center; gap: 10px; }
+  .live-expos-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--red); box-shadow: 0 0 0 0 rgba(184,35,47,0.6); animation: livePulse 1.6s infinite; flex-shrink: 0; }
+  @keyframes livePulse { 0% { box-shadow: 0 0 0 0 rgba(184,35,47,0.6); } 70% { box-shadow: 0 0 0 8px rgba(184,35,47,0); } 100% { box-shadow: 0 0 0 0 rgba(184,35,47,0); } }
+  .post-body .live-expos-title { margin: 0; font-size: 19px; line-height: 1.4; color: var(--ink); }
+  .live-expos-note { margin-top: 10px; font-size: 13.5px; color: var(--muted-dark); }
+  .live-expos-grid { margin-top: 14px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .post-body a.live-card {
+    display: grid; grid-template-columns: 96px 1fr; gap: 12px; padding: 10px; border: 1px solid var(--line); border-radius: 10px;
+    color: var(--ink); text-decoration: none; background: var(--paper); transition: border-color 0.15s, transform 0.15s;
+  }
+  .post-body a.live-card:hover { border-color: var(--red); transform: translateY(-2px); }
+  .live-card-img { display: block; width: 96px; aspect-ratio: 4 / 5; border-radius: 6px; overflow: hidden; background: var(--paper-soft); }
+  .live-card-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 0; }
+  .live-card-body { display: flex; flex-direction: column; gap: 3px; min-width: 0; font-size: 13px; line-height: 1.45; }
+  .live-card-badge { align-self: flex-start; padding: 1px 7px; border-radius: 999px; background: var(--ink); color: #fff; font-size: 11px; font-weight: 700; }
+  .live-card-title { font-size: 14.5px; line-height: 1.4; color: var(--ink); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .live-card-meta { color: var(--muted-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .live-card-cta { margin-top: auto; padding-top: 4px; color: var(--red); font-weight: 800; }
+  .live-expos-empty { margin-top: 12px; font-size: 14px; color: var(--muted-dark); }
+  .live-expos-foot { margin-top: 14px; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 12.5px; color: var(--muted); }
+  .post-body a.live-expos-more { color: var(--red); font-weight: 700; text-decoration: none; }
   .post-body hr { border: none; border-top: 1px solid var(--line); margin: 2.2em 0; }
   .post-body table { width: 100%; border-collapse: collapse; font-size: 15px; }
   .post-body th, .post-body td { border: 1px solid var(--line); padding: 10px 12px; text-align: left; vertical-align: top; }
@@ -271,6 +320,8 @@ ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script
     .post-item p { font-size: 13.5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     .post-body { font-size: 16px; }
     .post-body table { display: block; overflow-x: auto; font-size: 14px; }
+    .live-expos { padding: 16px 14px; }
+    .live-expos-grid { grid-template-columns: 1fr; }
     .post-body a.post-btn { display: flex; min-width: 0; width: 100%; padding: 15px 18px; font-size: 15px; }
     footer { padding: 24px 16px; }
   }
@@ -325,6 +376,7 @@ function loadPosts() {
         thumbnail: meta.thumbnail || '',
         draft: isDraft(meta),
         body,
+        live: body.includes('[[박람회:'),
         html: markdownToHtml(body),
       };
     })
@@ -336,6 +388,9 @@ function loadPosts() {
 async function build() {
   marked = (await import('marked')).marked;
   setupMarked(marked);
+  const usesLive = fs.existsSync(POSTS_DIR) && fs.readdirSync(POSTS_DIR)
+    .some(f => f.endsWith('.md') && fs.readFileSync(path.join(POSTS_DIR, f), 'utf8').includes('[[박람회:'));
+  if (usesLive) liveExpos = await fetchExpos();
 
   const posts = loadPosts();
   fs.rmSync(OUT_DIR, { recursive: true, force: true });
@@ -359,6 +414,7 @@ ${ctaBlock}`;
     fs.writeFileSync(path.join(OUT_DIR, `${p.slug}.html`), layout({
       title: `${p.seoTitle || p.title} | Wedding&Scoop`,
       keywords: p.keyword,
+      live: p.live,
       description: p.description || p.title,
       url,
       image: absUrl(p.thumbnail) || DEFAULT_IMAGE,
@@ -408,7 +464,7 @@ ${ctaBlock}`,
 
   const urls = [
     { loc: `${SITE}/blog`, lastmod: posts[0]?.date },
-    ...posts.map(p => ({ loc: `${SITE}/blog/${p.slug}`, lastmod: p.date })),
+    ...posts.map(p => ({ loc: `${SITE}/blog/${p.slug}`, lastmod: p.live ? todayKst() : p.date })),
   ];
   fs.writeFileSync(path.join(ROOT, 'sitemap-blog.xml'), `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
