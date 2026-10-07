@@ -122,7 +122,12 @@ function setupMarked(m) {
 
 const CALLOUTS = { '💡': 'tip', '⚠️': 'warn', '✅': 'check', '📌': 'info' };
 
-const markdownToHtml = (md) => marked.parse(md);
+// 무료사진 작가 표시(▲ … Photo by 작가 on Unsplash)는 사진 아래 줄 대신
+// 사진 오른쪽 아래 모서리에 아주 작게 표시 (Unsplash 이용 규칙은 지키면서 눈에 덜 띄게)
+const CREDIT_RE = /<p>(<img [^>]*>)<\/p>\n<p class="img-caption">▲\s*(?:(.*?)\s*·\s*)?Photo by (<a [^>]*>[^<]*<\/a>) on (<a [^>]*>Unsplash<\/a>)<\/p>\n?/g;
+const markdownToHtml = (md) => marked.parse(md).replace(CREDIT_RE, (all, img, caption, author, unsplash) =>
+  `<figure class="photo">${img}<figcaption class="photo-credit">© ${author} / ${unsplash}</figcaption></figure>\n`
+  + (caption ? `<p class="img-caption">▲ ${caption}</p>\n` : ''));
 
 // /images/... 같은 사이트 내부 경로 → https://weddingscoop.co.kr/images/... (카톡·네이버 미리보기용)
 const absUrl = (u) => (u && u.startsWith('/') ? SITE + u : u);
@@ -245,6 +250,13 @@ ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script
   .post-body blockquote { border-left: 3px solid var(--red); background: var(--paper-soft); padding: 14px 18px; color: var(--muted-dark); }
   .post-body .img-caption { margin-top: 0.5em; text-align: center; font-size: 13.5px; line-height: 1.6; color: var(--muted); }
   .post-body .img-caption a { color: inherit; }
+  .post-body figure.photo { position: relative; margin: 1.6em 0 0; }
+  .post-body figure.photo img { width: 100%; }
+  .post-body .photo-credit {
+    position: absolute; right: 6px; bottom: 6px; padding: 1px 5px; border-radius: 3px;
+    font-size: 9px; line-height: 1.5; letter-spacing: 0; color: rgba(255,255,255,0.8); background: rgba(0,0,0,0.28);
+  }
+  .post-body .photo-credit a { color: inherit; text-decoration: none; }
   .post-body p:has(> img:only-child) + .img-caption { margin-top: 0.5em; }
   .callout { display: flex; gap: 12px; padding: 16px 18px; border-radius: 10px; border: 1px solid transparent; }
   .callout-icon { font-size: 20px; line-height: 1.6; flex-shrink: 0; }
