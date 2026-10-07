@@ -1,10 +1,15 @@
 # 운영 배포가 끝나면 블로그 글의 빈 사진 자리를 언스플래시 무료사진으로 자동으로 채움
 # (사이트의 /api/fill-photos-auto 호출 — 채울 자리가 없으면 아무 일도 안 함)
+# GitHub가 발급하는 신원 증명 토큰(OIDC)으로 인증하므로 따로 비밀값 설정이 필요 없음
 name: Fill photos
 
 on:
   deployment_status:
   workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
   fill:
@@ -15,8 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Fill empty photo slots
-        env:
-          SECRET: ${{ secrets.FILL_PHOTOS_SECRET }}
         run: |
+          TOKEN=$(curl -sS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=weddingscoop-fill" | jq -r .value)
           curl -sS --max-time 90 -X POST https://weddingscoop.co.kr/api/fill-photos-auto \
-            -H 'X-Weddingscoop-Fill: 1' -H "X-Fill-Secret: ${SECRET}" -w '\nHTTP %{http_code}\n'
+            -H "Authorization: Bearer $TOKEN" -w '\nHTTP %{http_code}\n'
