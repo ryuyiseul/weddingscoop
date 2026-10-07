@@ -127,6 +127,13 @@
   #editor { background: #fff; }
   .editor-tip { margin-top: 8px; font-size: 12.5px; color: var(--muted); line-height: 1.7; }
 
+  /* 사진 자리 채우기 안내 */
+  .slot-bar {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+    margin-bottom: 10px; padding: 12px 14px; border-radius: 10px; background: #fdf3e1; border: 1px solid #f0d9a8;
+    font-size: 13.5px; color: var(--ink-soft);
+  }
+
   /* 툴바 (네이버 블로그 스타일: 큰 아이콘 + 글자) */
   .tb {
     position: sticky; top: 58px; z-index: 25; background: #fff; border: 1px solid #dadde1; border-bottom: none;
@@ -364,6 +371,10 @@
     <section>
       <input class="title-input" id="fTitle" placeholder="제목을 입력하세요" maxlength="120" />
       <div class="editor-box">
+        <div class="slot-bar" id="slotBar" hidden>
+          <span>📷 이 글에 <b id="slotCount">0</b>곳의 사진 자리가 있어요 · 무료사진(언스플래시)으로 한 번에 채울 수 있어요</span>
+          <button type="button" class="btn btn-small btn-primary" id="slotFill">무료사진 자동 채우기</button>
+        </div>
         <div class="tb" id="toolbar">
           <div class="tb-insert">
           <button type="button" class="tb-big" data-act="photo" title="내 컴퓨터·휴대폰 사진 넣기"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 8"/></svg><span>사진</span></button>
@@ -1309,6 +1320,58 @@
     toast('대표 이미지로 정했어요');
   });
 
+  // ═══════ 사진 자리 [[사진:검색어|설명]] → 무료사진 자동 채우기 ═══════
+  const SLOT_RE = /^[ \t]*\\?\[\\?\[사진:(.+?)\\?\]\\?\][ \t]*$/gm;
+  const unescapeMd = (t) => t.replace(/\\([\[\]|\-:_*.!()#+])/g, '$1');
+  function findSlots(md) {
+    return [...md.matchAll(SLOT_RE)].map(m => {
+      const inner = unescapeMd(m[1]);
+      const i = inner.indexOf('|');
+      return { line: m[0], query: (i < 0 ? inner : inner.slice(0, i)).trim(), alt: (i < 0 ? '' : inner.slice(i + 1)).trim() };
+    });
+  }
+  function updateSlotBar() {
+    const n = editor ? findSlots(editor.getMarkdown()).length : 0;
+    $('slotBar').hidden = !n;
+    $('slotCount').textContent = n;
+  }
+  $('slotFill').addEventListener('click', async () => {
+    const btn = $('slotFill');
+    let md = editor.getMarkdown();
+    const slots = findSlots(md);
+    if (!slots.length) return updateSlotBar();
+    btn.disabled = true;
+    const used = new Set();
+    const cache = {};
+    const picked = [];
+    try {
+      for (let i = 0; i < slots.length; i++) {
+        const slot = slots[i];
+        btn.textContent = `사진 찾는 중 (${i + 1}/${slots.length})`;
+        if (!cache[slot.query]) cache[slot.query] = (await api(`/api/admin/unsplash?q=${encodeURIComponent(slot.query)}&page=1`)).photos;
+        const photo = cache[slot.query].find(p => !used.has(p.id));
+        if (!photo) continue;
+        used.add(photo.id);
+        const alt = cleanMd(slot.alt) || cleanMd(photo.alt) || '사진';
+        md = md.replace(slot.line, `![${alt}](${photo.url})\n▲ Photo by [${cleanMd(photo.author)}](${photo.authorUrl}) on [Unsplash](${photo.unsplashUrl})`);
+        picked.push(photo);
+      }
+      editor.setMarkdown(md, false);
+      resetHistory();
+      picked.forEach(trackUnsplash);
+      if (!thumbValue && picked[0]) { thumbValue = picked[0].url; renderThumb(); }
+      dirty = true;
+      updateSlotBar();
+      updateSeo();
+      toast(`사진 ${picked.length}장을 넣었어요. 사진을 클릭하면 설명을 고치거나 뺄 수 있어요. 확인 후 저장해주세요`, false, 7000);
+    } catch (e) {
+      toast(e.data && e.data.setup ? '무료사진을 쓰려면 Vercel에 UNSPLASH_ACCESS_KEY를 설정해주세요' : e.message, true, 6000);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '무료사진 자동 채우기';
+    }
+  });
+
   // ═══════ 대표 이미지 ═══════
   function renderThumb() {
     const box = $('thumbPreview');
@@ -1513,6 +1576,7 @@
       renderAddr();
       editor.setMarkdown(post.body || '', false);
       resetHistory();
+      updateSlotBar();
       $('deleteBtn').hidden = !slug;
       $('viewLiveBtn').hidden = !slug || post.meta.draft;
       $('viewLiveBtn').href = `/blog/${post.slug}`;
