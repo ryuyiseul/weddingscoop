@@ -4,7 +4,7 @@
 //   POST             저장 { originalSlug, meta, body, images: [{ path, base64 }] }  — 새 글 주소는 1, 2, 3… 자동
 //   DELETE ?slug=xxx 삭제
 const { guard, listDir, readFile, commitFiles, readJson } = require('../_lib/admin');
-const { SLUG_RE, NUMERIC_SLUG_RE, DATE_RE, parsePost, serializePost, isDraft } = require('../../lib/post-format');
+const { SLUG_RE, NUMERIC_SLUG_RE, DATE_RE, parsePost, serializePost, isDraft, findPhotoSlots } = require('../../lib/post-format');
 
 const IMAGE_PATH_RE = /^images\/blog\/[a-z0-9-]+\/[a-z0-9-]+\.(webp|jpg|jpeg|png|gif)$/;
 const MAX_IMAGE_BYTES = 3 * 1024 * 1024;
@@ -36,8 +36,9 @@ async function listPosts() {
   const posts = await Promise.all(files.map(async (f) => {
     const slug = f.name.replace(/\.md$/, '');
     try {
-      const { meta } = parsePost(await readFile(f.path), f.name);
-      return { slug, ...pickMeta(meta), title: meta.title || '(제목 없음)' };
+      const src = await readFile(f.path);
+      const { meta } = parsePost(src, f.name);
+      return { slug, ...pickMeta(meta), title: meta.title || '(제목 없음)', photoSlots: findPhotoSlots(src).length };
     } catch (e) {
       return { slug, title: `(형식 오류) ${f.name}`, date: '', draft: true, broken: true };
     }

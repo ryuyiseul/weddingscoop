@@ -290,6 +290,16 @@ ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script
   .live-expos-empty { margin-top: 12px; font-size: 14px; color: var(--muted-dark); }
   .live-expos-foot { margin-top: 14px; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 12.5px; color: var(--muted); }
   .post-body a.live-expos-more { color: var(--red); font-weight: 700; text-decoration: none; }
+
+  /* 가까운 지역 글 */
+  .related-regions { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--line); }
+  .related-regions h2 { font-size: 17px; letter-spacing: -0.02em; }
+  .related-regions ul { list-style: none; margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .related-regions a {
+    display: inline-block; padding: 7px 12px; border: 1px solid var(--line); border-radius: 999px; background: #fff;
+    font-size: 13.5px; text-decoration: none; color: var(--ink-soft);
+  }
+  .related-regions a:hover { border-color: var(--red); color: var(--red); }
   .post-body hr { border: none; border-top: 1px solid var(--line); margin: 2.2em 0; }
   .post-body table { width: 100%; border-collapse: collapse; font-size: 15px; }
   .post-body th, .post-body td { border: 1px solid var(--line); padding: 10px 12px; text-align: left; vertical-align: top; }
@@ -392,13 +402,14 @@ function loadPosts() {
         thumbnail: meta.thumbnail || '',
         draft: isDraft(meta),
         body,
-        live: body.includes('[[박람회:'),
+        live: body.includes('[[박람회:') || body.includes('\\[\\[박람회:'),
+        place: (body.replace(/\\([\[\]:])/g, '$1').match(/^\[\[박람회:([^\]]+)\]\]\s*$/m) || [])[1] || '',
         html: markdownToHtml(body),
       };
     })
     // 임시저장(draft: true) 글과 날짜가 미래인 글은 공개하지 않음
     .filter(p => !p.draft && p.date <= today)
-    .sort((a, b) => b.date.localeCompare(a.date) || a.slug.localeCompare(b.slug));
+    .sort((a, b) => b.date.localeCompare(a.date) || (Number(b.slug) || 0) - (Number(a.slug) || 0) || a.slug.localeCompare(b.slug));
 }
 
 async function build() {
@@ -411,6 +422,24 @@ async function build() {
   const posts = loadPosts();
   fs.rmSync(OUT_DIR, { recursive: true, force: true });
   fs.mkdirSync(OUT_DIR, { recursive: true });
+
+  // 같은 권역의 다른 지역 글 (예: 수원 글 → 일산·분당·용인 …)
+  const relatedOf = (p) => {
+    const region = p.place && LIVE.regionOf(p.place);
+    if (!region) return '';
+    // 권역 대표 글(예: 경기·강원)이 먼저, 그다음 글 번호 순(주요 도시가 앞 번호)
+    const isHub = (o) => ['서울', '경기', '인천', '부산', '강원', '제주'].includes(o.place);
+    const list = posts
+      .filter(o => o !== p && o.place && LIVE.regionOf(o.place) === region)
+      .sort((a, b) => Number(isHub(b)) - Number(isHub(a)) || (Number(a.slug) || 0) - (Number(b.slug) || 0))
+      .slice(0, 12);
+    if (!list.length) return '';
+    return `
+<nav class="related-regions" aria-label="가까운 지역 웨딩박람회">
+  <h2>가까운 지역 웨딩박람회</h2>
+  <ul>${list.map(o => `<li><a href="/blog/${o.slug}">${escapeHtml(o.keyword || o.title)}</a></li>`).join('')}</ul>
+</nav>`;
+  };
 
   for (const p of posts) {
     const url = `${SITE}/blog/${p.slug}`;
@@ -426,6 +455,7 @@ async function build() {
 ${p.html}
   </div>
 </article>
+${relatedOf(p)}
 ${ctaBlock}`;
     fs.writeFileSync(path.join(OUT_DIR, `${p.slug}.html`), layout({
       title: `${p.seoTitle || p.title} | Wedding&Scoop`,
