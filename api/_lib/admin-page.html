@@ -358,6 +358,10 @@
     </div>
     <button class="btn btn-primary" type="button" id="newPostBtn">＋ 새 글 쓰기</button>
   </div>
+  <div class="slot-bar" id="fillAllBar" hidden style="margin-top:20px">
+    <span>📷 사진 자리가 남은 글 <b id="fillAllPosts">0</b>개 (<b id="fillAllSlots">0</b>곳) · 언스플래시 무료사진으로 한 번에 채워서 저장해요</span>
+    <button type="button" class="btn btn-small btn-primary" id="fillAllBtn">모든 글 사진 채우기</button>
+  </div>
   <div class="post-list" id="postList"><div class="empty">불러오는 중…</div></div>
 </main>
 
@@ -734,6 +738,10 @@
     try {
       const { posts } = await api('/api/admin/posts');
       knownPosts = posts;
+      const slotPosts = posts.filter(p => p.photoSlots > 0);
+      $('fillAllBar').hidden = !slotPosts.length;
+      $('fillAllPosts').textContent = slotPosts.length;
+      $('fillAllSlots').textContent = slotPosts.reduce((n, p) => n + p.photoSlots, 0);
       if (!posts.length) {
         list.innerHTML = '<div class="empty">아직 쓴 글이 없습니다. 첫 글을 써보세요!</div>';
         return;
@@ -761,6 +769,24 @@
       list.innerHTML = `<div class="empty">${escapeHtml(e.message)}</div>`;
     }
   }
+
+  $('fillAllBtn').addEventListener('click', async () => {
+    const btn = $('fillAllBtn');
+    btn.disabled = true;
+    btn.textContent = '사진 찾아서 넣는 중… (1분 정도)';
+    try {
+      const r = await api('/api/admin/fill-photos', { method: 'POST', body: {} });
+      toast(r.posts
+        ? `글 ${r.posts}개에 사진 ${r.photos}장을 넣었어요. 1~2분 뒤 사이트에 반영됩니다${r.partial ? ' (검색 한도 때문에 일부만 채웠어요 — 1시간 뒤 한 번 더 눌러주세요)' : ''}`
+        : (r.message || '채울 사진 자리가 없어요'), false, 9000);
+      openList();
+    } catch (e) {
+      toast(e.data && e.data.setup ? '무료사진을 쓰려면 Vercel에 UNSPLASH_ACCESS_KEY를 설정해주세요' : e.message, true, 8000);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '모든 글 사진 채우기';
+    }
+  });
 
   $('postList').addEventListener('click', (e) => {
     const btn = e.target.closest('[data-edit]');
