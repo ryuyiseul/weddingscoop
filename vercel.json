@@ -16,6 +16,9 @@
     },
     "api/admin/fill-photos.js": {
       "maxDuration": 60
+    },
+    "api/fill-photos-auto.js": {
+      "maxDuration": 60
     }
   },
   "redirects": [

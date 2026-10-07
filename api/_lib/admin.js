@@ -108,19 +108,19 @@ async function commitFiles(message, files) {
   const headSha = ref.object.sha;
   const head = await gh(`/git/commits/${headSha}`);
 
+  // 파일 내용 올리기 (8개씩 동시에)
   const tree = [];
-  for (const f of files) {
-    if (f.delete) {
-      tree.push({ path: f.path, mode: '100644', type: 'blob', sha: null });
-      continue;
-    }
-    const blob = await gh('/git/blobs', {
-      method: 'POST',
-      body: JSON.stringify(f.base64 !== undefined
-        ? { content: f.base64, encoding: 'base64' }
-        : { content: f.content, encoding: 'utf-8' }),
-    });
-    tree.push({ path: f.path, mode: '100644', type: 'blob', sha: blob.sha });
+  for (let i = 0; i < files.length; i += 8) {
+    tree.push(...await Promise.all(files.slice(i, i + 8).map(async (f) => {
+      if (f.delete) return { path: f.path, mode: '100644', type: 'blob', sha: null };
+      const blob = await gh('/git/blobs', {
+        method: 'POST',
+        body: JSON.stringify(f.base64 !== undefined
+          ? { content: f.base64, encoding: 'base64' }
+          : { content: f.content, encoding: 'utf-8' }),
+      });
+      return { path: f.path, mode: '100644', type: 'blob', sha: blob.sha };
+    })));
   }
 
   const newTree = await gh('/git/trees', {
