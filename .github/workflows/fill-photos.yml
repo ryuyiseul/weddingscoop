@@ -1,0 +1,22 @@
+# 운영 배포가 끝나면 블로그 글의 빈 사진 자리를 언스플래시 무료사진으로 자동으로 채움
+# (사이트의 /api/fill-photos-auto 호출 — 채울 자리가 없으면 아무 일도 안 함)
+name: Fill photos
+
+on:
+  deployment_status:
+  workflow_dispatch:
+
+jobs:
+  fill:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.deployment_status.state == 'success' &&
+       github.event.deployment.environment == 'Production')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fill empty photo slots
+        env:
+          SECRET: ${{ secrets.FILL_PHOTOS_SECRET }}
+        run: |
+          curl -sS --max-time 90 -X POST https://weddingscoop.co.kr/api/fill-photos-auto \
+            -H 'X-Weddingscoop-Fill: 1' -H "X-Fill-Secret: ${SECRET}" -w '\nHTTP %{http_code}\n'
