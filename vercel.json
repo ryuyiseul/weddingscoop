@@ -4,6 +4,7 @@
   "buildCommand": "node scripts/build-blog.js",
   "outputDirectory": ".",
   "regions": ["icn1"],
+  "github": { "silent": true },
   "functions": {
     "api/expos.js": {
       "maxDuration": 30
