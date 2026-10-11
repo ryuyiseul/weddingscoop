@@ -6122,6 +6122,14 @@
   const regionFilter = document.getElementById('regionFilter');
   const countNum = document.getElementById('countNum');
 
+  // 이미지 설명 "10월 ○○ 웨딩박람회" — lib/live-expos.js altOf 와 같은 규칙
+  function expoAlt(e) {
+    const m = e.date ? Number(String(e.date).slice(5, 7)) + '월 ' : '';
+    const key = String(e.region || '').replace(/^(경기|제주)도$/, '$1');
+    const t = String(e.title || '').trim();
+    return escapeHtml(m + t + (key && !(t.includes(key) && t.includes('박람회')) ? ' - ' + key + ' 웨딩박람회' : ''));
+  }
+
   function formatDate(dateStr, endStr) {
     const d = new Date(dateStr);
     const m = d.getMonth() + 1;
@@ -6212,7 +6220,7 @@
     grid.innerHTML = pageItems.map((e, i) => `
       <a class="card" href="${e.link}" target="_blank" rel="sponsored noopener">
         <div class="card-image">
-          <img src="${e.thumbnail}" alt="${e.title} - ${e.region} 웨딩박람회·결혼박람회 무료초대권 신청" loading="lazy" />
+          <img src="${e.thumbnail}" alt="${expoAlt(e)}" loading="lazy" />
         </div>
         <div class="card-body">
           <div class="card-badges">
@@ -6315,7 +6323,7 @@
         content: {
           title: expo.title,
           description: `📅 ${dateText}\n📍 ${expo.region}${expo.location ? ' · ' + expo.location : ''}\n\n✨ 무료초대권 신청하기`,
-          imageUrl: expo.thumbnail || `${window.location.origin}/og-image.png`,
+          imageUrl: expo.thumbnail ? new URL(expo.thumbnail, window.location.origin).href : `${window.location.origin}/og-image.png`,
           imageWidth: 800,
           imageHeight: 800,
           link: {
@@ -6568,7 +6576,7 @@
         "endDate": endDate,
         "eventStatus": "https://schema.org/EventScheduled",
         "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-        "image": e.thumbnail,
+        "image": e.thumbnail && e.thumbnail.startsWith('/') ? 'https://weddingscoop.co.kr' + e.thumbnail : e.thumbnail,
         "url": `https://weddingscoop.co.kr${REGION_TO_SLUG[e.region] ? '/' + REGION_TO_SLUG[e.region] : '/'}`,
         "location": {
           "@type": "Place",
@@ -6780,6 +6788,15 @@
   }
 
   // 개별 광고 항목 → 내부 형식 정규화
+  // 박람회 이미지를 우리 주소(/expo-img/…)로 — lib/live-expos.js imageUrl 과 같은 규칙
+  function expoImageUrl(raw) {
+    const s = String(raw || '').trim();
+    const host = 'https://ad.cpaad.co.kr/';
+    if (!s.startsWith(host)) return s;
+    const p = s.slice(host.length).split(/[?#]/)[0];
+    return /^data\/[\w./-]+\.(?:jpe?g|png|gif|webp)$/i.test(p) && !p.includes('..') ? '/expo-img/' + p : s;
+  }
+
   function normalizeExpo(adId, raw, apiIndex) {
     return {
       id: adId,
@@ -6793,7 +6810,7 @@
       region: normalizeRegion(raw.region),
       location: cleanLocation(raw.ad_location),
       rawLocation: raw.ad_location || '', // 원본 주소 전체 (챗봇 도시 매칭용)
-      thumbnail: raw.ad_thumbnail || raw.ad_mainvisual || '',
+      thumbnail: expoImageUrl(raw.ad_thumbnail || raw.ad_mainvisual || ''),
       tag: '',
     };
   }
@@ -7810,7 +7827,7 @@
         const contents = expos.slice(0, 3).map(e => ({
           title: e.title,
           description: `📅 ${formatChatDate(e.date, e.endDate)} · 📍 ${e.region}`,
-          imageUrl: e.thumbnail || `${window.location.origin}/og-image.png`,
+          imageUrl: e.thumbnail ? new URL(e.thumbnail, window.location.origin).href : `${window.location.origin}/og-image.png`,
           link: {
             mobileWebUrl: e.link,
             webUrl: e.link,

@@ -9,6 +9,9 @@
     "api/expos.js": {
       "maxDuration": 30
     },
+    "api/expo-img.js": {
+      "maxDuration": 20
+    },
     "api/admin/page.js": {
       "includeFiles": "api/_lib/admin-page.html"
     },
@@ -27,7 +30,8 @@
     { "source": "/gwangju", "destination": "/blog/15", "permanent": true }
   ],
   "rewrites": [
-    { "source": "/admin/:key", "destination": "/api/admin/page?key=:key" }
+    { "source": "/admin/:key", "destination": "/api/admin/page?key=:key" },
+    { "source": "/expo-img/:path*", "destination": "/api/expo-img?p=:path*" }
   ],
   "headers": [
     {
