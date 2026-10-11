@@ -45,3 +45,9 @@ jobs:
           printf '/api/expos: '
           curl -sS --max-time 30 -o /tmp/e -w '%{http_code} %{size_download}B' -H 'Referer: https://weddingscoop.co.kr/' https://weddingscoop.co.kr/api/expos; echo
           head -c 200 /tmp/e 2>/dev/null || true; echo
+          echo '--- 박람회 이미지 주소 (호스트별)'
+          grep -o '"ad_thumbnail[0-9]*":"[^"]*"\|"ad_mainvisual":"[^"]*"' /tmp/e | sed 's/.*":"//; s/"$//; s#\\/#/#g' | awk -F/ '{print $1"//"$3}' | sort | uniq -c
+          grep -o '"ad_thumbnail":"[^"]*"' /tmp/e | head -3
+          U=$(grep -o '"ad_thumbnail":"[^"]*"' /tmp/e | head -1 | sed 's/.*":"//; s/"$//; s#\\/#/#g')
+          echo "샘플: $U"; curl -sS --max-time 20 -o /tmp/i -w '%{http_code} %{content_type} %{size_download}B\n' "$U" || true
+          curl -sS -o /dev/null -w 'Yeti→ %{http_code}\n' -A 'Mozilla/5.0 (compatible; Yeti/1.1; +https://naver.me/spd)' "$U" || true
