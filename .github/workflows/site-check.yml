@@ -45,3 +45,10 @@ jobs:
           printf '/api/expos: '
           curl -sS --max-time 30 -o /tmp/e -w '%{http_code} %{size_download}B' -H 'Referer: https://weddingscoop.co.kr/' https://weddingscoop.co.kr/api/expos; echo
           head -c 200 /tmp/e 2>/dev/null || true; echo
+          echo '--- 박람회 이미지 (우리 주소 /expo-img 로 제공되는지)'
+          UA='Mozilla/5.0 (compatible; Yeti/1.1; +https://naver.me/spd)'
+          curl -sS -A "$UA" https://weddingscoop.co.kr/seoul > /tmp/s
+          grep -o '<img src="/expo-img/[^>]*>' /tmp/s | head -3
+          I=$(grep -o 'src="/expo-img/[^"]*' /tmp/s | head -1 | sed 's/src="//')
+          [ -n "$I" ] && curl -sS --max-time 30 -o /dev/null -A "$UA" -w "이미지 $I → %{http_code} %{content_type} %{size_download}B\n" "https://weddingscoop.co.kr$I"
+          echo "이미지 사이트맵: 메인 $(curl -sS https://weddingscoop.co.kr/sitemap.xml | grep -c '<image:loc>')개, 블로그 $(curl -sS https://weddingscoop.co.kr/sitemap-blog.xml | grep -c '<image:loc>')개"

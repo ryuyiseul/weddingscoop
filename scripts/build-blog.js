@@ -548,14 +548,20 @@ ${posts.length ? `<ul class="post-list">${items}\n</ul>` : '<div class="empty">�
 ${ctaBlock}`,
   }));
 
+  // 이미지 사이트맵: 글에 들어간 박람회 카드 이미지 + 본문 사진
+  const postImages = (p) => {
+    const cards = p.place ? LIVE.pick(liveExpos, p.place).items.slice(0, 6).map(e => absUrl(e.thumbnail)) : [];
+    const photos = [...String(p.body || '').matchAll(/!\[[^\]]*\]\((https?:\/\/[^)\s]+)/g)].map(m => m[1]);
+    return [...new Set([...cards, ...photos].filter(Boolean))].slice(0, 30);
+  };
   const urls = [
     { loc: `${SITE}/blog`, lastmod: posts[0]?.date },
-    ...posts.map(p => ({ loc: `${SITE}/blog/${p.slug}`, lastmod: p.live ? todayKst() : p.date })),
+    ...posts.map(p => ({ loc: `${SITE}/blog/${p.slug}`, lastmod: p.live ? todayKst() : p.date, images: postImages(p) })),
   ];
   fs.writeFileSync(path.join(ROOT, 'sitemap-blog.xml'), `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 ${urls.map(u => `  <url>
-    <loc>${u.loc}</loc>${u.lastmod ? `\n    <lastmod>${u.lastmod}</lastmod>` : ''}
+    <loc>${u.loc}</loc>${u.lastmod ? `\n    <lastmod>${u.lastmod}</lastmod>` : ''}${(u.images || []).map(i => `\n    <image:image><image:loc>${escapeHtml(i)}</image:loc></image:image>`).join('')}
   </url>`).join('\n')}
 </urlset>
 `);

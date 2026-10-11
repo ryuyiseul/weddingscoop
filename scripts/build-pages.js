@@ -26,6 +26,7 @@ const REGIONS = [
   { region: '기타', slug: 'etc', label: '기타 지역', priority: '0.6' },
 ];
 
+const absUrl = (u) => (u && u.startsWith('/') ? SITE + u : u);
 const esc = (s) => String(s == null ? '' : s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
@@ -40,11 +41,11 @@ function fmtRange(s, e) {
 }
 
 // index.html render() 의 카드와 같은 모양 (공유 버튼만 뺌 — 브라우저가 다시 그리면서 붙임)
-function cardHtml(e) {
+function cardHtml(e, label) {
   return `
       <a class="card" href="${esc(e.link)}" target="_blank" rel="sponsored noopener">
         <div class="card-image">
-          <img src="${esc(e.thumbnail)}" alt="${esc(e.title)} - ${esc(e.region)} 웨딩박람회·결혼박람회 무료초대권 신청" loading="lazy" />
+          <img src="${esc(e.thumbnail)}" alt="${esc(LIVE.altOf(e, label))}" loading="lazy" />
         </div>
         <div class="card-body">
           <div class="card-badges"><span class="card-badge">${esc(e.region)}</span></div>
@@ -85,7 +86,7 @@ function eventListJson(expos, name) {
           endDate: e.endDate || e.date,
           eventStatus: 'https://schema.org/EventScheduled',
           eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-          ...(e.thumbnail ? { image: e.thumbnail } : {}),
+          ...(e.thumbnail ? { image: absUrl(e.thumbnail) } : {}),
           url: `${SITE}/${slugOf(e.region) || ''}`,
           location: {
             '@type': 'Place',
@@ -128,7 +129,7 @@ const setBetween = (html, name, inner) =>
 function fillPage(html, expos, r, guides) {
   // 브라우저와 같은 순서(cpaad 등록순) 첫 페이지
   const list = expos.slice().sort((a, b) => a.order - b.order);
-  const cards = list.slice(0, ITEMS_PER_PAGE).map(cardHtml).join('');
+  const cards = list.slice(0, ITEMS_PER_PAGE).map(e => cardHtml(e, r ? r.label.replace(' 지역', '') : '')).join('');
   html = setBetween(html, 'GRID', cards ? `${cards}\n      ` : '');
   html = html.replace(/(<strong id="countNum">)[^<]*(<\/strong>)/, (m, a, b) => a + String(expos.length).padStart(2, '0') + b);
   html = setScript(html, 'eventListJsonLd', eventListJson(expos, r ? `${r.label} 웨딩박람회 목록` : '전국 웨딩박람회 목록'));
@@ -190,18 +191,23 @@ function buildPages({ root, expos, posts }) {
 
   // 메인 사이트맵 (메인 + 지역 페이지, 매 빌드 날짜로)
   const today = todayKst();
-  const urls = [{ loc: `${SITE}/`, priority: '1.0' }, ...REGIONS.map(r => ({ loc: `${SITE}/${r.slug}`, priority: r.priority }))];
+  const imagesOf = (list) => list.slice().sort((a, b) => a.order - b.order).slice(0, ITEMS_PER_PAGE)
+    .map(e => absUrl(e.thumbnail)).filter(Boolean);
+  const urls = [
+    { loc: `${SITE}/`, priority: '1.0', images: imagesOf(all) },
+    ...REGIONS.map(r => ({ loc: `${SITE}/${r.slug}`, priority: r.priority, images: imagesOf(all.filter(e => e.region === r.region)) })),
+  ];
   fs.writeFileSync(path.join(root, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 ${urls.map(u => `  <url>
     <loc>${u.loc}</loc>
     <lastmod>${today}</lastmod>
     <changefreq>daily</changefreq>
-    <priority>${u.priority}</priority>
+    <priority>${u.priority}</priority>${u.images.map(i => `\n    <image:image><image:loc>${esc(i)}</image:loc></image:image>`).join('')}
   </url>`).join('\n')}
 </urlset>
 `);
   console.log(`[pages] 메인 + 지역 페이지 ${REGIONS.length}개 (박람회 ${all.length}개 미리 넣음)`);
 }
 
-module.exports = { buildPages, REGIONS };
+module.exports = { buildPages, REGIONS, absUrl };
