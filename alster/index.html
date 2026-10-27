@@ -343,10 +343,13 @@ window.SITE = {
 
   document.getElementById('share').addEventListener('click', function () {
     var data = { title: document.title, url: location.href };
-    if (navigator.share) { navigator.share(data).catch(function () {}); return; }
-    try {
-      navigator.clipboard.writeText(location.href).then(function () { toast('링크를 복사했어요'); }, function () { toast(location.href); });
-    } catch (err) { toast(location.href); }
+    var copy = function () {
+      try {
+        navigator.clipboard.writeText(location.href).then(function () { toast('링크를 복사했어요'); }, function () { toast(location.href); });
+      } catch (err) { toast(location.href); }
+    };
+    if (navigator.share) { navigator.share(data).catch(function (err) { if (!err || err.name !== 'AbortError') copy(); }); return; }
+    copy();
   });
 
   var bar = document.getElementById('topbar');
